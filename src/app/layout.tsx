@@ -3,10 +3,6 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 //import ContentScrim from '@/components/ContentScrim'
-import BackgroundNetwork from '@/components/BackgroundNetwork'
-import HorizonBackground from '@/components/HorizonBackground'
-import BackgroundNetworkMesh from '@/components/BackgroundNetworkMesh'
-import BackgroundNetworkPolyrhythm from '@/components/BackgroundNetworkPolyrhythm'
 import BackgroundNetworkStable from '@/components/BackgroundNetworkStable'
 
 
@@ -47,16 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           snapHold={4}
           snapFall={5}
         />
-       {/* <ContentScrim />*/}
-        {/*<BackgroundNetworkMesh
-          density={0.9}
-          triangles
-          triangleStrength={0.85}
-          triSmoothing={0.0022}
-          fadeOut={0.33}
-        />*/}
-        {/* <HorizonBackground density={3} speed={100} horizon={1} />*/}
-      {/*<BackgroundNetwork density={1} />
+
         {/* Header / Nav */}
         <header className="sticky top-0 z-50 border-b border-border bg-white/70 backdrop-blur dark:bg-card/70">
             <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">

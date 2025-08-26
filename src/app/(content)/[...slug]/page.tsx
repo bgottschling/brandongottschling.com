@@ -9,8 +9,9 @@ export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 }
 
 export default async function ContentPage({ params }: { params: { slug: string[] } }) {
-  const slug = params.slug.join('/')
-  const entry = await getBySlug(slug)
+  const { slug } = await params                         // <- await before using
+  const joined = slug.join('/')
+  const entry = await getBySlug(joined)
   if (!entry || entry.meta.draft) return <div>Not found.</div>
 
   const { meta, source } = entry

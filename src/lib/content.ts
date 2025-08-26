@@ -6,6 +6,7 @@ export type ContentMeta = {
   title: string
   date?: string
   summary?: string
+  status?: string
   tags?: string[]
   type?: 'blog' | 'research' | 'project' | 'page'
   draft?: boolean
@@ -71,6 +72,7 @@ export async function getAllContent(): Promise<ContentMeta[]> {
       title: String(data.title),
       date: toIso(data.date),
       summary: data.summary,
+      status: data.status,
       tags: data.tags ?? [],
       type: (data.type as ContentMeta['type']) ?? 'blog',
       draft: Boolean(data.draft),

@@ -1,0 +1,66 @@
+import ProjectHeader from '@/components/ProjectHeader'
+
+<ProjectHeader status="Active · v0.1" live="https://brandongottschling.com" repo="https://github.com/bgottschling/brandongottschling.com" />
+
+---
+type: project
+title: "Brandongottschling.com the living workshop"
+slug: "brandongottschling-site"
+date: "2025-08-24"
+summary: "My personal lab: Next.js + MDX, warm design tokens, and a subtle generative background. Built to learn in public."
+status: "Active v0.1"
+tags: ["next.js", "mdx", "tailwind", "design-system", "vercel", "animation"]
+cover: "/images/projects/site/hero.png"
+links:
+  live: "https://brandongottschling.com"
+  repo: "https://github.com/bgottschling/brandongottschling.com"
+---
+
+> **Why**  
+> I wanted a single home for research notes, projects, and writing—lightweight, fast, and easy to grow. This site is my “living workshop,” where I build in public and keep the work portable.
+
+## Status
+
+- **Current:** Active v0.1  
+- **Stack:** Next.js 15 (App Router), MDX + file-system content, Tailwind/shadcn, `remark-gfm`, `rehype-slug`/`autolink-headings`, Vercel.  
+- **Design:** warm, minimal UI; card components; animated background network with periodic “harmony” moments.
+
+## Links
+
+- **Live:** [{links.live}]({links.live})
+- **Repo:** [{links.repo}]({links.repo})
+
+---
+
+## What I built
+
+- **Content system:** MDX + front-matter with a tiny filesystem reader (`/lib/content`).  
+- **Components:** `ItemCard`, `MissionCard`, `EthosCard`, and a robust `BackgroundNetworkStable` (canvas) with triangle fills and scheduled “snap” envelopes.  
+- **Design tokens:** accent hue + neutrals, typography via Tailwind Typography (scoped), and opaque cards (`not-prose`) for readability over animation.  
+- **SEO & basics:** metadata, og image placeholder, robots/sitemap (ready), RSS planned.  
+- **Deploy:** Vercel, custom domain.
+
+## Notes from the build
+
+- **MDX choices:** kept `next-mdx-remote` only where needed; most MDX renders natively with the App Router.  
+- **Types & configs:** use `next.config.ts` + `@next/mdx` with `remark-gfm` and `rehype` plugins; keep PostCSS/Tailwind in **ESM** format to dodge Turbopack warnings.  
+- **Performance guardrails:** DPR cap (1.5), bounded `requestAnimationFrame` delta, spatial grid for neighbor search, and FPS-based triangle fallback.  
+- **Accessibility:** high-contrast cards, limited line length (~68ch), tab/focus styles, no global opacity on text containers.
+
+## Takeaways
+
+1. **Ship the scaffolding, then style it.** Getting content flowing through MDX early made every other decision easier.  
+2. **Opaque cards over animated backgrounds** keep text legible without killing the vibe.  
+3. **Bound your math.** Wrapping angles and capping deltas removed “float gremlins” in the canvas.  
+4. **Prefer tokens over hard values.** One accent hue powers links, cards, and the background.  
+5. **Build to learn, learn to build.** Small, shippable pieces keep momentum (and faith) up.
+
+## What’s next
+
+- Add `/blog`, `/research`, and `/projects` index pages with filters/tags.  
+- Generate OG images for posts/projects.  
+- Light analytics (privacy-first) + uptime pings.  
+- “/now” page + `/rss.xml`.  
+- More project case studies (Unity – Subject 33; Orgami; Crypto Cycle dashboards).
+
+---

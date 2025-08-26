@@ -5,7 +5,7 @@ export default async function BlogIndex() {
   const items = (await getAllContent()).filter((p) => p.type === 'research' && !p.draft)
   return (
     <div>
-      <h1>Blog</h1>
+      <h1>Research</h1>
       <ul>
         {items.map((p) => (
           <li key={p.slug}>

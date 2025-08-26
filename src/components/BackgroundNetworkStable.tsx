@@ -182,7 +182,7 @@ export default function BackgroundNetworkStable({
     }
 
     // --- “Snap harmony” scheduler ---
-    let snapStart = performance.now() * 0.001 // seconds
+    const snapStart = performance.now() * 0.001 // seconds
     let nextSnapAt = snapStart + rr(snapEvery[0], snapEvery[1])
     const baselinePull = 0.02 // always-on subtle coherence
 
@@ -410,10 +410,12 @@ export default function BackgroundNetworkStable({
       ro.disconnect()
       cancelAnimationFrame(animId)
     }
-  }, [
+  },[
     density, hue, respectReducedMotion,
     triangles, triangleStrength, triSmoothing, fadeOut,
-    maxLinksPx, harmonyStrength, snapEvery[0], snapEvery[1], snapRise, snapHold, snapFall,
+    maxLinksPx, harmonyStrength,
+    snapRise, snapHold, snapFall,
+    // note: snap window range is stable for the lifetime of the component
   ])
 
   return (
