@@ -1,26 +1,71 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Theme tokens */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Monochrome base (Zinc) */
+  --bg:        0 0% 100%;
+  --fg:        240 6% 10%;
+  --muted:     240 5% 26%;
+  --card:      0 0% 100%;
+  --border:    240 5% 90%;
+
+  /* Accent (Amber) */
+  --accent:    38 92% 50%;
+  --accent-50: 38 100% 96%;
+
+  /* Code block bg */
+  --code:      240 6% 10%;
+  --code-fg:   0 0% 100%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dark mode (class-based) */
+.dark {
+  --bg:        240 6% 8%;
+  --fg:        0 0% 98%;
+  --muted:     240 4% 70%;
+  --card:      240 5% 12%;
+  --border:    240 4% 20%;
+
+  --accent:    38 92% 60%;
+  --accent-50: 38 100% 12%;
+
+  --code:      240 5% 12%;
+  --code-fg:   0 0% 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* very soft, neutral elevation that works on white and dark */
+.shadow-soft { box-shadow: 0 8px 30px rgba(0,0,0,.06); }
+
+/* Subtle paper-ish background + vignette (adds life without noise files) */
+html, body {
+  background-color: hsl(var(--bg));
+  background-image:
+    radial-gradient(60rem 30rem at 120% -10%, hsl(38 100% 97% / 0.6), transparent 60%),
+    radial-gradient(40rem 20rem at -10% -10%, hsl(220 20% 96% / 0.6), transparent 60%),
+    radial-gradient(100rem 40rem at 50% 120%, hsl(38 100% 92% / 0.25), transparent 70%);
+  background-attachment: fixed;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Typography tweaks */
+/* Prose defaults: use solid foreground, not muted */
+.prose {
+  --tw-prose-body: hsl(var(--fg));
+  --tw-prose-headings: hsl(var(--fg));
+  --tw-prose-links: hsl(var(--accent));
+  --tw-prose-bold: hsl(var(--fg));
+  --tw-prose-quotes: hsl(var(--fg));
+}
+.lead {
+  color: hsl(var(--fg)) !important;
+  opacity: 1 !important; /* ensure no inherited opacity affects it */
+}
+/* Never set opacity on content containers. Prefer bg-.../xx for tint only. */
+
+.prose a { text-underline-offset: 4px; }
+.prose pre {
+  background: hsl(var(--code)) !important;
+  color: hsl(var(--code-fg)) !important;
+  border-radius: 0.75rem;
 }
