@@ -16,6 +16,7 @@ export default async function ContentPage({ params }: { params: { slug: string[]
 
   const { meta, source } = entry
 
+  console.log(mdxComponents);
   return (
     <article>
       <h1>{meta.title}</h1>
