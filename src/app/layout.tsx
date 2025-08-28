@@ -70,7 +70,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Header / Nav */}
         <header className="sticky top-0 z-50 border-b border-border bg-white/70 backdrop-blur dark:bg-card/70">
-            // In layout.tsx (inside body or head) — JSON-LD
+          {/* Structured Data for SEO */}
+          {/* See https://developers.google.com/search/docs/appearance/structured-data/person */}
             <script type="application/ld+json" suppressHydrationWarning>
             {JSON.stringify({
               "@context": "https://schema.org",
