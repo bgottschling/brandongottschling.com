@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       'Research, Projects, Applications, CV, and Blog by Brandon Gottschling.',
     url: 'https://brandongottschling.com',
     siteName: 'brandongottschling.com',
-    images: [{ url: '/og.png', width: 1200, height: 630 }],
+    images: ["/api/og?title=Brandon%20Gottschling"],
     type: 'website',
   },
   twitter: {
