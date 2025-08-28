@@ -37,8 +37,8 @@ export async function GET(req: Request) {
             background:
               "conic-gradient(from 180deg at 50% 50%, #ffffff, #f59f0a)",
             WebkitMask:
-              "url(/flame-gradient-stroke.svg) center/contain no-repeat",
-            mask: "url(/flame-gradient-stroke.svg) center/contain no-repeat",
+              "url(/flame-master.svg) center/contain no-repeat",
+            mask: "url(/flame-master.svg) center/contain no-repeat",
           }}
         />
       </div>
