@@ -28,7 +28,7 @@ export async function GET(req: Request) {
         <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 880 }}>
           <div style={{ fontWeight: 800 }}>{title}</div>
           <div style={{ fontSize: 28, opacity: 0.9 }}>
-            Research · Unity · Crypto · Projects
+            Research · Projects · Applications · Crypto
           </div>
         </div>
 
