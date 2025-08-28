@@ -13,15 +13,23 @@ export const metadata: Metadata = {
     template: '%s | brandongottschling.com',
   },
   description:
-    'Research, projects/apps, CV, and blog by Brandon Gottschling — Unity (Subject 33), the Awake comic, Orgami (SME index), crypto cycle tools, and LIT Wax Works.',
+    'Research, Projects, Applications, CV, and Blog by Brandon Gottschling',
   openGraph: {
     title: 'Brandon Gottschling',
     description:
-      'Research, projects/apps, CV, and blog by Brandon Gottschling.',
+      'Research, Projects, Applications, CV, and Blog by Brandon Gottschling.',
     url: 'https://brandongottschling.com',
     siteName: 'brandongottschling.com',
     images: [{ url: '/og.png', width: 1200, height: 630 }],
     type: 'website',
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@brandon_afk", // optional
+    creator: "@brandon_afk",
+    title: "Research, Projects, Applications, CV, and Blog by Brandon Gottschling",
+    description: "Research notes, Unity dev, crypto dashboards, and projects.",
+    images: ["/api/og?title=Brandon%20Gottschling"]
   },
   robots: { index: true, follow: true },
   icons: {
@@ -62,6 +70,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Header / Nav */}
         <header className="sticky top-0 z-50 border-b border-border bg-white/70 backdrop-blur dark:bg-card/70">
+            // In layout.tsx (inside body or head) — JSON-LD
+            <script type="application/ld+json" suppressHydrationWarning>
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Brandon Gottschling",
+              url: "https://brandongottschling.com",
+              sameAs: [
+                "https://github.com/bgottschling",
+                "https://www.linkedin.com/in/bgottschling/",
+                "https://twitter.com/brandon_afk"
+              ]
+            })}
+            </script>
+
             <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
               <Link href="/" className="font-semibold tracking-tight hover:text-accent transition">
                 brandongottschling.com
