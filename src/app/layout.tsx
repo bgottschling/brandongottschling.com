@@ -2,6 +2,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+
+import MobileNavClient from '@/components/MobileNavClient'
+
 //import ContentScrim from '@/components/ContentScrim'
 import BackgroundNetworkStable from '@/components/BackgroundNetworkStable'
 
@@ -90,19 +93,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/" className="font-semibold tracking-tight hover:text-accent transition">
                 brandongottschling.com
               </Link>
-              <nav className="flex gap-4 text-sm">
-                {[
-                  { href: '/research', label: 'Research' },
-                  { href: '/projects', label: 'Projects' },
-                  { href: '/blog', label: 'Blog' },
-                  { href: '/cv', label: 'CV' },
-                  { href: '/about', label: 'About' },
-                ].map((n) => (
-                  <Link key={n.href} href={n.href} className="hover:text-accent transition">
-                    {n.label}
-                  </Link>
-                ))}
-              </nav>
+
+                {/* Desktop nav */}
+                <nav className="hidden md:flex gap-4 text-sm" aria-label="Primary">
+                  {[
+                    { href: '/research', label: 'Research' },
+                    { href: '/projects', label: 'Projects' },
+                    { href: '/blog', label: 'Blog' },
+                    { href: '/cv', label: 'CV' },
+                    { href: '/about', label: 'About' },
+                  ].map((n) => (
+                    <Link key={n.href} href={n.href} className="hover:text-accent transition">
+                      {n.label}
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* Mobile command menu */}
+                <div className="md:hidden">
+                  {/* import MobileNav from '@/app/components/MobileNav' */}
+                  <MobileNavClient />
+                </div>
             </div>
           </header>
 
