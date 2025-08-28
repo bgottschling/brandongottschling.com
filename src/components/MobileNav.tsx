@@ -97,9 +97,9 @@ export default function MobileNav() {
         <span className="sr-only">Open menu</span>
       </Button>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog open={open} onOpenChange={setOpen} className="bg-zinc-900 text-white">
         <CommandInput placeholder="Type to search… (⌘K)" />
-        <CommandList>
+        <CommandList className="bg-zinc-900 text-white">
           <CommandEmpty>No results found.</CommandEmpty>
           {renderGroup('Main', MAIN)}
           <CommandSeparator />
