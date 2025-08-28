@@ -1,30 +1,33 @@
-import type { NextConfig } from 'next'
+// next.config.mjs
+const isDev = process.env.NODE_ENV !== "production";
 
-const nextConfig: NextConfig = {
-  transpilePackages: ['next-mdx-remote'],
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   async headers() {
+    const csp = [
+      "default-src 'self'",
+      "img-src 'self' data: https:",
+      `script-src 'self' ${isDev ? "'unsafe-inline' 'unsafe-eval'" : "'unsafe-inline'"}`,
+      "style-src 'self' 'unsafe-inline'",
+      "font-src 'self' data:",
+      "connect-src 'self' https:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+    ].join("; ");
+
     return [
-      {
-        source: "/:path*{png|ico|svg|webmanifest}",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }]
-      },
-      {
-        source: "/api/og",
-        headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800" }]
-      },
       {
         source: "/(.*)",
         headers: [
+          { key: "Content-Security-Policy", value: csp },
           { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-          // Minimal CSP (tighten later)
-          { key: "Content-Security-Policy", value: "default-src 'self'; img-src 'self' data: https:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:" }
-        ]
-      }
+        ],
+      },
     ];
-  }
-}
+  },
+};
 
-export default nextConfig
+export default nextConfig;
