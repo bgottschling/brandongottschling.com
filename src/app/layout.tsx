@@ -24,6 +24,22 @@ export const metadata: Metadata = {
     type: 'website',
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      // Dark theme (your current pack)
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png", media: "(prefers-color-scheme: dark)" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png", media: "(prefers-color-scheme: dark)" },
+      { url: "/favicon.ico", sizes: "any", media: "(prefers-color-scheme: dark)" },
+
+      
+    ]
+  },
+  manifest: "/site.webmanifest",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#111111" },
+
+  ]
+
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
