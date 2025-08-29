@@ -7,12 +7,15 @@ import CTA from './CTA'
 type AProps = React.ComponentProps<'a'>
 type PreProps = React.ComponentProps<'pre'>
 
+// Import CTA's Props type
+type CTAProps = React.ComponentProps<typeof CTA>
+
 /** Only the elements you override; no global JSX namespace needed. */
 export type MDXComponentsMap = {
   a?: React.FC<AProps>
   pre?: React.FC<PreProps>
   ProjectHeader?: React.FC<{ status?: string; live?: string; repo?: string }>
-  CTA?: React.FC<any>
+  CTA?: React.FC<CTAProps>
 }
 
 function cls(...parts: Array<string | undefined>) {
