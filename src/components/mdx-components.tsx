@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import * as React from 'react'
 import ProjectHeader from '@/components/ProjectHeader'
+import CTA from './CTA'
 
 type AProps = React.ComponentProps<'a'>
 type PreProps = React.ComponentProps<'pre'>
@@ -11,6 +12,7 @@ export type MDXComponentsMap = {
   a?: React.FC<AProps>
   pre?: React.FC<PreProps>
   ProjectHeader?: React.FC<{ status?: string; live?: string; repo?: string }>
+  CTA?: React.FC<any>
 }
 
 function cls(...parts: Array<string | undefined>) {
@@ -45,4 +47,5 @@ export const mdxComponents: MDXComponentsMap = {
   a: A,
   pre: Pre,
   ProjectHeader,
+  CTA,
 }
