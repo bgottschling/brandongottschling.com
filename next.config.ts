@@ -3,6 +3,9 @@ const isDev = process.env.NODE_ENV !== "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental: {
+    transpilePackages: ["framer-motion"],
+  },
   async headers() {
     const csp = [
       "default-src 'self'",

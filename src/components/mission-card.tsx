@@ -9,6 +9,9 @@ export default function MissionCard() {
         <p className="m-0 text-[15px] leading-7">
         Build useful things, tell honest stories, and show up for people. Share what I’m
         learning so others can move with more courage, clarity, and hope.
+
+         I want this work to be more than output. I’m learning to be the kind of person who shows up—steady at home, useful in the world. 
+         That looks like working hard, seeking peace, and making things that genuinely help.
         </p>
     </div>
     </section>

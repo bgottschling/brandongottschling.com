@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getAllContent, type ContentMeta } from '@/lib/content'
 import ItemCard from '@/components/item-card'
 import MissionCard from '@/components/mission-card'
-import EthosCard from '@/components/ethos-card'
 
 export default async function HomePage() {
   const all: ContentMeta[] = await getAllContent()
@@ -22,7 +21,6 @@ export default async function HomePage() {
       </p>
 
       <MissionCard />
-      <EthosCard />
 
       <section className="mt-10">
         <header className="mb-3 flex items-baseline justify-between">
