@@ -26,7 +26,7 @@ export default function MobileFilterSheet({
             Filters
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[92vw] sm:w-[420px]">
+        <SheetContent side="left" className="w-[92vw] sm:w-[420px] bg-zinc-900 text-white overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
           </SheetHeader>

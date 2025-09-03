@@ -66,12 +66,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Scrim BETWEEN background and content */}
           <EdgeScrim
             variant="column-blur"
-            blur={14}                // 12–18 feels great
-            tint={0.06}              // tiny neutral tint over blur (0.04–0.08)
-            saturate={1.0}           // 1.0 = neutral; 1.15 adds a touch of vibrance
-            columnWidth="min(100vw - 2rem, 48rem)"  // align to your max-w-3xl
-            fade="16rem"             // widen/narrow side feather
-            centerX="50%"            // adjust if you ever offset the reading lane
+            blur={4}
+            tint={0.025}
+            saturate={1.0}
+            columnWidth="min(100vw - 2rem, 48rem)"
+            fade="12rem"
             z="z-0"
           />
 

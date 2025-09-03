@@ -3,31 +3,31 @@ import { cn } from "@/lib/utils";
 
 /**
  * EdgeScrim
- * A non-interactive overlay between your background and content.
+ * - "column-blur": glassy, transparent blur with only left/right fades.
+ * - "column": solid tint column with left/right fades.
+ * - "plateau" / "edges-dark": legacy radial options.
  *
- * Variants:
- *  - "column-blur"  ← glassy, transparent blur in a rectangular column
- *  - "column"       ← solid tint column with soft left/right fades
- *  - "plateau"      ← radial, center-defined plateau with soft falloff
- *  - "edges-dark"   ← classic vignette (darker edges)
+ * NOTE: This version is `fixed` by default so it always covers the viewport.
  */
 export default function EdgeScrim({
   variant = "column-blur",
-  // glass settings
-  blur = 14,            // px of backdrop blur
-  tint = 0.06,          // 0..1 neutral surface tint over blur (keep small)
-  saturate = 1.0,       // 1.0 = neutral, >1 boosts color, <1 desaturates
-  // column geometry
-  columnWidth = "min(100vw - 2rem, 48rem)", // align to max-w-3xl by default
-  fade = "16rem",       // width of the left/right feather
-  centerX = "50%",      // horizontally center the reading lane
-  // legacy radial options kept for convenience
+  // glass controls
+  blur = 14,          // px
+  tint = 0.06,        // 0..1 (keep tiny)
+  saturate = 1.0,     // 1.0 neutral
+  // geometry
+  columnWidth = "min(100vw - 2rem, 48rem)",
+  fade = "16rem",
+  centerX = "50%",
+  // legacy radial
   innerStop = 42,
   outerStop = 82,
   center = { x: "50%", y: "45%" },
-  className,
+  // positioning
   z = "z-0",
+  fixed = true,       // <— default to fixed overlay
   debug = false,
+  className,
 }: {
   variant?: "column-blur" | "column" | "plateau" | "edges-dark";
   blur?: number;
@@ -39,11 +39,13 @@ export default function EdgeScrim({
   innerStop?: number;
   outerStop?: number;
   center?: { x?: string; y?: string };
-  className?: string;
   z?: string;
+  fixed?: boolean;
   debug?: boolean;
+  className?: string;
 }) {
-  // Masks
+  const containerPos = fixed ? "fixed" : "absolute";
+
   const maskColumn = `linear-gradient(
     to right,
     rgba(0,0,0,0) 0,
@@ -79,21 +81,18 @@ export default function EdgeScrim({
       ? maskEdges
       : maskPlateau;
 
-  // Background layer “tint” for visibility; tiny alpha keeps it transparent.
-  const backgroundColor =
-    variant === "column-blur" ? `rgba(255,255,255,${tint})` : `rgba(10,10,15,${Math.min(0.75, Math.max(0, 0.9))})`;
-
   const style: React.CSSProperties =
     variant === "column-blur"
       ? {
-          backgroundColor,
+          // small neutral tint is required for backdrop-filter to render in some engines
+          backgroundColor: `rgba(255,255,255,${clamp01(tint)})`,
           WebkitBackdropFilter: `saturate(${saturate}) blur(${blur}px)`,
           backdropFilter: `saturate(${saturate}) blur(${blur}px)`,
           WebkitMaskImage: mask,
           maskImage: mask,
         }
       : {
-          backgroundColor,
+          backgroundColor: "rgba(10,10,15,0.55)",
           WebkitMaskImage: mask,
           maskImage: mask,
         };
@@ -102,13 +101,23 @@ export default function EdgeScrim({
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute inset-0 will-change-transform",
-        // no blend modes for blur; keep it clean over light/dark
+        "pointer-events-none inset-0 will-change-transform",
+        containerPos, // fixed|absolute
         z,
         debug && "outline outline-1 outline-red-500",
         className
       )}
       style={style}
+      data-variant={variant}
+      data-blur={blur}
+      data-tint={tint}
+      data-saturate={saturate}
+      data-columnwidth={columnWidth}
+      data-fade={fade}
     />
   );
+}
+
+function clamp01(n: number) {
+  return Math.max(0, Math.min(1, n));
 }
