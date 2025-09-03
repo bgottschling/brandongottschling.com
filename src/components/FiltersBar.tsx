@@ -53,10 +53,9 @@ export default function FiltersBar({
               className="flex min-w-0 items-center gap-1"
             >
               <ToggleGroupItem
-                value={"all" as any}
+                value={"all" as PrimaryCategory}
                 aria-label="Show all"
                 className={[
-                  // underline-tab look (no pill)
                   "rounded-none border-b-2 border-transparent bg-transparent",
                   "px-1.5 md:px-2.5 py-2 text-sm leading-none",
                   "data-[state=on]:border-amber-400 data-[state=on]:text-foreground",
