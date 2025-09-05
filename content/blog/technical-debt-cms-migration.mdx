@@ -37,9 +37,9 @@ I’m keeping MDX for the **body**, and moving metadata + workflow to a **lean C
 - Every save creates a **revision**; “Restore” is one click.  
 - Publishing is permissioned: authors write, editors publish.
 
-## Auth & security (and yes—use passkeys)
+## Auth & security (and yes, use passkeys)
 **Is the current plan secure?**  
-Yes—if you stick to the basics: **short-lived server sessions (HTTP-only, Secure, SameSite)**, **CSRF tokens on all write routes**, **RBAC**, **rate limiting**, and **audit logs**. Avoid long-lived, client-stored JWTs for admin.
+Yes, if you stick to the basics: **short-lived server sessions (HTTP-only, Secure, SameSite)**, **CSRF tokens on all write routes**, **RBAC**, **rate limiting**, and **audit logs**. Avoid long-lived, client-stored JWTs for admin.
 
 **Should we add passkeys?**  
 Yes. **Passkeys (WebAuthn)** give you phishing-resistant, passwordless sign-in tied to the user’s device (Face ID/Touch ID/Windows Hello). Make passkeys the **default**, with **email magic link** and **TOTP** as fallbacks.
@@ -84,4 +84,4 @@ Tooling I like for this stack:
 - Query speed for the new filter UX.
 
 ## Closing
-Debt is a tool. The cost is real; so is the velocity. Files got me to v0.x fast. A small CMS gets me to v1 without losing the craft. If you’re on the same path and want a lean schema or an auth hardening checklist, reach out—I plan to open-source the editor once it stops wobbling.
+Debt is a tool. The cost is real; so is the velocity. Files got me to v0.x fast. A small CMS gets me to v1 without losing the craft. If you’re on the same path and want a lean schema or an auth hardening checklist, reach out... I plan to open-source the editor once it stops wobbling.
