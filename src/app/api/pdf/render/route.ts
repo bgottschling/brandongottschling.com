@@ -10,7 +10,6 @@ function toUint8Array(buf: unknown): Uint8Array {
   if (buf instanceof Uint8Array) return buf;
   // Node Buffer is a Uint8Array subclass; extra guard for type-narrowing
   if (typeof Buffer !== "undefined" && typeof (Buffer as unknown as { isBuffer(v: unknown): boolean }).isBuffer === "function") {
-    // @ts-expect-error: isBuffer is only on Node's Buffer
     if (Buffer.isBuffer(buf)) return new Uint8Array(buf as unknown as Uint8Array);
   }
   throw new Error("Unexpected PDF buffer type");
@@ -58,7 +57,6 @@ async function settle(page: MinimalPage): Promise<void> {
   try {
     await page.evaluate(async () => {
       // Some environments may not expose Font Loading; guard it.
-      // @ts-expect-error: document.fonts may be missing in lib target, handled at runtime
       const ready = document.fonts?.ready;
       if (ready && typeof (ready as Promise<unknown>).then === "function") {
         await ready;
@@ -74,7 +72,10 @@ async function settle(page: MinimalPage): Promise<void> {
   }
 
   // Small extra settle so the canvas watermark + fonts are fully painted
-  await page.evaluate((ms: number) => new Promise<void>((r) => setTimeout(r, ms)), 500);
+  await page.evaluate((...args: unknown[]) => {
+    const ms = typeof args[0] === "number" ? args[0] : 0;
+    return new Promise<void>((r) => setTimeout(r, ms));
+  }, 500);
 }
 
 /** Launch local Chrome via `puppeteer` (dev) */
