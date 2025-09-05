@@ -64,7 +64,7 @@ async function settle(page: MinimalPage): Promise<void> {
 async function renderWithLocalPuppeteer(url: string): Promise<Uint8Array> {
   const puppeteer = await import("puppeteer");
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
     defaultViewport: { width: 1240, height: 1754, deviceScaleFactor: 2 },
   });
@@ -95,13 +95,14 @@ async function renderWithLocalPuppeteer(url: string): Promise<Uint8Array> {
 
 /** Vercel prod: serverless Chrome via `@sparticuz/chromium` + `puppeteer-core` */
 async function renderWithChromium(url: string): Promise<Uint8Array> {
-  const chromium = await import("@sparticuz/chromium");
+  const chromiumModule = await import("@sparticuz/chromium");
   const puppeteerCore = await import("puppeteer-core");
+  const chromium = chromiumModule.default ?? chromiumModule;
 
   const browser = await puppeteerCore.launch({
     args: chromium.args,
     executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
+    headless: true,
     defaultViewport: { width: 1240, height: 1754, deviceScaleFactor: 2 },
   });
 
@@ -152,7 +153,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       });
     }
 
-    return new Response(pdf, {
+    return new Response(Buffer.from(pdf), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": 'attachment; filename="Brandon-Gottschling-CV.pdf"',
