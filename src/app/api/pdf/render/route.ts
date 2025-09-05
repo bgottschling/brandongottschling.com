@@ -44,7 +44,7 @@ async function settle(page: MinimalPage): Promise<void> {
   // Ensure web fonts are ready and mark print mode
   try {
     await page.evaluate(async () => {
-      const fontsReady = (document as any)?.fonts?.ready;
+      const fontsReady = typeof document.fonts !== "undefined" ? document.fonts.ready : undefined;
       if (fontsReady && typeof (fontsReady as Promise<unknown>).then === "function") {
         await fontsReady;
       }
