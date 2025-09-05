@@ -5,17 +5,13 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const maxDuration = 60;
 
-/** Normalize the output buffer into a Uint8Array for Response() */
+/** Normalize to Uint8Array (Buffer is a Uint8Array subclass, so this covers both) */
 function toUint8Array(buf: unknown): Uint8Array {
   if (buf instanceof Uint8Array) return buf;
-  // Node Buffer is a Uint8Array subclass; extra guard for type-narrowing
-  if (typeof Buffer !== "undefined" && typeof (Buffer as unknown as { isBuffer(v: unknown): boolean }).isBuffer === "function") {
-    if (Buffer.isBuffer(buf)) return new Uint8Array(buf as unknown as Uint8Array);
-  }
   throw new Error("Unexpected PDF buffer type");
 }
 
-/** Minimal surface we rely on from Puppeteer Page/Browser (works for both puppeteer & puppeteer-core) */
+/** Minimal surface we rely on from Puppeteer Page (works for puppeteer & puppeteer-core) */
 type WaitUntil = "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
 
 type MinimalPage = {
@@ -31,11 +27,7 @@ type MinimalPage = {
     format?: string;
     margin?: { top?: string; right?: string; bottom?: string; left?: string };
   }) => Promise<unknown>;
-};
-
-type MinimalBrowser = {
-  newPage: () => Promise<MinimalPage>;
-  close: () => Promise<void>;
+  setUserAgent?: (ua: string) => Promise<void>;
 };
 
 function hasWaitForNetworkIdle(
@@ -46,41 +38,31 @@ function hasWaitForNetworkIdle(
 
 /** Give the page time to finish fonts, canvas, and late network */
 async function settle(page: MinimalPage): Promise<void> {
-  try {
-    await page.waitForSelector("#cv-print-root", { timeout: 8000 });
-  } catch {}
-  try {
-    await page.waitForSelector(".background-canvas", { timeout: 3000 });
-  } catch {}
+  try { await page.waitForSelector("#cv-print-root", { timeout: 8000 }); } catch {}
+  try { await page.waitForSelector(".background-canvas", { timeout: 3000 }); } catch {}
 
   // Ensure web fonts are ready and mark print mode
   try {
     await page.evaluate(async () => {
-      // Some environments may not expose Font Loading; guard it.
-      const ready = document.fonts?.ready;
-      if (ready && typeof (ready as Promise<unknown>).then === "function") {
-        await ready;
+      const fontsReady = (document as any)?.fonts?.ready;
+      if (fontsReady && typeof (fontsReady as Promise<unknown>).then === "function") {
+        await fontsReady;
       }
       document.documentElement.classList.add("pdf-export");
     });
   } catch {}
 
   if (hasWaitForNetworkIdle(page)) {
-    try {
-      await page.waitForNetworkIdle({ idleTime: 500, timeout: 5000 });
-    } catch {}
+    try { await page.waitForNetworkIdle({ idleTime: 500, timeout: 5000 }); } catch {}
   }
 
   // Small extra settle so the canvas watermark + fonts are fully painted
-  await page.evaluate((...args: unknown[]) => {
-    const ms = typeof args[0] === "number" ? args[0] : 0;
-    return new Promise<void>((r) => setTimeout(r, ms));
-  }, 500);
+  await page.evaluate((ms: number) => new Promise<void>((r) => setTimeout(r, ms)), 500);
 }
 
-/** Launch local Chrome via `puppeteer` (dev) */
+/** Local dev: launch Chrome via `puppeteer` */
 async function renderWithLocalPuppeteer(url: string): Promise<Uint8Array> {
-  const puppeteer = await import("puppeteer"); // typed
+  const puppeteer = await import("puppeteer");
   const browser = await puppeteer.launch({
     headless: "new",
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -89,11 +71,14 @@ async function renderWithLocalPuppeteer(url: string): Promise<Uint8Array> {
 
   try {
     const page = (await browser.newPage()) as unknown as MinimalPage;
+    if (page.setUserAgent) {
+      await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+      );
+    }
     await page.goto(url, { waitUntil: "domcontentloaded" }).catch(() => undefined);
     await page.emulateMediaType("screen");
-    await page.addStyleTag({
-      content: "*{-webkit-print-color-adjust:exact;print-color-adjust:exact}",
-    });
+    await page.addStyleTag({ content: "*{-webkit-print-color-adjust:exact;print-color-adjust:exact}" });
     await settle(page);
 
     const raw = await page.pdf({
@@ -108,10 +93,10 @@ async function renderWithLocalPuppeteer(url: string): Promise<Uint8Array> {
   }
 }
 
-/** Launch serverless Chrome via `@sparticuz/chromium` + `puppeteer-core` (Vercel prod) */
+/** Vercel prod: serverless Chrome via `@sparticuz/chromium` + `puppeteer-core` */
 async function renderWithChromium(url: string): Promise<Uint8Array> {
-  const chromium = await import("@sparticuz/chromium"); // typed
-  const puppeteerCore = await import("puppeteer-core"); // typed
+  const chromium = await import("@sparticuz/chromium");
+  const puppeteerCore = await import("puppeteer-core");
 
   const browser = await puppeteerCore.launch({
     args: chromium.args,
@@ -122,11 +107,14 @@ async function renderWithChromium(url: string): Promise<Uint8Array> {
 
   try {
     const page = (await browser.newPage()) as unknown as MinimalPage;
+    if (page.setUserAgent) {
+      await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+      );
+    }
     await page.goto(url, { waitUntil: "domcontentloaded" }).catch(() => undefined);
     await page.emulateMediaType("screen");
-    await page.addStyleTag({
-      content: "*{-webkit-print-color-adjust:exact;print-color-adjust:exact}",
-    });
+    await page.addStyleTag({ content: "*{-webkit-print-color-adjust:exact;print-color-adjust:exact}" });
     await settle(page);
 
     const raw = await page.pdf({
