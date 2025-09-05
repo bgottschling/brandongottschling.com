@@ -92,9 +92,13 @@ END:VCARD`;
       a.href = href;
       a.download = "Brandon-Gottschling-CV.pdf";
       a.click();
-      URL.revokeObjectURL(href);
-    } catch (e: any) {
-      alert(`PDF export threw an error:\n${e?.message || e}`);
+    URL.revokeObjectURL(href);
+    } catch (e) {
+    if (e instanceof Error) {
+      alert(`PDF export threw an error:\n${e.message}`);
+    } else {
+      alert(`PDF export threw an error:\n${String(e)}`);
+    }
     } finally {
       setPdfBusy(false);
     }
