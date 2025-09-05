@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { EXPERIENCES, SKILLS } from "@/data/cv";
+import { Suspense } from "react";
 import CvClientShell from "@/components/cv/CvClientShell"; // ← normal import (client component)
 
 export const metadata: Metadata = {
@@ -18,11 +19,13 @@ export default async function CVPage() {
   // Server component can pass plain data (serializable) to client component
   return (
     <main className="py-10">
-      <CvClientShell
-        experiences={EXPERIENCES}
-        skills={SKILLS}
-        headline="Proposal & Product development with incident leadership; I turn messy asks into shipped outcomes."
-      />
+      <Suspense fallback={<div>Loading CV...</div>}>
+        <CvClientShell
+          experiences={EXPERIENCES}
+          skills={SKILLS}
+          headline="Proposal & Product development with incident leadership; I turn messy asks into shipped outcomes."
+        />
+      </Suspense>
     </main>
   );
 }
