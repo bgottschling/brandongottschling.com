@@ -1,0 +1,87 @@
+---
+type: blog
+title: "Technical Debt, On Purpose: Moving from Files to a Real CMS"
+slug: "technical-debt-cms-migration"
+date: "2025-09-05"
+summary: "What ‘technical debt’ really is, when to take it, and how I’m evolving a file-based MDX workflow into a lean, server-side CMS with an editor, auth, and a relational database—without losing speed or portability."
+primaryCategory: "technology"
+tags: ["technical-debt","mdx","cms","next.js","auth","security","database","rsc"]
+image: "/images/blog/tech-debt-cms/cover.png"
+---
+
+> **TL;DR**  
+> Technical debt is a loan: you borrow time to ship now, then pay it back with structure when the surface area grows. I’m moving this site from plain MDX files to a small CMS (editor, auth, RDBMS). The goal: keep pages fast, keep content portable, and add a real publishing workflow.
+
+## What technical debt actually is
+Debt isn’t “bad code.” It’s a trade: accept a cheaper design **on purpose** to learn faster. You pay interest later in coordination, complexity, and inflexible data. Debt turns toxic when you can’t ship without risky manual steps, can’t reason about the system, or can’t onboard someone in a day. The cure isn’t “no debt.” It’s **intentional debt**: time-box shortcuts, write down what “paid off” looks like, and retire the shortcut when it starts charging too much interest.
+
+## Why move beyond MDX files
+MDX files were perfect for v0.x: Git-friendly, reviewable, portable. Then scale happened:
+- More posts/projects → need **filters**, **counts**, and **search** that don’t crawl the filesystem.
+- Drafts and reviews → need **auth**, **roles**, **version history**, and **audit**.
+- Edits on the go → need a **web editor** with preview, not just local Git.
+
+I’m keeping MDX for the **body**, and moving metadata + workflow to a **lean CMS** with a proper admin.
+
+## Migration plan (small, deliberate)
+1. Keep **MDX** as source for the body content.  
+2. Normalize **metadata** (title, slug, categories, tags, status, image) into a relational store for fast queries.  
+3. Ship a focused **MDX editor** and render preview using the **same component map** as production.  
+4. Add **auth** (server-side sessions), **RBAC**, and **audit logs**.  
+5. Build a clean **draft → review → publish** workflow with version history.  
+6. Serve via **RSC/SSR**, cache public reads at the edge, and **invalidate on publish**.
+
+## Editor & workflow
+- The editor only exposes blocks I actually use (CTA, ProjectHeader, etc.).  
+- Preview uses the exact MDX components map production uses—no surprises.  
+- Every save creates a **revision**; “Restore” is one click.  
+- Publishing is permissioned: authors write, editors publish.
+
+## Auth & security (and yes—use passkeys)
+**Is the current plan secure?**  
+Yes—if you stick to the basics: **short-lived server sessions (HTTP-only, Secure, SameSite)**, **CSRF tokens on all write routes**, **RBAC**, **rate limiting**, and **audit logs**. Avoid long-lived, client-stored JWTs for admin.
+
+**Should we add passkeys?**  
+Yes. **Passkeys (WebAuthn)** give you phishing-resistant, passwordless sign-in tied to the user’s device (Face ID/Touch ID/Windows Hello). Make passkeys the **default**, with **email magic link** and **TOTP** as fallbacks.
+
+What “good” looks like:
+- **Sessions, not raw JWTs** for admin: store a short random session secret server-side, issue an HTTP-only session cookie.  
+- **Passkeys first**: registration and sign-in via WebAuthn; require **user verification**; store credential IDs, public keys, counters.  
+- **Fallbacks**: email magic links (one-time, short expiry) and TOTP that can be rotated; both behind rate-limits.  
+- **Step-up auth**: re-confirm with a passkey before publishing, deleting, or changing roles.  
+- **Device management**: users can view and revoke registered passkeys; show “last used.”  
+- **Least privilege**: roles for admin, editor, author, viewer.  
+- **Audit everything**: who did what, to which record, and when.  
+- **CSRF + origin checks** on mutations; **CSP** and **no inline scripts** around the MDX preview.  
+- **MDX safety**: lock the components map, strip `<script>` and inline event handlers.
+
+Tooling I like for this stack:
+- **Auth.js** (or Lucia) for sessions + RBAC.  
+- **`@simplewebauthn/browser` + `@simplewebauthn/server`** for passkeys.  
+- **Zod** on inputs; **rate limits** on auth routes; **helmet-style** headers.
+
+## Serving & caching
+- Use **RSC/SSR** for shells and data fetch; stream where it helps.  
+- Cache public reads at the **edge** with tag invalidation on publish.  
+- Keep static fallbacks for RSS, sitemap, and OG images.
+
+## Migration without drama
+1. Parse existing MDX → extract frontmatter → seed the database.  
+2. Render old vs new and diff a sample to catch regressions.  
+3. Run file-loader and DB-loader side-by-side behind a flag for one release.  
+4. Cut over, freeze file edits, remove the file-loader.  
+5. Keep daily DB snapshots and versioned object storage for uploads.
+
+## Intentional debt to keep
+- **MDX as the body** (portable, Git-friendly), even with a DB.  
+- **Frontmatter fields mirrored** in the database so local rendering still works.  
+- A **plain export** (JSON + MDX) so I can move platforms any time.
+
+## What I’m watching
+- Editor friction (is it faster than local files?).  
+- Publish time (seconds, not minutes).  
+- Security posture (sessions, CSRF, audit).  
+- Query speed for the new filter UX.
+
+## Closing
+Debt is a tool. The cost is real; so is the velocity. Files got me to v0.x fast. A small CMS gets me to v1 without losing the craft. If you’re on the same path and want a lean schema or an auth hardening checklist, reach out—I plan to open-source the editor once it stops wobbling.
