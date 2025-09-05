@@ -57,7 +57,7 @@ async function settle(page: MinimalPage): Promise<void> {
   }
 
   // Small extra settle so the canvas watermark + fonts are fully painted
-  await page.evaluate((ms: number) => new Promise<void>((r) => setTimeout(r, ms)), 500);
+  await page.evaluate((...args: unknown[]) => new Promise<void>((r) => setTimeout(r, args[0] as number)), 500);
 }
 
 /** Local dev: launch Chrome via `puppeteer` */
