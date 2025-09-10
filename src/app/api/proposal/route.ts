@@ -2,12 +2,49 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, PDFFont } from "pdf-lib";
 
 // Try to load your CV data; fall back safely if fields are named differently.
 async function loadCvData() {
   try {
-    const mod: any = await import("@/data/cv");
+    const mod = await import("@/data/cv") as {
+      NAME?: string;
+      HEADLINE?: string;
+      LOCATION?: string;
+      EMAIL?: string;
+      EXEC_SUMMARY?: string[];
+      EXPERIENCES?: Array<{
+        title?: string;
+        role?: string;
+        company?: string;
+        org?: string;
+        range?: string;
+        dates?: string;
+        highlights?: string[];
+        bullets?: string[];
+      }>;
+      SKILL_GROUPS?: Array<{
+        name?: string;
+        title?: string;
+        items?: string[];
+      }>;
+      WEBSITE?: string;
+      experiences?: Array<{
+        title?: string;
+        role?: string;
+        company?: string;
+        org?: string;
+        range?: string;
+        dates?: string;
+        highlights?: string[];
+        bullets?: string[];
+      }>;
+      skills?: Array<{
+        name?: string;
+        title?: string;
+        items?: string[];
+      }>;
+    };
     return {
       NAME: mod.NAME ?? "Brandon Gottschling",
       HEADLINE: mod.HEADLINE ?? "People-first technologist and proposal developer.",
@@ -32,22 +69,28 @@ async function loadCvData() {
   }
 }
 
-function wrapText(text: string, maxWidth: number, font: any, size: number) {
-  const words = text.split(/\s+/);
-  const lines: string[] = [];
-  let line = "";
-  for (const w of words) {
-    const test = line ? `${line} ${w}` : w;
-    const width = font.widthOfTextAtSize(test, size);
-    if (width > maxWidth && line) {
-      lines.push(line);
-      line = w;
-    } else {
-      line = test;
+
+function wrapText(
+    text: string,
+    maxWidth: number,
+    font: PDFFont,
+    size: number
+): string[] {
+    const lines: string[] = [];
+    let line = "";
+    const words = text.split(" ");
+    for (const w of words) {
+        const test = line ? `${line} ${w}` : w;
+        const width = font.widthOfTextAtSize(test, size);
+        if (width > maxWidth && line) {
+            lines.push(line);
+            line = w;
+        } else {
+            line = test;
+        }
     }
-  }
-  if (line) lines.push(line);
-  return lines;
+    if (line) lines.push(line);
+    return lines;
 }
 
 export async function GET(req: Request) {
