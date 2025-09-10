@@ -1,31 +1,30 @@
-import { signCardToken } from "@/lib/cardToken";
-
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const metadata = { robots: { index: false, follow: false } };
+export const metadata = {
+  title: "Contact — Private",
+  robots: { index: false, follow: false },
+};
 
-export default async function QRPage() {
-  // Ensure this is a SERVER component (no "use client" at top)
-  const ttl = Number(process.env.CARD_TOKEN_TTL_SECONDS || 300);
-  const t = signCardToken(ttl);
-  const target = `${process.env.NEXT_PUBLIC_SITE_URL}/card?t=${encodeURIComponent(t)}`;
-
-  // Dynamic import avoids bundler resolution quirks
-  // @ts-expect-error: No type definitions for 'qrcode'
-  const QR = await import("qrcode");
-  // Prefer SVG on the server: no canvas, no native binaries
-  const svg = await QR.default.toString(target, { type: "svg", margin: 1, width: 512 });
+export default function ContactCard() {
+  const phone = "+17704807979";
+  const email = "hello@brandongottschling.com";
+  const vcfUrl = "/api/vcard?profile=brandon&v=1";
 
   return (
-    <main className="mx-auto max-w-md p-6 text-center space-y-4">
+    <main className="mx-auto max-w-md p-6 space-y-6">
       <meta name="robots" content="noindex,nofollow" />
-      <h1 className="text-xl font-semibold">Scan to view contact</h1>
-      <div
-        className="mx-auto"
-        dangerouslySetInnerHTML={{ __html: svg }}
-        aria-label="QR code"
-      />
-      <p className="text-xs text-neutral-500">This code expires in {ttl / 60} minutes.</p>
+      <section className="text-center">
+        <img src="/images/avatar.jpg" alt="Brandon" className="mx-auto h-24 w-24 rounded-full" />
+        <h1 className="mt-4 text-2xl font-semibold">Brandon Gottschling</h1>
+        <p className="text-sm text-neutral-500">Technical Marketing • Builder</p>
+      </section>
+      <div className="grid gap-3">
+        <a className="rounded-2xl border p-3 text-center" href={`tel:${phone}`}>📞 Call</a>
+        <a className="rounded-2xl border p-3 text-center" href={`sms:${phone}`}>💬 Text</a>
+        <a className="rounded-2xl border p-3 text-center" href={`mailto:${email}`}>✉️ Email</a>
+        <a className="rounded-2xl border p-3 text-center" href={vcfUrl}>➕ Save Contact (VCF)</a>
+      </div>
+      <footer className="text-center text-xs text-neutral-400">Private link. Please don’t share.</footer>
     </main>
   );
 }
