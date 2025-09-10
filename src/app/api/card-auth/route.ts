@@ -14,10 +14,11 @@ export async function POST(req: Request) {
   if (pin !== process.env.CARD_PIN) {
     const redirect = new URL("/card/access", origin);
     redirect.searchParams.set("error", "Invalid code");
-    return NextResponse.redirect(redirect);
+    // 303 so the browser turns POST → GET on the next page
+    return NextResponse.redirect(redirect, 303);
   }
 
-  const res = NextResponse.redirect(new URL("/card", origin));
+  const res = NextResponse.redirect(new URL("/card", origin), 303); // ← 303 here
   res.cookies.set("card_auth", "1", {
     httpOnly: true,
     secure: true,

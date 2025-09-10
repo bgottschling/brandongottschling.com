@@ -16,8 +16,6 @@ export default function CvHeaderBar({
   mode,
   setMode,
   onDownloadPdf,
-  onPrint,
-  onDownloadVCard,
   onCopyEmail,
   pdfBusy = false,
   className,
@@ -27,9 +25,7 @@ export default function CvHeaderBar({
   location?: string;
   mode: Mode;
   setMode: (m: Mode) => void;
-  onDownloadPdf: () => void;
-  onPrint: () => void;
-  onDownloadVCard: () => void;
+  onDownloadPdf?: () => Promise<void>;
   onCopyEmail: () => void;
   pdfBusy?: boolean;
   className?: string;
@@ -78,27 +74,21 @@ export default function CvHeaderBar({
             <div className={cn("flex flex-wrap items-center gap-2", compact ? "hidden md:flex" : "flex")}>
               <Button
                 variant="outline"
-                onClick={onDownloadPdf}
+                onClick={() => { void onDownloadPdf?.(); }}
                 disabled={pdfBusy}
                 className="justify-center whitespace-nowrap"
                 aria-busy={pdfBusy}
-              >
+                >
                 {pdfBusy ? (
-                  <>
+                    <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Preparing…
-                  </>
+                    </>
                 ) : (
-                  <>
+                    <>
                     <FileDown className="mr-2 h-4 w-4" /> Download PDF
-                  </>
+                    </>
                 )}
-              </Button>
-              <Button variant="outline" onClick={onPrint} className="justify-center whitespace-nowrap">
-                <Printer className="mr-2 h-4 w-4" /> Print
-              </Button>
-              <Button variant="outline" onClick={onDownloadVCard} className="justify-center whitespace-nowrap">
-                <Download className="mr-2 h-4 w-4" /> vCard
-              </Button>
+            </Button>
               <Button variant="outline" onClick={onCopyEmail} className="justify-center whitespace-nowrap">
                 <Mail className="mr-2 h-4 w-4" /> Copy email
               </Button>

@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
       "connect-src 'self' https:",
       "frame-ancestors 'none'",
       "base-uri 'self'",
+      "form-action 'self'",
       // If you later register a service worker, you can add: "worker-src 'self'"
     ].join("; ");
 
