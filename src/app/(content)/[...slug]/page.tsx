@@ -25,9 +25,9 @@ export default async function ContentPage({ params }: { params: { slug: string[]
       <h1>{meta.title}</h1>
       {meta.summary && <p className="lead">{meta.summary}</p>}
       <MDXRemote
-        source={source}
-        components={mdxComponents as Record<string, any>}
-        options={mdxRemoteOptions}
+      source={source}
+      components={mdxComponents as Record<string, React.ComponentType<unknown>>}
+      options={mdxRemoteOptions}
       />
     </article>
   );
