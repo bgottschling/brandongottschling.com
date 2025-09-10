@@ -1,10 +1,21 @@
-// next.config.mjs
+// next.config.ts
+import type { NextConfig } from "next";
+
 const isDev = process.env.NODE_ENV !== "production";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
+  transpilePackages: ["framer-motion"],
 
-    transpilePackages: ["framer-motion"],
+  // --- IMPORTANT for the PDF route + QR generation ---
+  experimental: {
+    serverComponentsExternalPackages: [
+      "@sparticuz/chromium",
+      "puppeteer-core",
+      "qrcode",
+    ],
+    // Ensure Chromium's brotli binaries are bundled into the serverless function
+    // NOTE: outputFileTracingIncludes is not supported in this Next.js version and has been removed.
+  },
 
   async headers() {
     const csp = [
@@ -16,6 +27,7 @@ const nextConfig = {
       "connect-src 'self' https:",
       "frame-ancestors 'none'",
       "base-uri 'self'",
+      // If you later register a service worker, you can add: "worker-src 'self'"
     ].join("; ");
 
     return [
