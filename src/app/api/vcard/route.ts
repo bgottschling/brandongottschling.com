@@ -1,9 +1,10 @@
-// /app/api/vcard/route.ts
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const profile = url.searchParams.get("profile") || "brandon";
+  // deny if no auth cookie (middleware handles main flow, this is defense-in-depth)
+  const cookie = (req.headers.get("cookie") || "").includes("card_auth=1");
+  if (!cookie) return new NextResponse("Unauthorized", { status: 401 });
+
   const contact = {
     first: "Brandon",
     last: "Gottschling",
@@ -14,9 +15,9 @@ export async function GET(req: Request) {
     url: "https://brandongottschling.com",
     address: "Georgia, USA",
   };
+
   const vcf = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
+    "BEGIN:VCARD","VERSION:3.0",
     `N:${contact.last};${contact.first};;;`,
     `FN:${contact.first} ${contact.last}`,
     `ORG:${contact.org}`,
@@ -27,10 +28,12 @@ export async function GET(req: Request) {
     `ADR;TYPE=WORK:;;${contact.address};;;;`,
     "END:VCARD",
   ].join("\r\n");
+
   return new NextResponse(vcf, {
     headers: {
       "Content-Type": "text/vcard; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${profile}.vcf"`,
+      "Content-Disposition": `attachment; filename="brandon.vcf"`,
+      "Cache-Control": "no-store",
     },
   });
 }

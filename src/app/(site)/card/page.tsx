@@ -1,66 +1,31 @@
-// /app/card/page.tsx  (Next 13+/App Router)
-// If using Pages Router: /pages/card.tsx
-import Link from "next/link";
+import { signCardToken } from "@/lib/cardToken";
 
-export const metadata = {
-  title: "Brandon Gottschling — Contact",
-  description: "One-tap contact card. Save to phone, call, email, or connect.",
-  openGraph: {
-    title: "Brandon Gottschling — Contact",
-    description: "One-tap contact card.",
-    url: "https://brandongottschling.com/card",
-    images: [{ url: "/images/og-card.png" }],
-  },
-};
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const metadata = { robots: { index: false, follow: false } };
 
-function jsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Brandon Gottschling",
-    jobTitle: "Technical Marketing & Builder",
-    url: "https://brandongottschling.com",
-    sameAs: [
-      "mailto:hello@brandongottschling.com",
-      "https://www.linkedin.com/in/brandongottschling",
-      "https://github.com/bgottschling",
-      // add socials
-    ],
-    worksFor: { "@type": "Organization", name: "—" },
-    email: "hello@brandongottschling.com",
-    telephone: "+1-770-480-7979",
-  };
-}
+export default async function QRPage() {
+  // Ensure this is a SERVER component (no "use client" at top)
+  const ttl = Number(process.env.CARD_TOKEN_TTL_SECONDS || 300);
+  const t = signCardToken(ttl);
+  const target = `${process.env.NEXT_PUBLIC_SITE_URL}/card?t=${encodeURIComponent(t)}`;
 
-export default function ContactCard() {
-  const phone = "+17704807979";
-  const email = "hello@brandongottschling.com";
-  const vcfUrl = "/api/vcard?profile=brandon&v=1";
-  const passUrl = "/api/walletpass?profile=brandon"; // optional
-  const site = "https://brandongottschling.com";
+  // Dynamic import avoids bundler resolution quirks
+  // @ts-expect-error: No type definitions for 'qrcode'
+  const QR = await import("qrcode");
+  // Prefer SVG on the server: no canvas, no native binaries
+  const svg = await QR.default.toString(target, { type: "svg", margin: 1, width: 512 });
+
   return (
-    <main className="mx-auto max-w-md p-6 space-y-6">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
-      <section className="text-center">
-        <img src="/images/avatar.jpg" alt="Brandon" className="mx-auto h-24 w-24 rounded-full" />
-        <h1 className="mt-4 text-2xl font-semibold">Brandon Gottschling</h1>
-        <p className="text-sm text-neutral-500">Technical Marketing • Builder</p>
-      </section>
-
-      <div className="grid gap-3">
-        <a className="rounded-2xl border p-3 text-center" href={`tel:${phone}`}>📞 Call</a>
-        <a className="rounded-2xl border p-3 text-center" href={`sms:${phone}`}>💬 Text</a>
-        <a className="rounded-2xl border p-3 text-center" href={`mailto:${email}`}>✉️ Email</a>
-        <a className="rounded-2xl border p-3 text-center" href={vcfUrl}>➕ Save Contact (VCF)</a>
-        {/* Optional Wallet pass */}
-        {/* <a className="rounded-2xl border p-3 text-center" href={passUrl}> Add to Apple Wallet</a> */}
-        <Link className="rounded-2xl border p-3 text-center" href={site}>🌐 Website</Link>
-        <a className="rounded-2xl border p-3 text-center" href="/card/qr">🔳 Show QR (fallback)</a>
-      </div>
-
-      <footer className="text-center text-xs text-neutral-400">
-        Tip: Tap NFC or scan QR. Links carry source tags for analytics.
-      </footer>
+    <main className="mx-auto max-w-md p-6 text-center space-y-4">
+      <meta name="robots" content="noindex,nofollow" />
+      <h1 className="text-xl font-semibold">Scan to view contact</h1>
+      <div
+        className="mx-auto"
+        dangerouslySetInnerHTML={{ __html: svg }}
+        aria-label="QR code"
+      />
+      <p className="text-xs text-neutral-500">This code expires in {ttl / 60} minutes.</p>
     </main>
   );
 }

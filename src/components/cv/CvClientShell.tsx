@@ -52,8 +52,7 @@ export default function CvClientShell({
   }
 
   function onDownloadVCard() {
-    const vcard =
-`BEGIN:VCARD
+    const vcard = `BEGIN:VCARD
 VERSION:3.0
 N:${escapeVC("Gottschling")};${escapeVC("Brandon")};;;
 FN:${escapeVC("Brandon Gottschling")}
@@ -68,13 +67,13 @@ END:VCARD`;
     URL.revokeObjectURL(url);
   }
 
-  // NEW: robust server-rendered PDF with loading state
+  // Robust server-rendered PDF with loading state
   async function onDownloadPdf() {
     try {
       setPdfBusy(true);
       const current = new URL(window.location.pathname, window.location.origin);
-      current.searchParams.set("mode", mode); // preserve current toggle
-      const res = await fetch(`/api/pdf/render?url=${encodeURIComponent(current.toString())}`);
+      current.searchParams.set("mode", mode); // preserve toggle
+      const res = await fetch(`/api/pdf?url=${encodeURIComponent(current.toString())}`);
       if (!res.ok) {
         const text = await res.text();
         let detail = text;
@@ -92,13 +91,9 @@ END:VCARD`;
       a.href = href;
       a.download = "Brandon-Gottschling-CV.pdf";
       a.click();
-    URL.revokeObjectURL(href);
+      URL.revokeObjectURL(href);
     } catch (e) {
-    if (e instanceof Error) {
-      alert(`PDF export threw an error:\n${e.message}`);
-    } else {
-      alert(`PDF export threw an error:\n${String(e)}`);
-    }
+      alert(`PDF export threw an error:\n${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setPdfBusy(false);
     }
@@ -127,9 +122,9 @@ END:VCARD`;
           pdfBusy={pdfBusy}
         />
         {mode === "experience" && EXEC_SUMMARY?.length ? (
-        <div className="mt-6">
+          <div className="mt-6">
             <ExecutiveSummary items={EXEC_SUMMARY} />
-        </div>
+          </div>
         ) : null}
 
         {mode === "skills" && (
@@ -139,11 +134,7 @@ END:VCARD`;
         )}
 
         <div id="cv-print-root" className="mt-8 md:mt-10">
-          {mode === "experience" ? (
-            <ExperienceView items={experiences} />
-          ) : (
-            <SkillsView groups={skillsFiltered} />
-          )}
+          {mode === "experience" ? <ExperienceView items={experiences} /> : <SkillsView groups={skillsFiltered} />}
         </div>
       </div>
     </div>

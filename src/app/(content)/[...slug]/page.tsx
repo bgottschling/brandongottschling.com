@@ -1,5 +1,6 @@
 import { getAllContent, getBySlug, type ContentMeta } from '@/lib/content'
-import { MDXRemote } from 'next-mdx-remote/rsc'
+import { MDXRemote } from 'next-mdx-remote'
+import { serialize } from 'next-mdx-remote/serialize'
 import { mdxRemoteOptions } from '@/lib/mdx'
 import { mdxComponents } from '@/components/mdx-components'
 
@@ -16,14 +17,16 @@ export default async function ContentPage({ params }: { params: { slug: string[]
 
   const { meta, source } = entry
 
+  // Serialize the MDX source before rendering
+  const mdxSource = await serialize(source, mdxRemoteOptions);
+
   console.log(mdxComponents);
   return (
     <article>
       <h1>{meta.title}</h1>
       {meta.summary && <p className="lead">{meta.summary}</p>}
       <MDXRemote
-        source={source}
-        options={mdxRemoteOptions}
+        {...mdxSource}
         // one-time widen: element-keyed map -> generic MDX map
         components={mdxComponents as unknown as Record<string, React.ComponentType>}
       />

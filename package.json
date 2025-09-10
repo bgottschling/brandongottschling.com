@@ -29,6 +29,7 @@
     "next": "15.5.0",
     "next-mdx-remote": "^5.0.0",
     "puppeteer-core": "^24.19.0",
+    "qrcode": "^1.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "rehype-autolink-headings": "^7.1.0",

@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "src/app/api/pdf/route.ts": {
+      "memory": 1024,
+      "maxDuration": 20,
+      "includeFiles": [
+        "node_modules/@sparticuz/chromium/bin/**",
+        "node_modules/.pnpm/@sparticuz+chromium@*/node_modules/@sparticuz/chromium/bin/**"
+      ]
+    },
+    "app/api/pdf/route.ts": {
+      "memory": 1024,
+      "maxDuration": 20,
+      "includeFiles": [
+        "node_modules/@sparticuz/chromium/bin/**",
+        "node_modules/.pnpm/@sparticuz+chromium@*/node_modules/@sparticuz/chromium/bin/**"
+      ]
+    },
+    "app/api/pdf/route.js": {
+      "memory": 1024,
+      "maxDuration": 20,
+      "includeFiles": [
+        "node_modules/@sparticuz/chromium/bin/**",
+        "node_modules/.pnpm/@sparticuz+chromium@*/node_modules/@sparticuz/chromium/bin/**"
+      ]
+    }
+  }
+}
