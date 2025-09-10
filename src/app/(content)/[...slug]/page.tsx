@@ -1,35 +1,34 @@
-import { getAllContent, getBySlug, type ContentMeta } from '@/lib/content'
-import { MDXRemote } from 'next-mdx-remote'
-import { serialize } from 'next-mdx-remote/serialize'
-import { mdxRemoteOptions } from '@/lib/mdx'
-import { mdxComponents } from '@/components/mdx-components'
+import { getAllContent, getBySlug, type ContentMeta } from "@/lib/content";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { mdxRemoteOptions } from "@/lib/mdx";
+import { mdxComponents } from "@/components/mdx-components";
 
 export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
-  const all = await getAllContent()
-  return all.map((p: ContentMeta) => ({ slug: p.slug.split('/') }))
+  const all = await getAllContent();
+  return all.map((p: ContentMeta) => ({ slug: p.slug.split("/") }));
 }
 
+export const revalidate = 60; // or 0/false for full static; tune as you like
+
 export default async function ContentPage({ params }: { params: { slug: string[] } }) {
-  const { slug } = await params                         // <- await before using
-  const joined = slug.join('/')
-  const entry = await getBySlug(joined)
-  if (!entry || entry.meta.draft) return <div>Not found.</div>
+  const joined = params.slug.join("/");
+  const entry = await getBySlug(joined);
+  if (!entry || entry.meta.draft) {
+    return <div>Not found.</div>;
+    // or: import { notFound } from "next/navigation"; notFound();
+  }
 
-  const { meta, source } = entry
+  const { meta, source } = entry; // `source` is the raw MDX string
 
-  // Serialize the MDX source before rendering
-  const mdxSource = await serialize(source, mdxRemoteOptions);
-
-  console.log(mdxComponents);
   return (
-    <article>
+    <article className="prose prose-neutral max-w-none">
       <h1>{meta.title}</h1>
       {meta.summary && <p className="lead">{meta.summary}</p>}
       <MDXRemote
-        {...mdxSource}
-        // one-time widen: element-keyed map -> generic MDX map
-        components={mdxComponents as unknown as Record<string, React.ComponentType>}
+        source={source}
+        components={mdxComponents as Record<string, any>}
+        options={mdxRemoteOptions}
       />
     </article>
-  )
+  );
 }

@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 
 export const metadata = {
   robots: { index: false, follow: false },
