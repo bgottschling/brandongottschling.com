@@ -36,8 +36,12 @@ export async function GET(req: Request) {
         "Cache-Control": "no-store",
       },
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? String(e) }, { status: 500 });
+  } catch (e: unknown) {
+    const errorMessage =
+      e && typeof e === "object" && "message" in e
+        ? (e as Error).message
+        : String(e);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   } finally {
     await browser.close();
   }
