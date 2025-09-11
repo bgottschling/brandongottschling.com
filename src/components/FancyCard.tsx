@@ -1,50 +1,87 @@
+// src/components/FancyCard.tsx
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import { TagList } from "@/components/TagList";
 
-type Props = {
+export default function FancyCard({
+  href,
+  title,
+  summary,
+  cover,
+  date,
+  tags,
+  priority = false,
+}: {
   href: string;
   title: string;
   summary?: string;
   cover?: string;
   date?: string;
   tags?: string[];
-  className?: string;
-};
+  priority?: boolean;
+}) {
+  const d =
+    date && !Number.isNaN(Date.parse(date))
+      ? new Date(date).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+        })
+      : undefined;
 
-export default function FancyCard({ href, title, summary, cover, date, tags }: Props) {
   return (
-    <Link href={href} className="group block no-underline">
-      <Card className="overflow-hidden rounded-2xl border-white/15 bg-white/8 shadow-sm ring-1 ring-white/5 transition duration-300 hover:bg-white/12 hover:ring-white/10">
-        {cover && (
-          <div className="relative aspect-[16/9] overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={cover}
-              alt=""
-              className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/55 to-transparent" />
+    <article className="group relative h-full overflow-hidden rounded-2xl border border-black/5 bg-white/70 shadow-sm ring-1 ring-black/[.02] transition hover:shadow-md dark:border-white/10 dark:bg-zinc-900/70 dark:ring-white/[.03]">
+      <Link
+        href={href}
+        aria-label={title}
+        className="grid h-full grid-rows-[auto_1fr_auto] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      >
+        {/* Media */}
+        <div className="relative overflow-hidden">
+          <div className="relative aspect-[16/9]">
+            {cover ? (
+              <Image
+                src={cover}
+                alt=""
+                fill
+                sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                priority={priority}
+              />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-amber-100 to-rose-100 dark:from-zinc-800 dark:to-zinc-700" />
+            )}
           </div>
-        )}
-        <CardContent className="p-4">
-          {/* Title: no default underline; only on hover for clarity */}
-          <div className="line-clamp-2 text-base font-semibold leading-tight tracking-tight decoration-transparent underline-offset-4 group-hover:underline">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/5 dark:to-white/5" />
+        </div>
+
+        {/* Body */}
+        <div className="px-4 pb-2 pt-3 sm:px-4">
+          <h3 className="line-clamp-2 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             {title}
-          </div>
-          {summary && <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{summary}</p>}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {date && <span className="text-xs text-muted-foreground">{date.slice(0, 10)}</span>}
-            {tags?.slice(0, 2).map((t) => (
-              <Badge key={t} variant="secondary" className="rounded-full">
-                {t}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+          </h3>
+          {summary && (
+            <p className="mt-1 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-300">
+              {summary}
+            </p>
+          )}
+        </div>
+
+        {/* Footer (stable height) */}
+        <div className="flex items-end justify-between gap-3 px-4 pb-4">
+          <TagList tags={tags} limit={4} className="max-w-[85%]" />
+          {d && (
+            <time
+              dateTime={date}
+              className="shrink-0 text-[11px] font-medium text-zinc-500 dark:text-zinc-400"
+            >
+              {d}
+            </time>
+          )}
+        </div>
+      </Link>
+    </article>
   );
 }
