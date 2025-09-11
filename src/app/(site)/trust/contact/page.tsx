@@ -56,7 +56,7 @@ async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
           signal: controller.signal,
         });
 
-        const data: { ok?: boolean; error?: string } = await res.json().catch(() => ({} as any));
+        const data: { ok?: boolean; error?: string } = await res.json().catch(() => ({ ok: false, error: "Unknown error" } as { ok?: boolean; error?: string }));
 
         if (!res.ok) {
           // Helpful messaging for common cases
