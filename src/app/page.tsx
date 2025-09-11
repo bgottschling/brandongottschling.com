@@ -14,7 +14,7 @@ export default async function HomePage() {
       <div>
       <h1 className="mb-3">Hi, I’m Brandon.</h1>
       <p className="max-w-[68ch] text-zinc-900 dark:text-zinc-100 leading-8 md:text-lg">
-        Building to learn and learning to build. I turn ideas into working things - one tool, one system, one patient story at a time. Here I share prototypes, playbooks, and results: Application Development, UX design, Game Development, Proposal Crafting, Multi-Faceted Commentary that helps leaders decide - privacy-first, measurable, and human.
+        Building to learn and learning to build. I turn ideas into working things - one tool, one system, one patient story at a time. Here I share prototypes, playbooks, and results: Application Development, UX design, Game Development, Proposal Crafting, Multi-Faceted Commentary that will maybe one day shape the future - privacy-first, measurable, and human.
       </p>
 
       <MissionCard />
