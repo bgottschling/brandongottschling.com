@@ -25,9 +25,9 @@ const MAIN: NavItem[] = [
 ];
 
 const TRUST: NavItem[] = [
-  { label: 'Contact', href: '/contact', icon: Search }, // icon as placeholder
-  { label: 'Privacy Policy', href: '/privacy', icon: FileText },
-  { label: 'Terms of Use', href: '/terms', icon: FileText },
+  { label: 'Contact', href: '/trust/contact', icon: Search }, // icon as placeholder
+  { label: 'Privacy Policy', href: '/trust/privacy', icon: FileText },
+  { label: 'Terms of Use', href: '/trust/terms', icon: FileText },
 ];
 
 const EXTERNAL: NavItem[] = [
