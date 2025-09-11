@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Sparkles, FileDown, Printer, Download, Mail, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Briefcase, Sparkles, FileDown, Mail, ChevronsUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHeaderOffset } from "@/hooks/useHeaderOffset";
 import { useSmartCollapse } from "@/hooks/useSmartCollapse";
@@ -34,6 +34,10 @@ export default function CvHeaderBar({
   const { collapsed, toggle, isMobile } = useSmartCollapse();
   const compact = isMobile && collapsed;
 
+  // Fixed widths on md+ ensure the center column is truly centered and symmetrical.
+  // Tweak if your name/headline gets longer.
+  const identityWidth = "md:w-[320px] w-[240px]";
+
   return (
     <div className={cn("sticky z-30", className)} style={{ top }}>
       <div
@@ -45,20 +49,24 @@ export default function CvHeaderBar({
         )}
       >
         <div className={cn("px-4 sm:px-5", compact ? "py-2" : "py-4 sm:py-5")}>
-          <div className="flex items-center justify-between gap-3">
-            {/* Identity / tap to toggle on mobile */}
+          {/* Top row: 3-column grid so the action toolbar is always perfectly centered */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+            {/* Identity (left) */}
             <button
               type="button"
               onClick={isMobile ? toggle : undefined}
-              className={cn("text-left min-w-[12rem] md:min-w-[22rem] md:max-w-[36rem] flex-1 select-none")}
               aria-label="Toggle header size"
+              className={cn(
+                "justify-self-start text-left select-none min-w-[12rem] md:min-w-[18rem] max-w-[36rem]",
+                identityWidth
+              )}
             >
-              <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>
-                {name}
-              </div>
+              <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>{name}</div>
               {!compact && (
                 <>
-                  {headline && <div className="text-sm text-muted-foreground leading-snug">{headline}</div>}
+                  {headline && (
+                    <div className="text-sm text-muted-foreground leading-snug line-clamp-2">{headline}</div>
+                  )}
                   {location && <div className="mt-1 text-xs text-muted-foreground">{location}</div>}
                 </>
               )}
@@ -70,62 +78,91 @@ export default function CvHeaderBar({
               )}
             </button>
 
-            {/* Actions */}
-            <div className={cn("flex flex-wrap items-center gap-2", compact ? "hidden md:flex" : "flex")}>
+            {/* Centered actions (middle) */}
+            <div
+              className={cn(
+                "justify-self-center",
+                compact ? "hidden md:flex" : "flex",
+                "items-center gap-2"
+              )}
+            >
               <Button
                 variant="outline"
-                onClick={() => { void onDownloadPdf?.(); }}
+                size="sm"
+                onClick={() => {
+                  void onDownloadPdf?.();
+                }}
                 disabled={pdfBusy}
-                className="justify-center whitespace-nowrap"
                 aria-busy={pdfBusy}
-                >
+                className="h-9 px-3 text-sm"
+              >
                 {pdfBusy ? (
-                    <>
+                  <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Preparing…
-                    </>
+                  </>
                 ) : (
-                    <>
+                  <>
                     <FileDown className="mr-2 h-4 w-4" /> Download PDF
-                    </>
+                  </>
                 )}
-            </Button>
-              <Button variant="outline" onClick={onCopyEmail} className="justify-center whitespace-nowrap">
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onCopyEmail}
+                className="h-9 px-3 text-sm"
+              >
                 <Mail className="mr-2 h-4 w-4" /> Copy email
               </Button>
             </div>
+
+            {/* Symmetry spacer (right) — mirrors identity width so center stays centered */}
+            <div className={cn("hidden md:block", identityWidth)} aria-hidden />
           </div>
 
-          {/* View toggle (no "View" label; hidden when compact on mobile) */}
+          {/* Segmented control (centered) */}
           <div
             className={cn(
               "overflow-hidden transition-[max-height,opacity] duration-200 ease-out md:max-h-none md:opacity-100",
               compact ? "max-h-0 opacity-0 md:opacity-100" : "max-h-[220px] opacity-100"
             )}
           >
-            <div className="mt-3 md:mt-4 grid grid-cols-[auto_auto] items-center gap-2">
-              <div className="grid grid-cols-2 gap-2">
+            <div className="mt-3 md:mt-4 flex justify-center">
+              <div className="inline-flex rounded-full border bg-white/80 backdrop-blur dark:bg-neutral-900/70 shadow-sm">
                 <Button
-                  variant={mode === "experience" ? "default" : "outline"}
-                  className="justify-center"
+                  type="button"
+                  size="sm"
                   onClick={() => setMode("experience")}
+                  className={cn(
+                    "h-9 rounded-full px-4 text-sm",
+                    mode === "experience" ? "bg-black text-white dark:bg-white dark:text-black" : "bg-transparent"
+                  )}
+                  variant={mode === "experience" ? "default" : "ghost"}
+                  aria-pressed={mode === "experience"}
                 >
                   <Briefcase className="mr-2 h-4 w-4" />
                   Experience
                 </Button>
                 <Button
-                  variant={mode === "skills" ? "default" : "outline"}
-                  className="justify-center"
+                  type="button"
+                  size="sm"
                   onClick={() => setMode("skills")}
+                  className={cn(
+                    "h-9 rounded-full px-4 text-sm",
+                    mode === "skills" ? "bg-black text-white dark:bg-white dark:text-black" : "bg-transparent"
+                  )}
+                  variant={mode === "skills" ? "default" : "ghost"}
+                  aria-pressed={mode === "skills"}
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   Skills
                 </Button>
               </div>
-              <div />
             </div>
           </div>
         </div>
-        {/* (separator removed by request) */}
+        {/* (separator omitted intentionally) */}
       </div>
     </div>
   );
