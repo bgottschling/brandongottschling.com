@@ -89,6 +89,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 ],
               })}
             </script>
+            <script
+              type="application/ld+json"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  "name": "brandongottschling.com",
+                  "url": "https://brandongottschling.com",
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://brandongottschling.com/search?q={query}",
+                    "query-input": "required name=query"
+                  }
+                }),
+              }}
+            />
 
             <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
               <Link href="/" className="font-semibold tracking-tight hover:text-accent transition">
@@ -123,17 +140,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
 
           {/* Footer (ABOVE scrim) */}
-          <footer className="relative z-10 mx-auto max-w-3xl px-4 py-8 text-sm text-muted">
+          <footer className="relative z-10 mx-auto max-w-3xl px-4 py-8 text-sm text-muted-foreground">
             <hr className="mb-4 border-border" />
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span>© {new Date().getFullYear()} Brandon Gottschling</span>
-              <nav className="flex gap-4">
-                <Link href="/now" className="hover:text-accent transition">
-                  /now
-                </Link>
-                <Link href="/rss.xml" className="hover:text-accent transition">
-                  RSS
-                </Link>
+
+              <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <Link href="/now" className="hover:text-accent transition">/now</Link>
+                <Link href="/rss.xml" className="hover:text-accent transition" rel="alternate">RSS</Link>
+
+                {/* Primary Trust hub */}
+                <Link href="/trust" className="hover:text-accent transition">Trust</Link>
+
+                {/* Quick sub-links */}
+                <span aria-hidden="true" className="text-muted-foreground">·</span>
+                <Link href="/trust/contact" className="hover:text-accent transition">Contact</Link>
+                <span aria-hidden="true" className="text-muted-foreground">·</span>
+                <Link href="/trust/privacy" className="hover:text-accent transition">Privacy</Link>
+                <span aria-hidden="true" className="text-muted-foreground">·</span>
+                <Link href="/trust/terms" className="hover:text-accent transition">Terms</Link>
               </nav>
             </div>
           </footer>

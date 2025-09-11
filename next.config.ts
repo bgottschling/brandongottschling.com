@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
     ].join("; ");
 
     return [
+      // Global security headers (you already had these)
       {
         source: "/(.*)",
         headers: [
@@ -41,6 +42,19 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
         ],
+      },
+      // Hard noindex for APIs
+      {
+        source: "/api/(.*)",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
+      // Hard noindex for private card area
+      {
+        source: "/card(.*)",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
     ];
   },
