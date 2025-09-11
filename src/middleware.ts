@@ -10,34 +10,36 @@ function cookieOK(req: NextRequest) {
 }
 
 export async function middleware(req: NextRequest) {
-  const { pathname, searchParams } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
-  // Canonical host (optional, if you added this earlier)
-  // const host = req.headers.get("host") || "";
-  // if (host.startsWith("www.")) { const url = req.nextUrl.clone(); url.host = host.slice(4); return NextResponse.redirect(url, 308); }
+  // Helper to send to access with ?next=<original>
+  const sendToAccess = () => {
+    const url = req.nextUrl.clone();
+    url.pathname = "/card/access";
+    const orig = `${pathname}${req.nextUrl.search || ""}`;
+    url.search = `?next=${encodeURIComponent(orig)}`;
+    return NextResponse.redirect(url);
+  };
 
-  // 1) QR page -> must be unlocked (cookie)
+  // 1) QR page: require cookie
   if (pathname.startsWith("/card/qr")) {
     if (cookieOK(req)) return NextResponse.next();
-    const url = req.nextUrl.clone(); url.pathname = "/card/access"; url.search = "";
-    return NextResponse.redirect(url);
+    return sendToAccess();
   }
 
-  // 2) vCard download -> TOKEN ONLY (cookie is ignored)
+  // 2) vCard download: token-only (kept from your hardened flow)
   if (pathname.startsWith("/api/vcard")) {
-    const t = searchParams.get("t") || "";
-    const payload = await verifyCardToken(t);
-    return payload ? NextResponse.next() : new NextResponse("Unauthorized", { status: 401 });
+    const t = req.nextUrl.searchParams.get("t") || "";
+    const ok = await verifyCardToken(t);
+    return ok ? NextResponse.next() : new NextResponse("Unauthorized", { status: 401 });
   }
 
-  // 3) Card page -> cookie OR valid token (convenience)
+  // 3) /card: allow cookie or valid token; else challenge
   if (pathname === "/card") {
     if (cookieOK(req)) return NextResponse.next();
-    const t = searchParams.get("t") || "";
+    const t = req.nextUrl.searchParams.get("t") || "";
     if (await verifyCardToken(t)) return NextResponse.next();
-
-    const url = req.nextUrl.clone(); url.pathname = "/card/access"; url.search = "";
-    return NextResponse.redirect(url);
+    return sendToAccess();
   }
 
   return NextResponse.next();
