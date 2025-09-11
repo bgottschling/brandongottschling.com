@@ -34,10 +34,6 @@ export default function CvHeaderBar({
   const { collapsed, toggle, isMobile } = useSmartCollapse();
   const compact = isMobile && collapsed;
 
-  // Fixed widths on md+ ensure the center column is truly centered and symmetrical.
-  // Tweak if your name/headline gets longer.
-  const identityWidth = "md:w-[320px] w-[240px]";
-
   return (
     <div className={cn("sticky z-30", className)} style={{ top }}>
       <div
@@ -49,23 +45,24 @@ export default function CvHeaderBar({
         )}
       >
         <div className={cn("px-4 sm:px-5", compact ? "py-2" : "py-4 sm:py-5")}>
-          {/* Top row: 3-column grid so the action toolbar is always perfectly centered */}
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+          {/* Top row: equal side columns with safe shrinking so text can wrap */}
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-3">
             {/* Identity (left) */}
             <button
               type="button"
               onClick={isMobile ? toggle : undefined}
               aria-label="Toggle header size"
-              className={cn(
-                "justify-self-start text-left select-none min-w-[12rem] md:min-w-[18rem] max-w-[36rem]",
-                identityWidth
-              )}
+              className="justify-self-start text-left select-none min-w-0 max-w-full"
             >
-              <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>{name}</div>
+              <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>
+                {name}
+              </div>
               {!compact && (
                 <>
                   {headline && (
-                    <div className="text-sm text-muted-foreground leading-snug line-clamp-2">{headline}</div>
+                    <div className="text-sm text-muted-foreground leading-snug whitespace-normal break-words">
+                      {headline}
+                    </div>
                   )}
                   {location && <div className="mt-1 text-xs text-muted-foreground">{location}</div>}
                 </>
@@ -79,19 +76,11 @@ export default function CvHeaderBar({
             </button>
 
             {/* Centered actions (middle) */}
-            <div
-              className={cn(
-                "justify-self-center",
-                compact ? "hidden md:flex" : "flex",
-                "items-center gap-2"
-              )}
-            >
+            <div className={cn(compact ? "hidden md:flex" : "flex", "justify-self-center items-center gap-2")}>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  void onDownloadPdf?.();
-                }}
+                onClick={() => void onDownloadPdf?.()}
                 disabled={pdfBusy}
                 aria-busy={pdfBusy}
                 className="h-9 px-3 text-sm"
@@ -106,22 +95,16 @@ export default function CvHeaderBar({
                   </>
                 )}
               </Button>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onCopyEmail}
-                className="h-9 px-3 text-sm"
-              >
+              <Button variant="outline" size="sm" onClick={onCopyEmail} className="h-9 px-3 text-sm">
                 <Mail className="mr-2 h-4 w-4" /> Copy email
               </Button>
             </div>
 
-            {/* Symmetry spacer (right) — mirrors identity width so center stays centered */}
-            <div className={cn("hidden md:block", identityWidth)} aria-hidden />
+            {/* Right side (empty) keeps the center perfectly centered */}
+            <div aria-hidden />
           </div>
 
-          {/* Segmented control (centered) */}
+          {/* Segmented control */}
           <div
             className={cn(
               "overflow-hidden transition-[max-height,opacity] duration-200 ease-out md:max-h-none md:opacity-100",
@@ -162,7 +145,6 @@ export default function CvHeaderBar({
             </div>
           </div>
         </div>
-        {/* (separator omitted intentionally) */}
       </div>
     </div>
   );
