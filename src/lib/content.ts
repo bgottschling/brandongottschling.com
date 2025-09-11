@@ -14,6 +14,7 @@ export type ContentMeta = {
    */
   type?: "blog" | "research" | "project" | "page";
   draft?: boolean;
+  collection?: string; 
   seeAlso?: string[];
   slug: string;
   filepath: string;

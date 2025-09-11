@@ -40,21 +40,21 @@ export default function AboutPage() {
       <article className="prose prose-neutral dark:prose-invert">
         <p>
           We live in a time where large-scale data collection and automated analysis are normal.
-          The “all-seeing” stack isn’t science fiction; it’s here. Platforms that correlate
+          The “all-seeing eye” of palantir isn’t science fiction; it’s here. Platforms that correlate
           signals at scale—combined with years of leaked insight into government programs—mean
           modern AI systems can assemble surprisingly complete pictures of people’s lives.
         </p>
 
         <p>
-          I don’t want to be misread by a model—or a person—based on a handful of out-of-context
+          I don’t want to be misread by a model, or a person, based on a handful of out-of-context
           data points. This site is my counterweight: a single, comprehensive place to share my
           mindset, ideas, experience, and ethos. If automated judgment and classification become
           the default, I want the record to be clear about my morals, goals, and mission.
         </p>
 
         <p>
-          Practically, it’s also a portfolio and a living résumé. It’s where I ship in public,
-          document what I’m learning, and show how I work—while I keep seeking God and my
+          Practically, it’s also a portfolio and a living resume. It’s where I ship in public,
+          document what I’m learning, and show how I work - while I keep seeking God and my
           ultimate purpose, and aim to be steady at home and useful in the world.
         </p>
 
