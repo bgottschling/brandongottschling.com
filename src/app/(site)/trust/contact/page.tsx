@@ -19,37 +19,71 @@ export default function ContactPage() {
   const [err, setErr] = React.useState<string | null>(null);
   const startedAt = React.useMemo(() => Date.now(), []);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setBusy(true); setErr(null); setOk(null);
-    const fd = new FormData(e.currentTarget);
-    const payload = {
-      name: String(fd.get("name") || ""),
-      email: String(fd.get("email") || ""),
-      message: String(fd.get("message") || ""),
-      website: String(fd.get("website") || ""),     // honeypot
-      startedAt,
-    };
-    const parse = Schema.safeParse(payload);
-    if (!parse.success) {
-      setErr("Please check your entries and try again."); setBusy(false); return;
-    }
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parse.data),
-      });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(j.error || "Send failed");
-      setOk("Thanks — I’ll get back to you soon.");
-      (e.target as HTMLFormElement).reset();
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : "Send failed");
-    } finally {
-      setBusy(false);
-    }
-  }
+async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+      e.preventDefault();
+
+      setBusy(true);
+      setErr(null);
+      setOk(null);
+
+      // 1) Collect + validate (client-side)
+      const fd = new FormData(e.currentTarget);
+      const payload = {
+        name: String(fd.get("name") || ""),
+        email: String(fd.get("email") || ""),
+        message: String(fd.get("message") || ""),
+        website: String(fd.get("website") || ""), // honeypot
+        startedAt, // from useMemo(Date.now())
+      };
+
+      const parsed = Schema.safeParse(payload);
+      if (!parsed.success) {
+        const first = parsed.error.issues[0];
+        setErr(first?.message || "Please check your entries and try again.");
+        setBusy(false);
+        return;
+      }
+
+      // 2) POST with a safety timeout
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), 15000); // 15s
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parsed.data),
+          signal: controller.signal,
+        });
+
+        const data: { ok?: boolean; error?: string } = await res.json().catch(() => ({} as any));
+
+        if (!res.ok) {
+          // Helpful messaging for common cases
+          if (res.status === 429) {
+            throw new Error(data.error || "Please wait a moment before sending.");
+          }
+          if (res.status === 400 && (data.error || "").toLowerCase().includes("origin")) {
+            throw new Error(
+              "Bad origin: please submit from the site’s contact page (don’t post the API URL directly)."
+            );
+          }
+          throw new Error(data.error || "Send failed. Please try again.");
+        }
+
+        setOk("Thanks — I’ll get back to you soon.");
+        (e.target as HTMLFormElement).reset();
+      } catch (err) {
+        if ((err as Error).name === "AbortError") {
+          setErr("Network timeout — please try again.");
+        } else {
+          setErr(err instanceof Error ? err.message : "Send failed. Please try again.");
+        }
+      } finally {
+        clearTimeout(t);
+        setBusy(false);
+      }
+}
 
   return (
     <main className="mx-auto max-w-2xl">
