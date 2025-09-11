@@ -2,8 +2,9 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Sparkles, FileDown, Mail, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Briefcase, Sparkles, Mail, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHeaderOffset } from "@/hooks/useHeaderOffset";
 import { useSmartCollapse } from "@/hooks/useSmartCollapse";
@@ -16,9 +17,6 @@ export default function CvHeaderBar({
   location,
   mode,
   setMode,
-  onDownloadPdf,
-  onCopyEmail,
-  pdfBusy = false,
   className,
 }: {
   name?: string;
@@ -26,44 +24,27 @@ export default function CvHeaderBar({
   location?: string;
   mode: Mode;
   setMode: (m: Mode) => void;
-  onDownloadPdf?: () => Promise<void>;
-  onCopyEmail: () => void;
-  pdfBusy?: boolean;
   className?: string;
 }) {
   const top = useHeaderOffset();
   const { collapsed, toggle, isMobile } = useSmartCollapse();
   const compact = isMobile && collapsed;
 
-  // Wider identity block = better headline wrap.
-  // On mobile it takes full width; on md+ we fix a comfortable column width.
-  const identityWidthLeft  = "w-full md:w-[420px] lg:w-[520px]";
-  const identityWidthRight = "hidden md:block md:w-[420px] lg:w-[520px]";
-
   return (
     <div className={cn("sticky z-30", className)} style={{ top }}>
-      <div
-        className={cn(
-          "rounded-2xl border shadow-sm transition-colors",
-          compact
-            ? "border-white/20 bg-white/95 dark:bg-neutral-900/95"
-            : "border-white/10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 dark:bg-neutral-900/70 dark:supports-[backdrop-filter]:bg-neutral-900/60"
-        )}
-      >
+      <div className="rounded-2xl border shadow-sm bg-white/80 backdrop-blur dark:bg-neutral-900/70">
         <div className={cn("px-4 sm:px-5", compact ? "py-2" : "py-4 sm:py-5")}>
-          {/* Top row: symmetric 3-column grid keeps toolbar perfectly centered */}
-          <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
-            {/* Identity (left) */}
+          {/* Top row: identity (left) + Contact (right) */}
+          <div className="grid grid-cols-[1fr_auto] items-start gap-3">
             <button
               type="button"
               onClick={isMobile ? toggle : undefined}
               aria-label="Toggle header size"
-              className={cn("justify-self-start text-left select-none max-w-full", identityWidthLeft)}
+              className="justify-self-start text-left select-none max-w-full"
             >
               <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>
                 {name}
               </div>
-
               {!compact && (
                 <>
                   {headline && (
@@ -74,7 +55,6 @@ export default function CvHeaderBar({
                   {location && <div className="mt-1 text-xs text-muted-foreground">{location}</div>}
                 </>
               )}
-
               {isMobile && (
                 <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground md:hidden">
                   <ChevronsUpDown className="h-3.5 w-3.5" />
@@ -83,33 +63,14 @@ export default function CvHeaderBar({
               )}
             </button>
 
-            {/* Actions (centered) */}
-            <div className={cn(compact ? "hidden md:flex" : "flex", "justify-self-center items-center gap-2")}>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void onDownloadPdf?.()}
-                disabled={pdfBusy}
-                aria-busy={pdfBusy}
-                className="h-9 px-3 text-sm"
-              >
-                {pdfBusy ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Preparing…
-                  </>
-                ) : (
-                  <>
-                    <FileDown className="mr-2 h-4 w-4" /> Download PDF
-                  </>
-                )}
-              </Button>
-              <Button variant="outline" size="sm" onClick={onCopyEmail} className="h-9 px-3 text-sm">
-                <Mail className="mr-2 h-4 w-4" /> Copy email
+            {/* Right-aligned single primary action */}
+            <div className="justify-self-end">
+              <Button asChild className="h-9 px-4 text-sm">
+                <Link href="/trust/contact" prefetch={false}>
+                  <Mail className="mr-2 h-4 w-4" /> Contact
+                </Link>
               </Button>
             </div>
-
-            {/* Symmetry spacer (right) — mirrors the left width so the center stays centered */}
-            <div className={identityWidthRight} aria-hidden />
           </div>
 
           {/* Segmented control (centered) */}
@@ -153,7 +114,6 @@ export default function CvHeaderBar({
             </div>
           </div>
         </div>
-        {/* (separator intentionally omitted) */}
       </div>
     </div>
   );
