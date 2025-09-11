@@ -1,14 +1,14 @@
 // src/app/(site)/now/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBySlug } from "@/lib/content"; // your existing content loader
+import { getAllContent, getBySlug, type ContentMeta } from "@/lib/content";
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { mdxRemoteOptions } from "@/lib/mdx";
 import { mdxComponents } from "@/components/mdx-components";
 
-export const runtime = "nodejs";       // content.ts uses fs/path
-export const dynamic = "force-static"; // generate at build
+export const runtime = "nodejs";
+export const dynamic = "force-static";
 export const revalidate = false;
 
 export const metadata: Metadata = {
@@ -21,38 +21,50 @@ export const metadata: Metadata = {
 function fmt(d?: string) {
   if (!d) return null;
   const date = new Date(d);
-  if (Number.isNaN(date.getTime())) return null;
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  return Number.isNaN(date.getTime())
+    ? null
+    : date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+
+function isPeriodSlug(s: string) {
+  // accepts "now/2025-09"
+  return /^now\/\d{4}-\d{2}$/.test(s);
 }
 
 export default async function NowPage() {
-  // Try to load `content/now.mdx` (slug: "now")
   const entry = await getBySlug("now").catch(() => null);
 
-  // Fallback content if MDX not found so /now never 404s
+  // Collect recent snapshots
+  const all = (await getAllContent()) as ContentMeta[];
+  const snapshots = all
+    .filter((m) => !m.draft && typeof m.slug === "string" && isPeriodSlug(m.slug))
+    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
+    .slice(0, 3);
+
   if (!entry) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-10 md:py-14">
         <header className="mb-6">
           <h1 className="text-3xl/tight font-semibold tracking-tight">Now</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Last updated: <em>—</em>
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Last updated: <em>—</em></p>
         </header>
         <div className="prose prose-neutral dark:prose-invert">
-          <p>
-            This page shares what I’m focused on right now—work in progress, reading,
-            and priorities. I keep it short and current.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            To enable live updates, create <code>content/now.mdx</code>. See the template in the repo.
-          </p>
-          <p>
-            Meanwhile, you can explore the{" "}
-            <Link className="underline" href="/projects">Projects</Link>,{" "}
-            <Link className="underline" href="/blog">Blog</Link>, or{" "}
-            <Link className="underline" href="/cv">CV</Link>.
-          </p>
+          <p>This page shares what I’m focused on right now.</p>
+          {snapshots.length ? (
+            <>
+              <hr />
+              <h3>Recent snapshots</h3>
+              <ul>
+                {snapshots.map((s) => (
+                  <li key={s.slug}>
+                    <Link className="underline" href={`/${s.slug}`}>{s.title || s.slug.replace("now/", "")}</Link>
+                    {s.date && <span className="text-sm text-muted-foreground"> — {fmt(s.date)}</span>}
+                  </li>
+                ))}
+              </ul>
+              <p><Link className="underline" href="/now/archive">View all snapshots →</Link></p>
+            </>
+          ) : null}
         </div>
       </main>
     );
@@ -85,13 +97,22 @@ export default async function NowPage() {
           {...mdxSource}
           components={mdxComponents as unknown as Record<string, React.ComponentType>}
         />
-        <hr />
-        <p className="text-sm text-muted-foreground">
-          Want a longer view? See the{" "}
-          <Link href="/projects" className="underline">Projects</Link> and{" "}
-          <Link href="/blog" className="underline">Blog</Link>. Subscribe via{" "}
-          <Link href="/rss.xml" className="underline" rel="alternate">RSS</Link>.
-        </p>
+
+        {snapshots.length ? (
+          <>
+            <hr />
+            <h3>Recent snapshots</h3>
+            <ul>
+              {snapshots.map((s) => (
+                <li key={s.slug}>
+                  <Link className="underline" href={`/${s.slug}`}>{s.title || s.slug.replace("now/", "")}</Link>
+                  {s.date && <span className="text-sm text-muted-foreground"> — {fmt(s.date)}</span>}
+                </li>
+              ))}
+            </ul>
+            <p><Link className="underline" href="/now/archive">View all snapshots →</Link></p>
+          </>
+        ) : null}
       </article>
     </main>
   );
