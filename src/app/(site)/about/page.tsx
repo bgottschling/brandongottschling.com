@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About — Brandon Gottschling",
@@ -77,10 +78,9 @@ export default function AboutPage() {
 
         <p className="text-sm text-muted-foreground">
           If you’re evaluating my work, start with the{" "}
-          <a href="/cv" className="underline">CV</a> and the{" "}
-          <a href="/projects" className="underline">Projects</a> page. For private contact
-          details, use the{" "}
-          <a href="/trust/contact" className="underline">Contact</a> page.
+          <Link href="/cv" className="underline">CV</Link> and the{" "}
+          <Link href="/projects" className="underline">Projects</Link> page. For private contact details, use the{" "}
+          <Link href="/trust/contact" className="underline">Contact</Link> page.
         </p>
       </article>
     </main>

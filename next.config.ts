@@ -7,15 +7,6 @@ const nextConfig: NextConfig = {
   transpilePackages: ["framer-motion"],
 
   // --- IMPORTANT for the PDF route + QR generation ---
-  experimental: {
-    serverComponentsExternalPackages: [
-      "@sparticuz/chromium",
-      "puppeteer-core",
-      "qrcode",
-    ],
-    // Ensure Chromium's brotli binaries are bundled into the serverless function
-    // NOTE: outputFileTracingIncludes is not supported in this Next.js version and has been removed.
-  },
 
   async headers() {
     const csp = [
