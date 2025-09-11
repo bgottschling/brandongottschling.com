@@ -1,3 +1,4 @@
+// src/lib/content.ts
 import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
@@ -9,24 +10,36 @@ export type ContentMeta = {
   summary?: string;
   status?: string;
   tags?: string[];
-  /**
-   * Your existing key. We'll also accept `collection` and map to this.
-   */
-  type?: "blog" | "research" | "project" | "page";
+  /** Accepted content collections */
+  type?: "blog" | "research" | "project" | "page" | "now";
   draft?: boolean;
-  collection?: string; 
+  collection?: string;
   seeAlso?: string[];
   slug: string;
   filepath: string;
   image?: string;
 
-  /** NEW (optional at runtime): preferred bucket for UI. */
+  /** Preferred bucket for UI. */
   primaryCategory?: PrimaryCategory;
 
-  /** NEW (optional): publish switch (defaults to true if absent). */
+  /** Publish switch (defaults to true if absent). */
   published?: boolean;
 };
 
+// ------------------------------
+// Collection/type detection
+// ------------------------------
+const KNOWN_TYPES = ["blog", "research", "project", "page", "now"] as const;
+type KnownType = (typeof KNOWN_TYPES)[number];
+
+function detectTypeFromSlug(rel: string): KnownType {
+  const head = rel.split("/")[0] || "";
+  return (KNOWN_TYPES as readonly string[]).includes(head) ? (head as KnownType) : "blog";
+}
+
+// ------------------------------
+// Content roots
+// ------------------------------
 // support /content, /src/content, or CONTENT_DIR
 const CANDIDATE_DIRS = [
   path.join(process.cwd(), "content"),
@@ -45,7 +58,9 @@ async function firstExistingDir(): Promise<string | null> {
   return null;
 }
 
-// ---- date helpers ----
+// ------------------------------
+// Date helpers
+// ------------------------------
 function toMs(d: unknown): number {
   if (!d) return 0;
   if (d instanceof Date) return d.getTime() || 0;
@@ -68,6 +83,9 @@ function devWarn(msg: string) {
   }
 }
 
+// ------------------------------
+// Load all content
+// ------------------------------
 export async function getAllContent(): Promise<ContentMeta[]> {
   const base = await firstExistingDir();
   if (!base) return [];
@@ -81,14 +99,19 @@ export async function getAllContent(): Promise<ContentMeta[]> {
     const { data } = matter(raw);
     if (!data?.title) continue;
 
-    const rel = path.relative(base, file).replace(/\\/g, "/").replace(/\.(mdx|md)$/, "");
+    const rel = path
+      .relative(base, file)
+      .replace(/\\/g, "/")
+      .replace(/\.(mdx|md)$/, "");
 
-    // Accept both `type` and `collection`
+    // Accept both `type` and `collection`; fall back to slug detection
     const frontType = (data.type ?? data.collection) as ContentMeta["type"] | undefined;
+    const resolvedType: KnownType = (frontType as KnownType | undefined) ?? detectTypeFromSlug(rel);
 
     const primaryCategory =
       (data.primaryCategory as PrimaryCategory | undefined) ?? inferFromTags(data.tags);
-    if (!data.primaryCategory) devWarn(`⚠ content: missing primaryCategory → inferred "${primaryCategory}" (${rel})`);
+    if (!data.primaryCategory)
+      devWarn(`⚠ content: missing primaryCategory → inferred "${primaryCategory}" (${rel})`);
 
     const published = data.published === undefined ? true : Boolean(data.published);
 
@@ -98,7 +121,7 @@ export async function getAllContent(): Promise<ContentMeta[]> {
       summary: data.summary,
       status: data.status,
       tags: data.tags ?? [],
-      type: frontType ?? "blog",
+      type: resolvedType,
       draft: Boolean(data.draft),
       seeAlso: data.seeAlso ?? [],
       slug: rel,
@@ -112,6 +135,9 @@ export async function getAllContent(): Promise<ContentMeta[]> {
   return items.sort((a, b) => toMs(b.date) - toMs(a.date));
 }
 
+// ------------------------------
+// Load a single entry by slug
+// ------------------------------
 export async function getBySlug(
   slug: string
 ): Promise<{ meta: ContentMeta; source: string } | null> {
@@ -125,10 +151,14 @@ export async function getBySlug(
       const { data, content } = matter(raw);
 
       const frontType = (data.type ?? data.collection) as ContentMeta["type"] | undefined;
+      const resolvedType: KnownType =
+        (frontType as KnownType | undefined) ?? detectTypeFromSlug(slug);
+
       const primaryCategory =
         (data.primaryCategory as PrimaryCategory | undefined) ?? inferFromTags(data.tags);
       if (!data.primaryCategory)
         devWarn(`⚠ content: missing primaryCategory in getBySlug → inferred "${primaryCategory}" (${slug})`);
+
       const published = data.published === undefined ? true : Boolean(data.published);
 
       const meta: ContentMeta = {
@@ -136,7 +166,7 @@ export async function getBySlug(
         date: toIso(data.date),
         summary: data.summary,
         tags: data.tags ?? [],
-        type: frontType ?? "blog",
+        type: resolvedType,
         draft: Boolean(data.draft),
         seeAlso: data.seeAlso ?? [],
         slug,
@@ -147,12 +177,15 @@ export async function getBySlug(
       };
       return { meta, source: content };
     } catch {
-      // try next
+      // try next candidate
     }
   }
   return null;
 }
 
+// ------------------------------
+// Walk directory tree
+// ------------------------------
 async function walk(dir: string): Promise<string[]> {
   const dirents = await fs.readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
@@ -164,7 +197,9 @@ async function walk(dir: string): Promise<string[]> {
   return files.flat();
 }
 
-// Optional helper to hide drafts/unpublished/future (use at call-sites)
+// ------------------------------
+// Visibility helper
+// ------------------------------
 export function filterVisible(items: ContentMeta[]) {
   const now = Date.now();
   return items
