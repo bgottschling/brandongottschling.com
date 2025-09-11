@@ -2,10 +2,10 @@
 type: project
 title: "This website - the living workshop"
 slug: "brandongottschling-site"
-date: "2025-09-05"
-summary: "v0.4 adds a polished CV experience (toggleable views, Exec Summary, scope/metrics), a server-rendered PDF export that captures the live canvas, and continued UI refinements for a calm, readable site."
-status: "Active v0.4"
-tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "filters", "a11y", "seo", "pdf", "resume"]
+date: "2025-09-10"
+summary: "v0.5 focuses on privacy-first contact sharing (auth-gated QR with single-use tokens), a refined proposal PDF (clean typography, ToC, mission page, circular avatar), routing/CSP fixes, and UX polish across the CV header and downloads."
+status: "Active v0.5"
+tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv"]
 cover: "/images/projects/site/hero.png"
 links:
   live: "https://brandongottschling.com"
@@ -13,79 +13,71 @@ links:
 ---
 
 <ProjectHeader
-  status="Active · v0.4"
+  status="Active · v0.5"
   live="https://brandongottschling.com"
   repo="https://github.com/bgottschling/brandongottschling.com"
 />
 
 > **Why**  
-> One home for research notes, projects, and writing—lightweight, fast, and easy to grow. It’s a “living workshop” for shipping in public.
+> I want one home for my research notes, projects, and writing—lightweight, fast, and easy to grow. This site is a “living workshop” where I ship in public and keep improving the craft.
 
 ## Stack Overview
 
-- **Stack:** Next.js 15 (App Router), MDX + filesystem content, Tailwind, shadcn/ui, `remark-gfm`, `rehype-slug`/`autolink-headings`, Vercel.  
-- **Design:** warm, minimal UI; high-contrast cards; animated **BackgroundNetworkStable** canvas with “harmony” moments.
+- **Core:** Next.js 15 (App Router), MDX from the filesystem, Tailwind, shadcn/ui.  
+- **Content tooling:** `remark-gfm`, `rehype-slug`, autolinked headings.  
+- **PDF:** `pdf-lib` (portable; no headless browser), with WinAnsi-safe text.  
+- **Contact sharing:** server-rendered **QR** (SVG) with HMAC tokens, enforced by Edge middleware.  
+- **State & limits:** serverless key–value store over HTTP for single-use tokens and gentle rate limits.  
+- **Hosting:** Vercel.
 
 ---
 
-## What changed in v0.4
+## What changed in v0.5
 
-**CV: executive-ready and printable**
-- New **CV header bar** with mobile-aware collapse/expand and sticky behavior (flush with site nav on scroll).
-- Toggleable **Experience / Skills** views; **Executive Summary** at the top for fast scanning.
-- Per-role **Scope** and **Key Results** blocks (metrics are draft→validated), rendered above highlights.
-- **Download PDF** now uses a server route (`/api/pdf/render`) that boots headless Chrome, waits for fonts/canvas, honors `@page`, and captures the live background as a watermark. Includes a **“Preparing…”** loading state and robust errors.
+### Private contact card (QR-first; NFC later)
+I tightened the sharing flow so I control who sees my contact details and when.
 
-**Scrim & readability**
-- Column scrim refined: rectangular lane with **left/right edge fades**, slight tint, and balanced blur so text stays crisp.
-- Z-stack formalized (canvas `-z-30` → scrim `z-0` → content `z-10+`) across pages for consistent layering.
+- **/card** is private, and **/card/qr** is **challenge-gated** (simple PIN → versioned cookie).  
+- Every QR encodes a **short-lived, signed token**. The **vCard endpoint requires the token** (cookies are ignored).  
+- Tokens are **single-use** and gently **rate-limited** to discourage scraping. A second scan returns **410 Gone**.  
+- The code **auto-rotates** (refreshes) before expiry.  
+- The QR now points **directly to the vCard download**, and the vCard includes my avatar inline.  
+- If I unlock from `/card/qr`, the flow sends me **back to that page** after the PIN using a safe `next` parameter.  
+- I also fixed form submissions under my **Content Security Policy** and optionally canonicalize the host to avoid apex/`www` mismatches.
 
-**Filter shell polish**
-- Sidebar sits further from the reading lane; content remains centered.  
-- Mobile keeps the filter grid in a sheet/drawer; keyboard and screen reader flow verified.
+> **Note on ops:** In public posts I keep security at a high level. I don’t publish environment details; those live in my private runbook.
 
-**DX & safety rails**
-- Fixed “invalid element type” issues by aligning **default vs named exports** for CV components.  
-- Hardened PDF route with `preferCSSPageSize`, font readiness, and a simple “pdf-export” CSS hook.
+### Proposal PDF (executive-ready)
+The proposal export moved to a portable generator so it works the same everywhere and looks good.
+
+- Dedicated **Mission & Executive Summary** page with my statement.  
+- **Experience** renders **time / scope / metrics / highlights** with dividers and breathing room.  
+- **Skills** follow experience in clean two columns.  
+- **Table of Contents** with dotted leaders and page numbers.  
+- Supports a **circular avatar** (prefers a transparent PNG; falls back to JPG).  
+- Consistent 1″ margins, subtle rules, and tidy type scale; text is sanitized so there are no encoding surprises.
+
+### CV & UI polish
+- The **Download** actions show a clear **“Preparing…”** busy state.  
+- The **QR page** scales nicely on mobile and stays visually centered.
+
+### Routing & content fixes
+- Middleware is Edge-safe (WebCrypto) and typed.  
+- MDX page rendering is stabilized (server serialization + component map).  
+- I removed brittle build flags and simplified the deployment config.
 
 ---
 
 ## Highlights (implementation notes)
 
-**New / updated components**
-- `src/components/cv/CvHeaderBar.tsx` – sticky, mobile-savvy header with actions (PDF, Print, vCard, Copy email).  
-- `src/components/cv/ExecutiveSummary.tsx` – compact summary card (Client).  
-- `src/components/cv/ExperienceView.tsx` – renders **Scope / Key Results / Highlights** with badges.  
-- `src/components/cv/SkillsView.tsx` – tidy skill buckets with search.  
-- `src/app/api/pdf/render/route.ts` – **puppeteer-core + @sparticuz/chromium** in prod, plain `puppeteer` in dev; waits for fonts/canvas; prints A4 with background.
+**Endpoints & files**
+- **Middleware:** gated `/card` + `/card/qr`; token-only check on the vCard endpoint; optional host canonicalization.  
+- **Tokens:** compact HMAC SHA-256 payloads (base64url) with short TTL and a nonce for one-time use.  
+- **KV store:** small helpers to “burn” tokens on first use and throttle downloads per IP.  
+- **Contact:** PIN → versioned cookie, safe `next` redirect, avatar embedded in the vCard.  
+- **QR:** server-generated SVG with an auto-refresh interval.  
+- **Proposal PDF:** mission, ToC, experience, and skills; page numbers and consistent spacing.  
+- **CV header:** busy state during downloads.
 
-**Scrim**
-- `src/components/EdgeScrim.tsx` – **column-blur** variant (linear mask only on sides, no circular vignette) with tint/saturate controls.
-
-**Hooks**
-- `src/hooks/useHeaderOffset.ts` – aligns sticky CV bar under site nav.  
-- `src/hooks/useSmartCollapse.ts` – mobile collapse logic (tap to expand; auto-minimize on scroll).
-
----
-
-## Before / After (UX at a glance)
-
-- **Before:** CV lived as static text; printing from the browser produced mixed results; sidebar spacing felt tight on small/medium viewports.  
-- **After:** CV is **executive-scannable** with a clean PDF export; sidebar sits out of the reading lane; mobile collapse is smooth and readable.
-
----
-
-## Known issues / TODO
-
-- Validate and replace draft metrics with confirmed numbers for WBD and BD roles.  
-- Add OG image generator for CV and index pages.  
-- Optional: export a one-page “Exec” PDF theme (summary + scopes + metrics callouts).  
-- Site search (`/search?q=`) and JSON-LD `SearchAction`.
-
----
-
-## Changelog
-
-- **v0.4 (2025-09-05):** CV overhaul (Exec Summary, scope/metrics, mobile collapse), robust PDF export with live canvas capture, scrim refinement, sidebar spacing, export/import fixes.  
-- **v0.3 (2025-09-03):** Centered reading layout with column-blur scrim; descriptive sidebar grids + mobile Filters sheet; Blog/Research/Projects overhauled with shared filter/search/view; improved card readability; Next 15 fixes (viewport themeColor, awaited `searchParams`); stricter content taxonomy and logging.  
-- **v0.2 (2025-08-28):** Trust pages, mobile command palette, JSON-LD, lazy-loading, a11y touches.
+**Security posture (high-level)**
+- Private contact area with a simple unlock, **single-use links**, and **short TTL**.
