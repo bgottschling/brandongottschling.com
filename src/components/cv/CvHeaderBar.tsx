@@ -1,3 +1,4 @@
+// src/components/cv/CvHeaderBar.tsx
 "use client";
 
 import * as React from "react";
@@ -34,6 +35,11 @@ export default function CvHeaderBar({
   const { collapsed, toggle, isMobile } = useSmartCollapse();
   const compact = isMobile && collapsed;
 
+  // Wider identity block = better headline wrap.
+  // On mobile it takes full width; on md+ we fix a comfortable column width.
+  const identityWidthLeft  = "w-full md:w-[420px] lg:w-[520px]";
+  const identityWidthRight = "hidden md:block md:w-[420px] lg:w-[520px]";
+
   return (
     <div className={cn("sticky z-30", className)} style={{ top }}>
       <div
@@ -45,28 +51,30 @@ export default function CvHeaderBar({
         )}
       >
         <div className={cn("px-4 sm:px-5", compact ? "py-2" : "py-4 sm:py-5")}>
-          {/* Top row: equal side columns with safe shrinking so text can wrap */}
-          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-3">
+          {/* Top row: symmetric 3-column grid keeps toolbar perfectly centered */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
             {/* Identity (left) */}
             <button
               type="button"
               onClick={isMobile ? toggle : undefined}
               aria-label="Toggle header size"
-              className="justify-self-start text-left select-none min-w-0 max-w-full"
+              className={cn("justify-self-start text-left select-none max-w-full", identityWidthLeft)}
             >
               <div className={cn("font-semibold leading-tight", compact ? "text-base" : "text-lg")}>
                 {name}
               </div>
+
               {!compact && (
                 <>
                   {headline && (
-                    <div className="text-sm text-muted-foreground leading-snug whitespace-normal break-words">
+                    <div className="mt-0.5 text-sm text-muted-foreground whitespace-normal break-words leading-relaxed">
                       {headline}
                     </div>
                   )}
                   {location && <div className="mt-1 text-xs text-muted-foreground">{location}</div>}
                 </>
               )}
+
               {isMobile && (
                 <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground md:hidden">
                   <ChevronsUpDown className="h-3.5 w-3.5" />
@@ -75,7 +83,7 @@ export default function CvHeaderBar({
               )}
             </button>
 
-            {/* Centered actions (middle) */}
+            {/* Actions (centered) */}
             <div className={cn(compact ? "hidden md:flex" : "flex", "justify-self-center items-center gap-2")}>
               <Button
                 variant="outline"
@@ -100,11 +108,11 @@ export default function CvHeaderBar({
               </Button>
             </div>
 
-            {/* Right side (empty) keeps the center perfectly centered */}
-            <div aria-hidden />
+            {/* Symmetry spacer (right) — mirrors the left width so the center stays centered */}
+            <div className={identityWidthRight} aria-hidden />
           </div>
 
-          {/* Segmented control */}
+          {/* Segmented control (centered) */}
           <div
             className={cn(
               "overflow-hidden transition-[max-height,opacity] duration-200 ease-out md:max-h-none md:opacity-100",
@@ -145,6 +153,7 @@ export default function CvHeaderBar({
             </div>
           </div>
         </div>
+        {/* (separator intentionally omitted) */}
       </div>
     </div>
   );
