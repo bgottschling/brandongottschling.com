@@ -80,4 +80,32 @@ The proposal export moved to a portable generator so it works the same everywher
 - **CV header:** busy state during downloads.
 
 **Security posture (high-level)**
-- Private contact area with a simple unlock, **single-use links**, and **short TTL**.
+- Private contact area with a simple unlock, **single-use links**, and **short TTL**.  
+- **Rate-limits** on sensitive endpoints.  
+- **Instant revoke** by rotating a secret or bumping a version value in config.
+
+---
+
+## Before / After (at a glance)
+
+- **Before:** QR could be reached without a fresh challenge; PDF export was brittle; the cover layout felt cramped; experience read like a wall of text.  
+- **After:** QR is **private, rotating, and single-use**; the proposal PDF is **clean and portable** with a ToC; the cover and contact row have breathing room; experience is broken up with dividers and spacing.
+
+---
+
+## Known issues / Next up
+
+- Add **NFC / Apple Wallet** pass that opens the same tokenized flow.  
+- Optional **Exec one-pager** PDF theme (summary-first).  
+- Brand accents for PDFs (color, link styling), clickable email/URL.  
+- Consider moving the KV usage to a native provider in my host for simpler ops.  
+- Site search (`/search?q=`) and `SearchAction` JSON-LD.
+
+---
+
+## Changelog
+
+- **v0.5 (2025-09-10):** Private contact flow (auth-gated QR, single-use tokens, rate-limits), proposal PDF with ToC/mission/clean typography, circular avatar support, safer redirects & CSP, CV download busy state, QR layout fixes.  
+- **v0.4 (2025-09-05):** CV overhaul (Exec Summary, scope/metrics, mobile collapse), robust PDF export with live canvas capture, scrim refinement, sidebar spacing, export/import fixes.  
+- **v0.3 (2025-09-03):** Centered reading layout with column-blur scrim; descriptive sidebar grids + mobile Filters sheet; Blog/Research/Projects overhauled; Next 15 fixes; stricter taxonomy.  
+- **v0.2 (2025-08-28):** Trust pages, mobile command palette, JSON-LD, lazy-loading, a11y touches.
