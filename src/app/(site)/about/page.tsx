@@ -41,7 +41,7 @@ export default function AboutPage() {
         <p>
           We live in a time where large-scale data collection and automated analysis are normal.
           The “all-seeing eye” of palantir isn’t science fiction; it’s here. Platforms that correlate
-          signals at scale—combined with years of leaked insight into government programs—mean
+          signals at scale - combined with years of leaked insight into government programs - mean
           modern AI systems can assemble surprisingly complete pictures of people’s lives.
         </p>
 
