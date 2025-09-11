@@ -116,9 +116,6 @@ export default function CvClientShell({
         location={location}
         mode={mode}
         setMode={setMode}
-        onDownloadPdf={() => downloadPdf("proposal")}  // ← important
-        onCopyEmail={onCopyEmail}
-        pdfBusy={pdfBusy}
         />
         {mode === "experience" && EXEC_SUMMARY?.length ? (
           <div className="mt-6">
