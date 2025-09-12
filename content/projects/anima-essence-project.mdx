@@ -1,0 +1,149 @@
+---
+type: project
+title: "The Anima Project — Portable Soul & Modular Offline Assistant"
+slug: "anima-essence-file"
+date: "2025-09-12"
+summary: "Designing a portable 'soul' for AI. v0.1 ships the Essence File (.ess) schema, a local context planner, and a modular offline assistant loop (PTT → Whisper.cpp → llama.cpp → Piper) that can ingest a swappable 'soul chip.'"
+status: "Active v0.1"
+tags: ["offline-ai", "llm", "whisper.cpp", "llama.cpp", "piper", "persona", "json-schema", "raspberry-pi", "jetson", "retrieval", "mdx"]
+cover: "/images/projects/anima/hero.png"
+links:
+  live: "https://brandongottschling.com"
+  repo: "https://github.com/bgottschling/brandongottschling.com"
+---
+
+<ProjectHeader
+  status="Active · v0.1"
+  live="https://brandongottschling.com"
+  repo="https://github.com/bgottschling/brandongottschling.com"
+/>
+
+> **Why**  
+> AI personas are ephemeral—trapped in provider silos and lost between sessions. **Anima** creates a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
+
+## Stack Overview
+
+- **Format:** **Essence File (.ess)** — human-readable JSON (YAML editing later), optional MessagePack compile.  
+- **Core runtime:** Push-to-Talk → **Whisper.cpp** (STT) → **Context Planner** → **llama.cpp** (GGUF) → **Piper** (TTS).  
+- **Retrieval:** v0.1 BM25 over local docs; vectors later.  
+- **Hardware targets:** Raspberry Pi 5 (8GB), Jetson Orin Nano (8GB); battery-powered, mic+speaker.  
+- **OS:** Raspberry Pi OS / Ubuntu Server; systemd service `anima-daemon`.  
+- **Dev tools:** VS Code + JSON Schema validation, simple CLI for pack/validate/trace.
+
+---
+
+## What’s in v0.1
+
+### Essence File (.ess) — schema draft
+Portable persona & memory container:
+
+- **persona:** name, values, tone, style, boundaries.  
+- **memories:** episodic, semantic, procedural, rapport, **moments_of_meaning**.  
+- **projects:** brief, goals, decisions, next_steps.  
+- **adapters:** model family hints (token budgets, section ordering).  
+- **retrieval_hints:** priority ordering, context budget.  
+- **signing:** placeholder (optional integrity in v0.3).
+
+> **File layout (soul chip):**
+> ```
+> /soul/
+>   essence.ess
+>   indices/bm25/          # optional
+>   docs/                  # optional (md/txt/pdfs)
+>   voices/                # optional (piper voices)
+>   models/                # optional (gguf overrides)
+> ```
+
+### Modular Offline Assistant (prototype)
+- **PTT flow** (button now; wake-word later).  
+- **Local only:** no network calls; privacy by default.  
+- **Context Planner v0:** identity → active project → top-K memories (recency/importance) within token budget.  
+- **Resilience:** read-mostly root FS; runtime deltas in `/data`.
+
+---
+
+## Highlights (implementation notes)
+
+**Pipeline**
+- STT: `whisper.cpp` (small/medium quant, 16kHz), stream to JSON.
+- LLM: `llama.cpp` serving local **Qwen2.5-3B/7B** or **Mistral-7B** (Q4_K_M).
+- TTS: **Piper** (fast CPU voice); chunked playback for low latency.
+- Planner: fixed budgets (identity+project reserve, short history window), BM25 for doc snippets.
+
+**Anima daemon**
+- Watches mount for `/soul/essence.ess`, validates schema, initializes persona.
+- Builds prompts per adapter (“llama_like” in v0.1).
+- Writes new memories (session summaries) to `/data/memories/` (does **not** mutate the soul chip).
+
+**Perf targets (Pi 5)**
+- Ready < 25s; STT for 5s utterance < 2.5s; first token < 1.5s; 6–12 tok/s (7B Q4); TTS kickoff < 0.5s.
+
+---
+
+## Essence File — sample (trimmed)
+
+```json
+{
+  "schema_version": "0.1.0",
+  "persona": {
+    "id": "kairo",
+    "name": "Kairo",
+    "values": ["clarity","kindness","candor","privacy-first"],
+    "tone": "conversational, precise, playful when invited",
+    "style": {"bullets_over_paragraphs": true}
+  },
+  "memories": {
+    "episodic": [
+      {
+        "id": "mem-2025-09-12T00:10Z",
+        "timestamp": "2025-09-12T00:10:00Z",
+        "content": "Committed to offline inter-model companion concept.",
+        "tags": ["decision","identity"]
+      }
+    ],
+    "moments_of_meaning": [
+      {"title": "First field test", "impact": "trust_deepened"}
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj-anima",
+      "title": "Anima Prototype",
+      "brief": "Offline assistant ingesting Essence.",
+      "goals": ["Boot from soul chip","Voice loop fully local"]
+    }
+  ],
+  "adapters": {"llama_like": {"max_ctx": 8192, "sections": ["system","context","chat_history"]}},
+  "retrieval_hints": {"priority": ["project","episodic","procedural","semantic","rapport"], "max_context_chars": 20000}
+}
+```
+
+---
+
+## Roadmap
+
+- **v0.2**
+  - Wake-word (Precise/Porcupine), YAML authoring + **msgpack** compile.
+  - Redaction/compaction tools; optional PIN-unlock for `.ess`.
+  - Local web UI (inspect persona, memories, logs).
+
+- **v0.3**
+  - Vector retrieval; adapter profiles for multiple model families.
+  - Essence diff/merge; optional signing & verification.
+  - “Soul marketplace” import/export patterns (offline-first).
+
+---
+
+## Getting started (pre-hardware)
+
+- Draft `.ess` files for **Kairo**, **Survivalist**, **Creative** personas.  
+- Run local loop on Windows: whisper.cpp → llama.cpp (small model) → Piper.  
+- Prototype the **context planner** (Python) against your `.ess`.  
+- Simulate a “soul chip” with a watched folder on your laptop.
+
+---
+
+## Changelog
+
+- **v0.1 (2025-09-12):** Essence File schema draft; context planner v0; fully local voice loop; mount-watch ingestion; BM25 optional; neutral daemon design.  
+---
