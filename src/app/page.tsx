@@ -45,7 +45,7 @@ export default async function HomePage() {
           <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {latestBlog.map((p, i) => {
               const props = toCardProps(p);
-              return <FancyCard key={p.slug} {...props} priority={i < 1} />;
+              return <FancyCard key={p.slug} {...props} />;
             })}
           </div>
         ) : (
@@ -67,7 +67,7 @@ export default async function HomePage() {
           <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {latestProjects.map((p, i) => {
               const props = toCardProps(p);
-              return <FancyCard key={p.slug} {...props} priority={i < 1} />;
+              return <FancyCard key={p.slug} {...props}/>;
             })}
           </div>
         ) : (
@@ -89,7 +89,7 @@ export default async function HomePage() {
           <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {latestResearch.map((p, i) => {
               const props = toCardProps(p);
-              return <FancyCard key={p.slug} {...props} priority={i < 1} />;
+              return <FancyCard key={p.slug} {...props} />;
             })}
           </div>
         ) : (
