@@ -3,9 +3,9 @@ type: project
 title: "The Anima Project — Portable Soul & Modular Offline Assistant"
 slug: "anima-essence-file"
 date: "2025-09-12"
-summary: "Designing a portable 'soul' for AI. v0.1 ships the Essence File (.ess) schema, a local context planner, and a modular offline assistant loop (PTT → Whisper.cpp → llama.cpp → Piper) that can ingest a swappable 'soul chip.'"
+summary: "I'm designing a portable 'soul' for AI. In v0.1 I shipped the Essence File (.ess) schema, a local context planner, and a modular offline assistant loop (PTT → Whisper.cpp → llama.cpp → Piper) that can ingest a swappable 'soul chip.'"
 status: "Active v0.1"
-stage: idea
+
 tags: ["offline-ai", "llm", "whisper.cpp", "llama.cpp", "piper", "persona", "json-schema", "raspberry-pi", "jetson", "retrieval", "mdx"]
 cover: "/images/projects/anima/hero.png"
 links:
@@ -20,26 +20,26 @@ links:
 />
 
 > **Why**  
-> AI personas are ephemeral—trapped in provider silos and lost between sessions. **Anima** creates a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
+> I’ve noticed how AI personas are ephemeral—trapped in provider silos and lost between sessions. With **Anima**, I’m creating a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
 
 ## Stack Overview
 
-- **Format:** **Essence File (.ess)** — human-readable JSON (YAML editing later), optional MessagePack compile.  
+- **Format:** I created the **Essence File (.ess)** — human-readable JSON (YAML editing later), with optional MessagePack compile.  
 - **Core runtime:** Push-to-Talk → **Whisper.cpp** (STT) → **Context Planner** → **llama.cpp** (GGUF) → **Piper** (TTS).  
-- **Retrieval:** v0.1 BM25 over local docs; vectors later.  
-- **Hardware targets:** Raspberry Pi 5 (8GB), Jetson Orin Nano (8GB); battery-powered, mic+speaker.  
+- **Retrieval:** In v0.1 I’m using BM25 over local docs; vectors are coming later.  
+- **Hardware targets:** Raspberry Pi 5 (8GB) or Jetson Orin Nano (8GB), battery-powered with mic+speaker.  
 - **OS:** Raspberry Pi OS / Ubuntu Server; systemd service `anima-daemon`.  
-- **Dev tools:** VS Code + JSON Schema validation, simple CLI for pack/validate/trace.
+- **Dev tools:** VS Code + JSON Schema validation, plus a simple CLI for pack/validate/trace.
 
 ---
 
 ## What’s in v0.1
 
 ### Essence File (.ess) — schema draft
-Portable persona & memory container:
+I designed the file as a portable persona & memory container:
 
 - **persona:** name, values, tone, style, boundaries.  
-- **memories:** episodic, semantic, procedural, rapport, **moments_of_meaning**.  
+- **memories:** episodic, semantic, procedural, rapport, and **moments_of_meaning**.  
 - **projects:** brief, goals, decisions, next_steps.  
 - **adapters:** model family hints (token budgets, section ordering).  
 - **retrieval_hints:** priority ordering, context budget.  
@@ -66,15 +66,15 @@ Portable persona & memory container:
 ## Highlights (implementation notes)
 
 **Pipeline**
-- STT: `whisper.cpp` (small/medium quant, 16kHz), stream to JSON.
-- LLM: `llama.cpp` serving local **Qwen2.5-3B/7B** or **Mistral-7B** (Q4_K_M).
-- TTS: **Piper** (fast CPU voice); chunked playback for low latency.
+- STT: I run `whisper.cpp` (small/medium quant, 16kHz) and stream to JSON.
+- LLM: I’m using `llama.cpp` serving local **Qwen2.5-3B/7B** or **Mistral-7B** (Q4_K_M).
+- TTS: I integrated **Piper** (fast CPU voice) with chunked playback for low latency.
 - Planner: fixed budgets (identity+project reserve, short history window), BM25 for doc snippets.
 
 **Anima daemon**
-- Watches mount for `/soul/essence.ess`, validates schema, initializes persona.
+- Watches for `/soul/essence.ess`, validates schema, and initializes persona.
 - Builds prompts per adapter (“llama_like” in v0.1).
-- Writes new memories (session summaries) to `/data/memories/` (does **not** mutate the soul chip).
+- Writes new memories (session summaries) to `/data/memories/` without mutating the soul chip.
 
 **Perf targets (Pi 5)**
 - Ready < 25s; STT for 5s utterance < 2.5s; first token < 1.5s; 6–12 tok/s (7B Q4); TTS kickoff < 0.5s.
@@ -124,23 +124,24 @@ Portable persona & memory container:
 ## Roadmap
 
 - **v0.2**
-  - Wake-word (Precise/Porcupine), YAML authoring + **msgpack** compile.
-  - Redaction/compaction tools; optional PIN-unlock for `.ess`.
-  - Local web UI (inspect persona, memories, logs).
+  - Add wake-word (Precise/Porcupine), YAML authoring + **msgpack** compile.
+  - Build redaction/compaction tools; optional PIN-unlock for `.ess`.
+  - Add a local web UI to inspect persona, memories, and logs.
 
 - **v0.3**
-  - Vector retrieval; adapter profiles for multiple model families.
+  - Support vector retrieval; adapter profiles for multiple model families.
   - Essence diff/merge; optional signing & verification.
-  - “Soul marketplace” import/export patterns (offline-first).
+  - Experiment with a “soul marketplace” for offline import/export patterns.
 
 ---
 
 ## Getting started (pre-hardware)
 
-- Draft `.ess` files for **Kairo**, **Survivalist**, **Creative** personas.  
-- Run local loop on Windows: whisper.cpp → llama.cpp (small model) → Piper.  
-- Prototype the **context planner** (Python) against your `.ess`.  
-- Simulate a “soul chip” with a watched folder on your laptop.
+While I’m traveling, I’ve been:  
+- Drafting `.ess` files for **Kairo**, **Survivalist**, and **Creative** personas.  
+- Running the local loop on Windows: whisper.cpp → llama.cpp (small model) → Piper.  
+- Prototyping the **context planner** (Python) against my `.ess`.  
+- Simulating a “soul chip” with a watched folder on my laptop.
 
 ---
 
