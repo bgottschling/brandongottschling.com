@@ -35,13 +35,12 @@ export default function FancyCard({
 }: Props) {
   const [loaded, setLoaded] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
-
   const showImage = !!cover && !broken;
 
   return (
     <article
       className={cn(
-        // not-prose prevents Tailwind Typography (.prose) from injecting h3 margins
+        // prevent Tailwind Typography from injecting margins
         "not-prose group relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900",
         className
       )}
@@ -75,7 +74,7 @@ export default function FancyCard({
 
       {/* BODY */}
       <div className="p-4 md:p-5">
-        {/* Title: no default margins; tighter to the image */}
+        {/* Title: tight to the image */}
         <h3 className="m-0 mt-2 text-lg font-semibold leading-snug tracking-tight">
           <Link
             href={href}
@@ -85,16 +84,25 @@ export default function FancyCard({
           </Link>
         </h3>
 
-        {/* Summary: full-bleed subtle accent (flush with card edges) */}
+        {/* SUMMARY: higher-contrast warm gradient, full-bleed */}
         {summary ? (
-          <div className="-mx-4 mt-2 bg-amber-50/55 px-4 py-3 md:-mx-5 md:px-5 dark:bg-amber-300/5">
-            <p className="m-0 line-clamp-3 text-sm leading-6 text-neutral-700 dark:text-neutral-300">
+          <div
+            className={cn(
+              "-mx-4 md:-mx-5 mt-2 px-4 py-3 md:px-5",
+              // Gradient band + subtle top border and inset highlight
+              "bg-gradient-to-r from-amber-100/95 via-amber-50/95 to-rose-100/95",
+              "border-t border-amber-200/80 dark:border-amber-300/20",
+              "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.7)]",
+              "dark:from-amber-300/15 dark:via-amber-300/10 dark:to-rose-300/15"
+            )}
+          >
+            <p className="m-0 line-clamp-3 text-[0.95rem] leading-6 text-neutral-800 dark:text-neutral-200">
               {summary}
             </p>
           </div>
         ) : null}
 
-        {/* Tags + Date (neutral base) */}
+        {/* META */}
         {(tags?.length || date) && (
           <div className="mt-4 flex items-end justify-between gap-3">
             {tags?.length ? (
