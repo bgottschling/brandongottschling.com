@@ -65,17 +65,17 @@ export default function FancyCard({
       <div className="p-4 pt-3">
         {/* Title – pure clamp; ellipsis uses currentColor so it matches the title color */}
         <h3 className="text-[1.05rem]/6 font-semibold tracking-tight text-neutral-900 transition-colors group-hover:text-amber-600 dark:text-neutral-100">
-          <span
+            <span
             className="line-clamp-2"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical" as any,
+              WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
-          >
+            >
             {title}
-          </span>
+            </span>
         </h3>
 
         {/* Summary */}
@@ -85,7 +85,7 @@ export default function FancyCard({
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical" as any,
+              WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
           >
