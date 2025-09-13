@@ -14,7 +14,6 @@ type Props = {
   date?: string;
   tags?: string[];
   className?: string;
-  /** Optional: promote a card (e.g., first in list) */
   priority?: boolean;
 };
 
@@ -42,9 +41,8 @@ export default function FancyCard({
   return (
     <article
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900",
-        className
-      )}
+        "group relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900"
+      , className)}
     >
       {/* MEDIA */}
       <div className="relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
@@ -75,25 +73,32 @@ export default function FancyCard({
 
       {/* BODY */}
       <div className="p-4 md:p-5">
-        {/* Title block: tight top spacing */}
-        <h3 className="text-lg font-semibold leading-snug tracking-tight">
+        {/* Title: remove default h3 margins, add tight top spacing */}
+        <h3 className="m-0 mt-2 text-lg font-semibold leading-snug tracking-tight">
           <Link
             href={href}
-            className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+            className={cn(
+              // Default: amber text so the line-clamp ellipsis matches
+              "text-amber-700 dark:text-amber-300",
+              // On hover/focus: upgrade to gradient
+              "hover:text-transparent focus:text-transparent bg-clip-text hover:bg-gradient-to-r focus:bg-gradient-to-r hover:from-amber-600 hover:to-amber-500 focus:from-amber-600 focus:to-amber-500",
+              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+            )}
           >
-            <span className="line-clamp-2 bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">
-              {title}
-            </span>
+            <span className="line-clamp-2">{title}</span>
           </Link>
         </h3>
 
+        {/* Subtle accent for summary only */}
         {summary ? (
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
-            {summary}
-          </p>
+          <div className="mt-2 rounded-lg bg-amber-50/55 p-3 dark:bg-amber-300/5">
+            <p className="m-0 line-clamp-3 text-sm leading-6 text-neutral-700 dark:text-neutral-300">
+              {summary}
+            </p>
+          </div>
         ) : null}
 
-        {/* Tags + Date */}
+        {/* Tags + Date (neutral base) */}
         {(tags?.length || date) && (
           <div className="mt-4 flex items-end justify-between gap-3">
             {tags?.length ? (
@@ -106,16 +111,16 @@ export default function FancyCard({
                     {t}
                   </span>
                 ))}
-                {tags.length > 3 ? (
+                {tags.length > 3 && (
                   <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200">
                     +{tags.length - 3}
                   </span>
-                ) : null}
+                )}
               </div>
             ) : (
               <span />
             )}
-            {date ? (
+            {date && (
               <time
                 dateTime={date}
                 className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400"
@@ -126,7 +131,7 @@ export default function FancyCard({
                   day: "2-digit",
                 })}
               </time>
-            ) : null}
+            )}
           </div>
         )}
       </div>
