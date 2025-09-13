@@ -41,8 +41,10 @@ export default function FancyCard({
   return (
     <article
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900"
-      , className)}
+        // not-prose prevents Tailwind Typography (.prose) from injecting h3 margins
+        "not-prose group relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900",
+        className
+      )}
     >
       {/* MEDIA */}
       <div className="relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
@@ -73,25 +75,19 @@ export default function FancyCard({
 
       {/* BODY */}
       <div className="p-4 md:p-5">
-        {/* Title: remove default h3 margins, add tight top spacing */}
+        {/* Title: no default margins; tighter to the image */}
         <h3 className="m-0 mt-2 text-lg font-semibold leading-snug tracking-tight">
           <Link
             href={href}
-            className={cn(
-              // Default: amber text so the line-clamp ellipsis matches
-              "text-amber-700 dark:text-amber-300",
-              // On hover/focus: upgrade to gradient
-              "hover:text-transparent focus:text-transparent bg-clip-text hover:bg-gradient-to-r focus:bg-gradient-to-r hover:from-amber-600 hover:to-amber-500 focus:from-amber-600 focus:to-amber-500",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
-            )}
+            className="text-amber-700 underline-offset-[6px] hover:underline dark:text-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
           >
             <span className="line-clamp-2">{title}</span>
           </Link>
         </h3>
 
-        {/* Subtle accent for summary only */}
+        {/* Summary: full-bleed subtle accent (flush with card edges) */}
         {summary ? (
-          <div className="mt-2 rounded-lg bg-amber-50/55 p-3 dark:bg-amber-300/5">
+          <div className="-mx-4 mt-2 bg-amber-50/55 px-4 py-3 md:-mx-5 md:px-5 dark:bg-amber-300/5">
             <p className="m-0 line-clamp-3 text-sm leading-6 text-neutral-700 dark:text-neutral-300">
               {summary}
             </p>
@@ -136,7 +132,7 @@ export default function FancyCard({
         )}
       </div>
 
-      {/* Click target overlay */}
+      {/* Full-card click target */}
       <Link href={href} className="absolute inset-0" aria-label={title} />
     </article>
   );
