@@ -15,56 +15,47 @@ type Props = {
   tags?: string[];
   className?: string;
   priority?: boolean;
+  /** Set true if a parent already wraps this card in a <Link> to avoid nested anchors */
+  disableLink?: boolean;
 };
 
-function Shimmer() {
-  return (
-    <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-black/[0.03] to-black/[0.06] dark:from-white/[0.03] dark:to-white/[0.06]" />
-  );
-}
+// Tunable, keeps card heights consistent across the grid
+const TITLE_MIN_H_PX = 54;    // ~2 lines
+const SUMMARY_MIN_H_PX = 78;  // ~3 lines
 
-export default function FancyCard({
+function CardInner({
   href,
   title,
   summary,
   cover,
   date,
   tags,
-  className,
-  priority = false,
-}: Props) {
-  const [loaded, setLoaded] = React.useState(false);
-  const [broken, setBroken] = React.useState(false);
-  const showImage = !!cover && !broken;
+  priority,
+}: Omit<Props, "className" | "disableLink">) {
+  const [imgOk, setImgOk] = React.useState(true);
 
   return (
     <article
       className={cn(
-        // equal-height, bottom-aligned meta
-        "not-prose h-full flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_20px_-10px_rgba(0,0,0,0.25)] transition hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.35)] dark:border-white/10 dark:bg-zinc-900",
-        className
+        "h-full overflow-hidden rounded-2xl border border-black/5 bg-white",
+        "shadow-[0_10px_28px_-18px_rgba(0,0,0,0.45)] transition-all",
+        "hover:-translate-y-[1px] hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,0.55)]",
+        "dark:border-white/10 dark:bg-zinc-900"
       )}
     >
-      {/* MEDIA */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
-        {showImage ? (
-          <>
-            {!loaded && <Shimmer />}
-            <Image
-              src={cover!}
-              alt=""
-              fill
-              sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-              className={cn(
-                "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
-                loaded ? "opacity-100" : "opacity-0"
-              )}
-              priority={priority}
-              loading={priority ? "eager" : "lazy"}
-              onLoad={() => setLoaded(true)}
-              onError={() => setBroken(true)}
-            />
-          </>
+      {/* Media */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
+        {cover && imgOk ? (
+          <Image
+            src={cover}
+            alt=""
+            fill
+            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            loading={priority ? "eager" : "lazy"}
+            priority={priority}
+            onError={() => setImgOk(false)}
+          />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">
             No Image
@@ -72,49 +63,56 @@ export default function FancyCard({
         )}
       </div>
 
-      {/* CONTENT (grows) */}
-      <div className="flex grow flex-col p-4 md:p-5">
-        {/* Title: slightly smaller & tighter */}
-        <h3 className="m-0 mt-1.5 text-[1.05rem] leading-tight tracking-tight sm:text-[1.1rem] font-semibold">
-          <Link
-            href={href}
-            className="text-amber-700 underline-offset-[6px] hover:underline dark:text-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
-          >
-            <span className="line-clamp-2">{title}</span>
-          </Link>
+      {/* Title band (tight spacing, fixed min-height) */}
+      <div
+        className="px-4 pt-3 pb-2 md:px-5"
+        style={{ minHeight: TITLE_MIN_H_PX }}
+      >
+        <h3 className="m-0 text-[1.06rem] leading-snug tracking-tight font-semibold sm:text-[1.12rem]">
+          <span className="line-clamp-2 text-amber-800 dark:text-amber-300">
+            {title}
+          </span>
         </h3>
+      </div>
 
-        {/* Summary band: tighter padding; high-contrast warm gradient */}
+      {/* Summary band (higher contrast but not shouty) */}
+      <div
+        className={cn(
+          "px-4 py-3 md:px-5",
+          "bg-gradient-to-r from-amber-50 via-amber-50/80 to-amber-100/70",
+          "ring-1 ring-inset ring-amber-100/80",
+          "dark:from-amber-200/10 dark:via-amber-200/10 dark:to-amber-200/10 dark:ring-white/10"
+        )}
+        style={{ minHeight: SUMMARY_MIN_H_PX }}
+      >
         {summary ? (
-          <div className="-mx-4 mt-2 px-4 py-2 md:-mx-5 md:px-5 bg-gradient-to-r from-amber-200/90 via-amber-50/90 to-rose-200/90 dark:from-amber-300/15 dark:via-amber-300/10 dark:to-rose-300/15 border-t border-amber-200/80 dark:border-amber-300/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
-            <p className="m-0 line-clamp-3 text-[0.95rem] leading-6 text-neutral-800 dark:text-neutral-200">
-              {summary}
-            </p>
-          </div>
-        ) : null}
+          <p className="m-0 line-clamp-3 text-[0.95rem] leading-6 text-neutral-800 dark:text-neutral-100/90">
+            {summary}
+          </p>
+        ) : (
+          <div className="h-[1px] opacity-0" />
+        )}
+      </div>
 
-        {/* Meta pinned to bottom */}
-        {(tags?.length || date) && (
-          <div className="mt-auto pt-4 flex items-end justify-between gap-3">
-            {tags?.length ? (
-              <div className="flex flex-wrap gap-2">
-                {tags.slice(0, 3).map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200"
-                  >
-                    {t}
-                  </span>
-                ))}
-                {tags.length > 3 && (
-                  <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200">
-                    +{tags.length - 3}
-                  </span>
-                )}
-              </div>
-            ) : (
-              <span />
-            )}
+      {/* Footer (stable row: tags scroll, date pinned) */}
+      {(tags?.length || date) && (
+        <div className="px-4 pb-4 pt-3 md:px-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex gap-2 overflow-x-auto overscroll-x-contain scrollbar-none">
+              {(tags ?? []).slice(0, 6).map((t) => (
+                <span
+                  key={t}
+                  className="shrink-0 whitespace-nowrap rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200"
+                >
+                  {t}
+                </span>
+              ))}
+              {tags && tags.length > 6 && (
+                <span className="shrink-0 whitespace-nowrap rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200">
+                  +{tags.length - 6}
+                </span>
+              )}
+            </div>
             {date && (
               <time
                 dateTime={date}
@@ -128,11 +126,50 @@ export default function FancyCard({
               </time>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Full-card click target */}
-      <Link href={href} className="absolute inset-0" aria-label={title} />
+      {/* Click affordance for keyboard users if the whole card is linked */}
+      <span className="sr-only">Open: {title}</span>
     </article>
+  );
+}
+
+export default function FancyCard({
+  href,
+  title,
+  summary,
+  cover,
+  date,
+  tags,
+  className,
+  priority,
+  disableLink = false,
+}: Props) {
+  const body = (
+    <div className={cn("group h-full", className)}>
+      <CardInner
+        href={href}
+        title={title}
+        summary={summary}
+        cover={cover}
+        date={date}
+        tags={tags}
+        priority={priority}
+      />
+    </div>
+  );
+
+  // If you ever wrap FancyCard in a parent <Link>, pass disableLink to avoid nested anchors
+  if (disableLink) return body;
+
+  return (
+    <Link
+      href={href}
+      className="block h-full focus-visible:outline-none"
+      prefetch
+    >
+      {body}
+    </Link>
   );
 }
