@@ -34,7 +34,19 @@ export default function FancyCard({
   disableOverlay = false,
 }: Props) {
   const [imgOk, setImgOk] = React.useState(true);
+  const [loaded, setLoaded] = React.useState(false);
+  const [broken, setBroken] = React.useState(false);
   const visibleTags = (tags ?? []).slice(0, MAX_TAGS);
+
+  // Show image if cover is provided and not broken
+  const showImage = !!cover && !broken;
+
+  // Simple shimmer placeholder
+  function Shimmer() {
+    return (
+      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-800" />
+    );
+  }
 
   return (
     <article
@@ -55,17 +67,25 @@ export default function FancyCard({
       )}
 
       {/* Media */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
-        {cover && imgOk ? (
-          <Image
-            fill
-            src={cover}
-            alt=""
-            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-            priority={priority}
-            className="rounded-t-2xl object-cover"
-            onError={() => setImgOk(false)}
-          />
+      <div className="relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800">
+        {showImage ? (
+          <>
+            {!loaded && <Shimmer />}
+            <Image
+              src={cover!}
+              alt=""
+              fill
+              sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+              className={cn(
+                "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                loaded ? "opacity-100" : "opacity-0"
+              )}
+              priority={priority}
+              loading={priority ? "eager" : "lazy"}
+              onLoad={() => setLoaded(true)}
+              onError={() => setBroken(true)}
+            />
+          </>
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">
             No Image
