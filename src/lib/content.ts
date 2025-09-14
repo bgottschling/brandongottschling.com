@@ -9,6 +9,7 @@ export type ContentMeta = {
   date?: string;
   summary?: string;
   status?: string;
+  stage?: string;
   tags?: string[];
   /** Accepted content collections */
   type?: "blog" | "research" | "project" | "page" | "now";
@@ -120,6 +121,7 @@ export async function getAllContent(): Promise<ContentMeta[]> {
       date: toIso(data.date),
       summary: data.summary,
       status: data.status,
+      stage: data.stage,
       tags: data.tags ?? [],
       type: resolvedType,
       draft: Boolean(data.draft),

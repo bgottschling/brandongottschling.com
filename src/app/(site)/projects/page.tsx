@@ -37,14 +37,18 @@ export default async function ProjectsPage({
       cover: p.image,
       date: p.date,
       tags: p.tags,
-      stage,
+      stage: p.stage
     };
   });
 
   // counts
   const counts: Partial<Record<CountKey, number>> = {};
   for (const s of PROJECT_STAGES) counts[s] = 0;
-  for (const it of items) counts[it.stage] = (counts[it.stage] ?? 0) + 1;
+  for (const it of items) {
+    if (it.stage !== undefined) {
+      counts[it.stage as ProjectStage] = (counts[it.stage as ProjectStage] ?? 0) + 1;
+    }
+  }
   counts.all = items.length;
 
   const options: GridOption[] = PROJECT_STAGES.map((k) => ({
