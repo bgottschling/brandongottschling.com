@@ -15,14 +15,12 @@ type Props = {
   tags?: string[];
   className?: string;
   priority?: boolean;
-  /** If the parent already wraps this in a <Link>, set true to avoid a nested anchor. */
   disableOverlay?: boolean;
 };
 
-// Height guards to keep cards uniform across the grid
 const TITLE_MIN_H = 48;   // ~2 lines
 const SUMMARY_MIN_H = 78; // ~3 lines
-const MAX_TAGS = 3;       // keep date pinned; no scrollbars
+const MAX_TAGS = 9999;    // we now fade instead of capping; keep all
 
 export default function FancyCard({
   href,
@@ -37,7 +35,6 @@ export default function FancyCard({
 }: Props) {
   const [imgOk, setImgOk] = React.useState(true);
   const visibleTags = (tags ?? []).slice(0, MAX_TAGS);
-  const extraCount = (tags?.length ?? 0) - visibleTags.length;
 
   return (
     <article
@@ -49,7 +46,6 @@ export default function FancyCard({
         className
       )}
     >
-      {/* Full-card click target without underlining content */}
       {!disableOverlay && (
         <Link
           href={href}
@@ -77,7 +73,7 @@ export default function FancyCard({
         )}
       </div>
 
-      {/* Title band (tight spacing; only the title text is a link) */}
+      {/* Title band */}
       <div className="px-4 pb-1 pt-2 md:px-5" style={{ minHeight: TITLE_MIN_H }}>
         <h3 className="m-0 text-[1.05rem] font-semibold leading-snug tracking-tight sm:text-[1.1rem]">
           <Link
@@ -89,7 +85,7 @@ export default function FancyCard({
         </h3>
       </div>
 
-      {/* Summary band – contrasty but calm; no underlines */}
+      {/* Summary band */}
       <div
         className={cn(
           "px-4 py-3 md:px-5",
@@ -107,29 +103,36 @@ export default function FancyCard({
         )}
       </div>
 
-      {/* Footer – tags never scroll; date stays pinned */}
+      {/* Footer — single row tags with fade, date pinned */}
       {(visibleTags.length > 0 || date) && (
         <div className="px-4 pb-4 pt-3 md:px-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 flex-wrap gap-2">
-              {visibleTags.map((t) => (
-                <span
-                  key={t}
-                  className="shrink-0 whitespace-nowrap rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200"
-                >
-                  {t}
-                </span>
-              ))}
-              {extraCount > 0 && (
-                <span className="shrink-0 whitespace-nowrap rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200">
-                  +{extraCount}
-                </span>
-              )}
+          <div className="relative flex items-center gap-3">
+            {/* Tags rail (no wrap, no scrollbars, fade on the right) */}
+            <div className="min-w-0 flex-1">
+              <div
+                className="flex gap-2 whitespace-nowrap overflow-hidden pr-24"
+                // Fade the last ~20% so tags visually disappear behind the date
+                style={{
+                  maskImage: "linear-gradient(to right, black 80%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to right, black 80%, transparent 100%)",
+                }}
+              >
+                {visibleTags.map((t) => (
+                  <span
+                    key={t}
+                    className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
+
+            {/* Date pinned at the far right */}
             {date && (
               <time
                 dateTime={date}
-                className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400"
+                className="z-[1] shrink-0 text-xs text-neutral-500 dark:text-neutral-400"
               >
                 {new Date(date).toLocaleDateString(undefined, {
                   year: "numeric",
