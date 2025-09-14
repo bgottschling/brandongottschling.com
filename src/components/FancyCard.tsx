@@ -66,29 +66,37 @@ export default function FancyCard({
         />
       )}
 
-      {/* Media */}
-      <div className="relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800 mt-0 mb-0">
+
+      {/* MEDIA (no vertical margins, no baseline drift) */}
+      <div
+        className={cn(
+          "relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl",
+          "bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800",
+          "block leading-none text-[0]" // kill baseline/line-height gaps
+        )}
+        style={{ marginTop: 0, marginBottom: 0 }} // hard reset
+      >
         {showImage ? (
           <>
-        {!loaded && <Shimmer />}
-        <Image
-          src={cover!}
-          alt=""
-          fill
-          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-          className={cn(
-            "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
-            loaded ? "opacity-100" : "opacity-0"
-          )}
-          priority={priority}
-          loading={priority ? "eager" : "lazy"}
-          onLoad={() => setLoaded(true)}
-          onError={() => setBroken(true)}
-        />
+            {!loaded && <Shimmer />}
+            <Image
+              src={cover!}
+              alt=""
+              fill
+              sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+              className={cn(
+                "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
+                loaded ? "opacity-100" : "opacity-0"
+              )}
+              priority={priority}
+              loading={priority ? "eager" : "lazy"}
+              onLoad={() => setLoaded(true)}
+              onError={() => setBroken(true)}
+            />
           </>
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">
-        No Image
+            No Image
           </div>
         )}
       </div>
