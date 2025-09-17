@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -9,13 +8,15 @@ import BackgroundNetworkStable from "@/components/BackgroundNetworkStable";
 export const metadata: Metadata = {
   metadataBase: new URL("https://brandongottschling.com"),
   title: {
-    default: "Brandon Gottschling — Research, Projects, Writing",
+    default: "Brandon Gottschling — Consulting, Research, Projects, Writing",
     template: "%s | brandongottschling.com",
   },
-  description: "Research, Projects, Applications, CV, and Blog by Brandon Gottschling",
+  description:
+    "Boutique consulting by Brandon Gottschling — MVPs, AI integrations, performance & accessibility, dashboards, workflow automation, strategy — plus research, projects, and writing.",
   openGraph: {
     title: "Brandon Gottschling",
-    description: "Research, Projects, Applications, CV, and Blog by Brandon Gottschling.",
+    description:
+      "MVPs and modern systems — built fast with enterprise-tested craft. AI, performance, dashboards, automation, and strategy.",
     url: "https://brandongottschling.com",
     siteName: "brandongottschling.com",
     images: ["/api/og?title=Brandon%20Gottschling"],
@@ -25,8 +26,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@brandon_afk",
     creator: "@brandon_afk",
-    title: "Research, Projects, Applications, CV, and Blog by Brandon Gottschling",
-    description: "Research notes, Unity dev, crypto dashboards, and projects.",
+    title: "Brandon Gottschling — Consulting & Research",
+    description:
+      "MVPs, AI, performance, dashboards, automation, and strategy — plus research and writing.",
     images: ["/api/og?title=Brandon%20Gottschling"],
   },
   robots: { index: true, follow: true },
@@ -76,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           {/* Header / Nav (ABOVE scrim) */}
           <header className="sticky top-0 z-50 border-b border-border bg-white/70 backdrop-blur">
+            {/* Person */}
             <script type="application/ld+json" suppressHydrationWarning>
               {JSON.stringify({
                 "@context": "https://schema.org",
@@ -89,6 +92,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 ],
               })}
             </script>
+
+            {/* Site */}
             <script
               type="application/ld+json"
               suppressHydrationWarning
@@ -96,13 +101,109 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 __html: JSON.stringify({
                   "@context": "https://schema.org",
                   "@type": "WebSite",
-                  "name": "brandongottschling.com",
-                  "url": "https://brandongottschling.com",
-                  "potentialAction": {
+                  name: "brandongottschling.com",
+                  url: "https://brandongottschling.com",
+                  potentialAction: {
                     "@type": "SearchAction",
-                    "target": "https://brandongottschling.com/search?q={query}",
-                    "query-input": "required name=query"
-                  }
+                    target: "https://brandongottschling.com/search?q={query}",
+                    "query-input": "required name=query",
+                  },
+                }),
+              }}
+            />
+
+            {/* Services / OfferCatalog for rich/AI results */}
+            <script
+              type="application/ld+json"
+              suppressHydrationWarning
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "OfferCatalog",
+                  name: "Consulting Services",
+                  url: "https://brandongottschling.com/services",
+                  itemListElement: [
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "MVP / Custom App (Next.js + Supabase + Tailwind)",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 10000, maxPrice: 50000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "AI Integrations / LLM (fine-tuning, embeddings)",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 20000, maxPrice: 60000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "Performance & Accessibility",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 2000, maxPrice: 10000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "Dashboards & Analytics",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 2000, maxPrice: 10000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "Workflow Automation (Notion, Zapier, Airtable)",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "SEO Audit (Technical, Content, JSON-LD)",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "Strategy & CX Architecture",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 10000, maxPrice: 50000 },
+                    },
+                    {
+                      "@type": "Offer",
+                      itemOffered: {
+                        "@type": "Service",
+                        name: "Maintenance & Support",
+                        areaServed: ["US", "CA"],
+                        provider: { "@type": "Person", name: "Brandon Gottschling" },
+                      },
+                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000, unitText: "MON" },
+                    },
+                  ],
                 }),
               }}
             />
@@ -115,6 +216,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* Desktop nav */}
               <nav className="hidden md:flex gap-4 text-sm" aria-label="Primary">
                 {[
+                  { href: "/services", label: "Services" },
                   { href: "/research", label: "Research" },
                   { href: "/projects", label: "Projects" },
                   { href: "/blog", label: "Blog" },
@@ -125,6 +227,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {n.label}
                   </Link>
                 ))}
+                <Link
+                  href="/trust/contact" // replace with Calendly if desired
+                  className="rounded-md border px-2 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
+                >
+                  Book a Pilot
+                </Link>
               </nav>
 
               {/* Mobile command menu */}
@@ -134,25 +242,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </header>
 
-          {/* Main content (ABOVE scrim) */}
+          {/* Main content */}
           <main className="relative z-10 mx-auto max-w-3xl px-4 py-8 prose prose-zinc">
             {children}
           </main>
 
-          {/* Footer (ABOVE scrim) */}
+          {/* Footer */}
           <footer className="relative z-10 mx-auto max-w-3xl px-4 py-8 text-sm text-muted-foreground">
             <hr className="mb-4 border-border" />
             <div className="flex items-center justify-between gap-3">
               <span>© {new Date().getFullYear()} Brandon Gottschling</span>
-
               <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-3 gap-y-2">
                 <Link href="/now" className="hover:text-accent transition">/now</Link>
                 <Link href="/rss.xml" className="hover:text-accent transition" rel="alternate">RSS</Link>
-
-                {/* Primary Trust hub */}
                 <Link href="/trust" className="hover:text-accent transition">Trust</Link>
-
-                {/* Quick sub-links */}
                 <span aria-hidden="true" className="text-muted-foreground">·</span>
                 <Link href="/trust/contact" className="hover:text-accent transition">Contact</Link>
                 <span aria-hidden="true" className="text-muted-foreground">·</span>
