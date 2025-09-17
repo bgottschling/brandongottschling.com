@@ -1,0 +1,72 @@
+// src/components/ServiceBand.tsx
+import Link from "next/link";
+
+export type Service = {
+  id: string;
+  title: string;
+  price: string;   // e.g., "Typical: $10k–$50k"
+  blurb: string;
+  bullets?: string[];
+};
+
+export default function ServiceBand({ service }: { service: Service }) {
+  return (
+    <details
+      className="group overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_10px_28px_-18px_rgba(0,0,0,0.45)]
+                 ring-1 ring-inset ring-amber-100/80 open:shadow-[0_18px_40px_-20px_rgba(0,0,0,0.55)]
+                 dark:border-white/10 dark:bg-zinc-900 dark:ring-white/10"
+    >
+      <summary className="list-none cursor-pointer select-none">
+        {/* Accent header row (mirrors FancyCard band) */}
+        <div
+          className="flex items-center justify-between gap-3 rounded-t-2xl border-b border-black/5
+                     bg-gradient-to-r from-amber-50/85 via-amber-50 to-amber-100/80 px-4 py-3
+                     dark:border-white/10 dark:from-amber-200/10 dark:via-amber-200/10 dark:to-amber-200/10"
+        >
+          <div className="min-w-0">
+            <h3 className="m-0 truncate text-[1.05rem] font-semibold leading-snug tracking-tight">
+              {service.title}
+            </h3>
+            <p className="m-0 truncate text-sm text-neutral-700 dark:text-neutral-300">{service.blurb}</p>
+          </div>
+
+          <div className="shrink-0 text-right">
+            <div className="text-xs text-neutral-500 dark:text-neutral-400">Typical</div>
+            <div className="text-sm font-medium">{service.price}</div>
+          </div>
+
+          <span
+            aria-hidden
+            className="ml-1 inline-flex h-6 w-6 items-center justify-center rounded-md border border-amber-200 text-xs
+                       transition-transform group-open:rotate-180 dark:border-white/10"
+          >
+            ▾
+          </span>
+        </div>
+      </summary>
+
+      {/* Body */}
+      <div className="px-5 pb-4 pt-3">
+        {service.bullets?.length ? (
+          <ul className="mt-1 list-disc list-inside text-sm text-neutral-800 dark:text-neutral-100/90">
+            {service.bullets.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-white/10 dark:text-neutral-200">
+            ☑ Included in pilot scoping
+          </span>
+          <Link
+            href="/services"
+            className="inline-flex items-center rounded-md border px-2 py-1 text-xs hover:bg-zinc-50 dark:border-white/10 dark:hover:bg-zinc-900/40"
+          >
+            View details
+          </Link>
+        </div>
+      </div>
+    </details>
+  );
+}
