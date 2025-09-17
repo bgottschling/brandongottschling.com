@@ -37,7 +37,7 @@ export default function BrandBadges({
       </span>
 
       {brands.map((b) => {
-        const svg = isSvg(b.src as any);
+        const svg = isSvg(typeof b.src === "string" ? b.src : undefined);
         const useMono = b.mono ?? mono;
         const useInvert = b.invertDark ?? autoDarkInvert;
         const allowFilters = svg ? !!b.filtersOnSvg : true;
