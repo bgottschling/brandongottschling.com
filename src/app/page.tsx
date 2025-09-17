@@ -55,7 +55,7 @@ export default async function HomePage() {
       <section aria-label="Trusted by" className="mb-8">
         <BrandBadges
           brands={[
-            { name: "Warner Bros Discovery", src: "/logos/wbd.png" },
+            { name: "Warner Bros Discovery", src: "/logos/WBD.png" },
             { name: "Tricentis", src: "/logos/tricentis.webp" },
             { name: "Becton Dickinson", src: "/logos/bd.svg" },
           ]}
