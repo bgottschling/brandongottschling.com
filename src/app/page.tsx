@@ -32,10 +32,7 @@ export default async function HomePage() {
           I build MVPs and modernize digital systems — fast.
         </h1>
         <p className="max-w-[68ch] leading-8 md:text-lg text-zinc-900 dark:text-zinc-100">
-          From custom apps and dashboards to AI integrations, performance, accessibility, and automation —{" "}
-          I bring enterprise-tested craft within reach. I’ve supported teams at{" "}
-          <span className="font-medium">Warner Bros Discovery</span>, <span className="font-medium">Tricentis</span>, and{" "}
-          <span className="font-medium">Becton Dickinson</span>, and now apply that experience to help organizations ship what matters.
+          I help teams ship smarter — not just faster. Whether it’s a lean MVP, an AI-powered dashboard, or a performance overhaul, I bring enterprise-grade precision to small teams and bold ideas. Trusted by <span className="font-medium">Warner Bros Discovery</span>, <span className="font-medium">Tricentis</span>, and <span className="font-medium">BD</span>, I turn complexity into clarity — so you can launch what actually moves the needle.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           {/* Replace href with your Calendly link if preferred */}
@@ -58,10 +55,13 @@ export default async function HomePage() {
       <section aria-label="Trusted by" className="mb-8">
         <BrandBadges
           brands={[
-            { name: "Warner Bros Discovery", src: "/logos/wbd.png", initials: "WBD" },
-            { name: "Tricentis", src: "/logos/tricentis.webp", initials: "TRI" },
-            { name: "Becton Dickinson", src: "/logos/bd.svg", initials: "BD" },
+            { name: "Warner Bros Discovery", src: "/logos/wbd.png" },
+            { name: "Tricentis", src: "/logos/tricentis.webp" },
+            { name: "Becton Dickinson", src: "/logos/bd.svg" },
           ]}
+          height={32}
+          boxWidth={128}
+          priority
         />
       </section>
 

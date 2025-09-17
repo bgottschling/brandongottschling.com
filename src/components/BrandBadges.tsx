@@ -54,38 +54,27 @@ export default function BrandBadges({
           .join(" ");
 
         return (
-          <div
+            <div
             key={b.name}
             className={[
-              "relative overflow-hidden rounded-xl",
-              bordered ? "border border-black/10 bg-white/70 dark:border-white/10 dark:bg-zinc-900/60" : "",
+                "relative flex items-center justify-center rounded-xl",
+                bordered ? "border border-black/10 bg-white/70 dark:border-white/10 dark:bg-zinc-900/60" : "",
             ].join(" ")}
             style={{ width: boxWidth, height }}
-            title={b.name}
-            aria-label={b.name}
-          >
+            >
             {b.src ? (
-              <div className="absolute inset-0 p-2">
-                <div className="relative h-full w-full">
-                  <Image
-                    src={b.src}
-                    alt={b.name}
-                    fill
-                    sizes={`${boxWidth}px`}
-                    className={["object-contain", filterClasses].join(" ")}
-                    priority={priority}
-                    // Note: Next/Image handles svg/png/webp/jpg seamlessly for local files in /public.
-                  />
-                </div>
-              </div>
+                <Image
+                src={b.src}
+                alt={b.name}
+                fill
+                sizes={`${boxWidth}px`}
+                className={`object-contain ${filterClasses}`}
+                priority={priority}
+                />
             ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
-                  {b.initials ?? b.name}
-                </span>
-              </div>
+                <span className="text-sm font-medium">{b.initials ?? b.name}</span>
             )}
-          </div>
+            </div>
         );
       })}
     </div>
