@@ -1,80 +1,84 @@
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 type Brand = {
   name: string;
-  src?: string;          // "/logos/wbd.svg" | "/logos/wbd.png" | "/logos/wbd.webp" | ...
-  initials?: string;     // fallback letters if image missing
-  mono?: boolean;        // force grayscale/mono for this brand
-  invertDark?: boolean;  // force invert in dark mode (useful for dark logos)
-  filtersOnSvg?: boolean;// apply filters to SVG too (off by default)
+  src?: string | StaticImageData;
+  initials?: string;
+  mono?: boolean;        // opt-in grayscale
+  invertDark?: boolean;  // opt-in dark-mode invert
+  filtersOnSvg?: boolean;// opt-in filters for SVG
 };
 
-function isSvgPath(src?: string) {
-  if (!src) return false;
+function isSvg(src?: string | StaticImageData) {
+  if (!src || typeof src !== "string") return false;
   const q = src.split("?")[0].toLowerCase();
   return q.endsWith(".svg");
 }
 
 export default function BrandBadges({
   brands,
-  height = 28,      // logo box height (px)
-  boxWidth = 120,   // per-badge width for a tidy row
-  gap = 12,         // spacing between badges
-  mono = true,      // grayscale by default
-  autoDarkInvert = true,
+  mono = false,            // full color by default
+  autoDarkInvert = false,  // no invert by default
   bordered = true,
-  priority = false, // set true on homepage
+  priority = false,
+  className,
 }: {
   brands: Brand[];
-  height?: number;
-  boxWidth?: number;
-  gap?: number;
   mono?: boolean;
   autoDarkInvert?: boolean;
   bordered?: boolean;
   priority?: boolean;
+  className?: string;      // to set responsive size vars from parent
 }) {
   return (
-    <div className="flex flex-wrap items-center" style={{ gap }}>
-      <span className="uppercase tracking-wide text-xs text-zinc-500">Trusted by teams at:</span>
+    <div className={`flex flex-wrap items-center gap-3 ${className ?? ""}`}>
+      <span className="uppercase tracking-wide text-xs text-zinc-500">
+        Trusted by teams at:
+      </span>
 
       {brands.map((b) => {
-        const svg = isSvgPath(b.src);
+        const svg = isSvg(b.src as any);
         const useMono = b.mono ?? mono;
         const useInvert = b.invertDark ?? autoDarkInvert;
+        const allowFilters = svg ? !!b.filtersOnSvg : true;
 
-        // By default, skip filters on SVG to avoid weird color inversions.
-        const applyFilters = svg ? !!b.filtersOnSvg : true;
-
-        const filterClasses = [
-          applyFilters && useMono ? "grayscale opacity-90" : "",
-          applyFilters && useInvert ? "dark:invert" : "",
+        const filters = [
+          allowFilters && useMono ? "grayscale" : "",
+          allowFilters && useInvert ? "dark:invert" : "",
         ]
           .filter(Boolean)
           .join(" ");
 
         return (
-            <div
+          <div
             key={b.name}
             className={[
-                "relative flex items-center justify-center rounded-xl",
-                bordered ? "border border-black/10 bg-white/70 dark:border-white/10 dark:bg-zinc-900/60" : "",
+              "relative flex items-center justify-center rounded-xl",
+              bordered ? "border border-black/10 bg-white/70 dark:border-white/10 dark:bg-zinc-900/60" : "",
             ].join(" ")}
-            style={{ width: boxWidth, height }}
-            >
+            style={{
+              // Size via CSS vars (set on parent with Tailwind arbitrary properties)
+              width: "var(--bb-w, 128px)",
+              height: "var(--bb-h, 32px)",
+            }}
+            title={b.name}
+            aria-label={b.name}
+          >
             {b.src ? (
-                <Image
+              <Image
                 src={b.src}
                 alt={b.name}
                 fill
-                sizes={`${boxWidth}px`}
-                className={`object-contain ${filterClasses}`}
+                sizes="(min-width:768px) 136px, 33vw"
+                className={`object-contain p-2 ${filters}`.trim()}
                 priority={priority}
-                />
+              />
             ) : (
-                <span className="text-sm font-medium">{b.initials ?? b.name}</span>
+              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                {b.initials ?? b.name}
+              </span>
             )}
-            </div>
+          </div>
         );
       })}
     </div>

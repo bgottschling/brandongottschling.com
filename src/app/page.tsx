@@ -54,14 +54,12 @@ export default async function HomePage() {
       {/* TRUST BADGES (swap srcs when you add SVGs in /public/logos) */}
       <section aria-label="Trusted by" className="mb-8">
         <BrandBadges
+          className="[--bb-h:28px] [--bb-w:112px] sm:[--bb-h:30px] sm:[--bb-w:128px] md:[--bb-h:32px] md:[--bb-w:136px]"
           brands={[
-            { name: "Warner Bros Discovery", src: "/logos/WBD.png" },
+            { name: "Warner Bros Discovery", src: "/logos/wbd.png" },
             { name: "Tricentis", src: "/logos/tricentis.webp" },
             { name: "Becton Dickinson", src: "/logos/bd.svg" },
           ]}
-          height={32}
-          boxWidth={128}
-          priority
         />
       </section>
 
