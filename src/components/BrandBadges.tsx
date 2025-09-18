@@ -23,7 +23,7 @@ export default function BrandBadges({
   brands,
   // Responsive size via CSS vars (override on parent via className if you like)
   className,
-  bordered = true,
+  bordered = false,
   priority = false,
   mono = false,
   autoDarkInvert = false,
