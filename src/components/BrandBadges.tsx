@@ -43,10 +43,12 @@ export default function BrandBadges({
 
       {/* Responsive grid keeps the row tidy on mobile */}
       <div
-        className="
-          grid gap-3
-          grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:auto-cols-max md:grid-flow-col
-        "
+            className="
+            grid gap-3
+            grid-cols-1
+            sm:grid-cols-2
+            md:auto-cols-max md:grid-flow-col
+            "
         style={{
           // default sizes; override via parent: [--bb-h:28px] [--bb-w:112px]
           // example: className="[--bb-h:28px] [--bb-w:112px] sm:[--bb-h:32px] sm:[--bb-w:136px]"
@@ -54,6 +56,7 @@ export default function BrandBadges({
           // @ts-expect-error CSS var fallback
           "--bb-h": "32px",
           "--bb-w": "136px",
+          marginTop: ".25rem",
         }}
       >
         {brands.map((b) => {

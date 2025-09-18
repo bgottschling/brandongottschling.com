@@ -74,11 +74,9 @@ export default function ServicesList() {
         </header>
 
         {/* single column on mobile; two columns on lg+; equal-height rows */}
-        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:[grid-auto-rows:1fr]">
+        <div className="flex flex-col gap-4">
         {services.map((svc) => (
-            <div key={svc.id} className="h-full">
-            <ServiceBand service={svc} />
-            </div>
+            <ServiceBand key={svc.id} service={svc} />
         ))}
         </div>
     </section>
