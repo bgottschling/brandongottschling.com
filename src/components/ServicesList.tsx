@@ -62,22 +62,25 @@ export default function ServicesList() {
     },
   ];
 
-  return (
+    return (
     <section className="mt-2" aria-labelledby="services-heading">
-      <header className="mb-3 flex items-baseline justify-between">
+        <header className="mb-3 flex items-baseline justify-between">
         <h2 id="services-heading" className="text-lg font-semibold tracking-tight">
-          Services <span className="text-sm text-zinc-500">(pilot is 100% discounted)</span>
+            Services <span className="text-sm text-zinc-500">(pilot is 100% discounted)</span>
         </h2>
         <Link href="/services" className="text-sm underline underline-offset-4">
-          See full menu
+            See full menu
         </Link>
-      </header>
+        </header>
 
-      <div className="flex flex-col gap-3">
+        {/* single column on mobile; two columns on lg+; equal-height rows */}
+        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:[grid-auto-rows:1fr]">
         {services.map((svc) => (
-          <ServiceBand key={svc.id} service={svc} />
+            <div key={svc.id} className="h-full">
+            <ServiceBand service={svc} />
+            </div>
         ))}
-      </div>
+        </div>
     </section>
-  );
+    );
 }
