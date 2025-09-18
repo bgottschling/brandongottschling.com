@@ -51,9 +51,8 @@ export default function BrandBadges({
           // default sizes; override via parent: [--bb-h:28px] [--bb-w:112px]
           // example: className="[--bb-h:28px] [--bb-w:112px] sm:[--bb-h:32px] sm:[--bb-w:136px]"
           // (Tailwind arbitrary props)
-          // @ts-ignore CSS var fallback
+          // @ts-expect-error CSS var fallback
           "--bb-h": "32px",
-          // @ts-ignore
           "--bb-w": "136px",
         }}
       >
