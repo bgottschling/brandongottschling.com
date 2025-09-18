@@ -36,7 +36,7 @@ export default function BrandBadges({
   autoDarkInvert?: boolean;
 }) {
   return (
-    <div className={`not-prose ${className ?? ""}`}>
+    <div className={`not-prose mx-auto ${className ?? ""}`}>
       <div className="mb-2 text-xs uppercase tracking-wide text-zinc-500">
         Trusted by teams at:
       </div>
@@ -48,6 +48,7 @@ export default function BrandBadges({
             grid-cols-1
             sm:grid-cols-2
             md:auto-cols-max md:grid-flow-col
+            justify-center
             "
         style={{
           // default sizes; override via parent: [--bb-h:28px] [--bb-w:112px]
