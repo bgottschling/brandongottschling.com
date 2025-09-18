@@ -61,9 +61,9 @@ export default async function HomePage() {
           "
           brands={[
             // WBD often ships with generous whitespace → reduce padding + bump scale slightly
-            { name: "Warner Bros Discovery", src: "/logos/WBD.png", pad: 4, scale: 2.24, align: "center" },
-            { name: "Tricentis", src: "/logos/tricentis.webp", pad: 8, scale: 2.0 },
-            { name: "Becton Dickinson", src: "/logos/bd.svg", pad: 8, scale: 2.0 },
+            { name: "Warner Bros Discovery", src: "/logos/WBD.png", pad: 8, scale: 2.24, align: "center" },
+            { name: "Tricentis", src: "/logos/tricentis.webp", pad: 16, scale: 2.0 },
+            { name: "Becton Dickinson", src: "/logos/bd.svg", pad: 16, scale: 2.0 },
           ]}
           priority
         />
