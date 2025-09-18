@@ -65,7 +65,6 @@ export default async function HomePage() {
             { name: "Tricentis", src: "/logos/tricentis.webp", pad: 8, scale: 2.0 },
             { name: "Becton Dickinson", src: "/logos/bd.svg", pad: 8, scale: 2.0 },
           ]}
-          bordered
           priority
         />
       </section>
