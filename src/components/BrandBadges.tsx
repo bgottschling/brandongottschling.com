@@ -56,9 +56,11 @@ export default function BrandBadges({
           // @ts-expect-error CSS var fallback
           "--bb-h": "32px",
           "--bb-w": "136px",
-          marginTop: ".25rem",
+          paddingTop: "1rem",
         }}
       >
+    {/* STACK on mobile, then 2 cols (sm), then 3 cols (md). */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         {brands.map((b) => {
           const svg = isSvg(typeof b.src === "string" ? b.src : undefined);
           const allowFilters = svg ? !!b.filtersOnSvg : true;
@@ -75,11 +77,13 @@ export default function BrandBadges({
             <div
               key={b.name}
               className={[
-                "relative flex items-center justify-center rounded-xl",
+                "relative mx-auto flex w-full items-center justify-center rounded-xl",
                 bordered ? "border border-black/10 bg-white/70 dark:border-white/10 dark:bg-zinc-900/60" : "",
               ].join(" ")}
               style={{
-                width: "var(--bb-w, 136px)",
+                // make the cell take full width of the column,
+                // but cap the visual width so marks don't look huge
+                maxWidth: "var(--bb-w, 136px)",
                 height: "var(--bb-h, 32px)",
               }}
               title={b.name}
@@ -90,7 +94,7 @@ export default function BrandBadges({
                   src={b.src}
                   alt={b.name}
                   fill
-                  sizes="(min-width:768px) 136px, 33vw"
+                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 40vw, 136px"
                   className={[
                     "object-contain",
                     allowFilters && useMono ? "grayscale" : "",
@@ -112,6 +116,7 @@ export default function BrandBadges({
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );
