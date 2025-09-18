@@ -52,13 +52,13 @@ export default function BrandBadges({
           // example: className="[--bb-h:28px] [--bb-w:112px] sm:[--bb-h:32px] sm:[--bb-w:136px]"
           // (Tailwind arbitrary props)
           // @ts-ignore CSS var fallback
-          ["--bb-h" as any]: "32px",
+          "--bb-h": "32px",
           // @ts-ignore
-          ["--bb-w" as any]: "136px",
+          "--bb-w": "136px",
         }}
       >
         {brands.map((b) => {
-          const svg = isSvg(b.src as any);
+          const svg = isSvg(typeof b.src === "string" ? b.src : undefined);
           const allowFilters = svg ? !!b.filtersOnSvg : true;
           const useMono = b.mono ?? mono;
           const useInvert = b.invertDark ?? autoDarkInvert;
