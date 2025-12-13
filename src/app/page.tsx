@@ -29,10 +29,10 @@ export default async function HomePage() {
       {/* HERO */}
       <section aria-labelledby="hero-heading" className="mb-6">
         <h1 id="hero-heading" className="mb-3 text-2xl font-semibold tracking-tight">
-          I build MVPs and modernize digital systems — fast.
+          I build prototypes, write about tech and life, and share what I learn along the way.
         </h1>
         <p className="max-w-[68ch] leading-8 md:text-lg text-zinc-900 dark:text-zinc-100">
-            Building to learn and learning to build. This is my journal, my experiment, my resume? Check it out, have a look around and get to know me a little. This place is an ever-evolving collection of my thoughts on technology, life, faith, and work, along with case studies of projects I've built and research notes I've compiled.
+            Building to learn and learning to build. This is my journal, my experiment, my resume? Check it out, have a look around and get to know me a little. This place is an ever-evolving collection of my thoughts on technology, life, faith, and work, along with case studies of projects I&apos;ve built and research notes I&apos;ve compiled.
         </p>
         {/*<div className="mt-4 flex flex-wrap gap-3">
           {/* Replace href with your Calendly link if preferred
