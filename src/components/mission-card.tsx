@@ -22,7 +22,7 @@ export default function MissionCard() {
         </p>
         <p className="mt-3 text-[15px] leading-7 text-neutral-800 dark:text-neutral-100/90">
           I want this work to be more than output. I’m learning to be the kind of person who
-          shows up—steady at home, useful in the world. That looks like working hard, seeking
+          shows up, steady at home and useful in the world. That looks like working hard, seeking
           peace, and making things that genuinely help.
         </p>
       </div>
