@@ -216,7 +216,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* Desktop nav */}
               <nav className="hidden md:flex gap-4 text-sm" aria-label="Primary">
                 {[
-                  { href: "/services", label: "Services" },
                   { href: "/research", label: "Research" },
                   { href: "/projects", label: "Projects" },
                   { href: "/blog", label: "Blog" },
@@ -227,12 +226,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {n.label}
                   </Link>
                 ))}
-                <Link
+                {/*<Link
                   href="/trust/contact" // replace with Calendly if desired
                   className="rounded-md border px-2 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-900/40"
                 >
                   Book a Pilot
-                </Link>
+                </Link>*/}
               </nav>
 
               {/* Mobile command menu */}

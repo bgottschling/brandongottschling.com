@@ -32,10 +32,10 @@ export default async function HomePage() {
           I build MVPs and modernize digital systems — fast.
         </h1>
         <p className="max-w-[68ch] leading-8 md:text-lg text-zinc-900 dark:text-zinc-100">
-          I help teams ship smarter — not just faster. Whether it’s a lean MVP, an AI-powered dashboard, or a performance overhaul, I bring enterprise-grade precision to small teams and bold ideas. Trusted by <span className="font-medium">Warner Bros Discovery</span>, <span className="font-medium">Tricentis</span>, and <span className="font-medium">BD</span>, I turn complexity into clarity — so you can launch what actually moves the needle.
+            Building to learn and learning to build. This is my journal, my experiment, my resume? Check it out, have a look around and get to know me a little. This place is an ever-evolving collection of my thoughts on technology, life, faith, and work, along with case studies of projects I've built and research notes I've compiled.
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {/* Replace href with your Calendly link if preferred */}
+        {/*<div className="mt-4 flex flex-wrap gap-3">
+          {/* Replace href with your Calendly link if preferred
           <Link
             href="/trust/contact"
             className="inline-flex items-center rounded-lg border border-transparent bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900"
@@ -48,7 +48,7 @@ export default async function HomePage() {
           >
             View services & pricing
           </Link>
-        </div>
+        </div> */}
       </section>
 
       {/* TRUST BADGES (swap srcs when you add SVGs in /public/logos) */}
@@ -74,7 +74,7 @@ export default async function HomePage() {
       </section>
 
       {/* SERVICES — accented expandable bands to match FancyCard language */}
-      <ServicesList />
+      {/*<ServicesList />*/}
 
       {/* MISSION — restyled to match FancyCard accent band */}
       <section className="mt-10" aria-labelledby="mission-heading">
