@@ -4,7 +4,7 @@ import CenteredFilterShell from "@/components/layouts/CenteredFilterShell";
 import SidebarCategoryGrid, { type GridOption } from "@/components/SidebarCategoryGrid";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
 import SearchViewBar from "@/components/SearchViewBar";
-import BucketBoard from "@/components/BucketBoard";
+import ItemsGridList, { type Item as ItemsGridItem } from "@/components/ItemsGridList";
 
 export const runtime = "nodejs";
 export const metadata = { title: "Blog" };
@@ -18,6 +18,7 @@ export const viewport = {
 };
 
 type CountKey = PrimaryCategory | "all";
+type BlogItem = ItemsGridItem & { primaryCategory?: PrimaryCategory };
 
 export default async function BlogPage({
   searchParams,
@@ -29,7 +30,7 @@ export default async function BlogPage({
   const raw = await getAllContent();
   const posts = filterVisible(raw).filter((x) => (x.type ?? "blog") === "blog");
 
-  const items = posts.map((p) => ({
+  const items: BlogItem[] = posts.map((p) => ({
     href: `/blog/${p.slug.split("/").pop()}`,
     title: p.title,
     summary: p.summary,
@@ -61,6 +62,20 @@ export default async function BlogPage({
   const q = (sp.q as string | undefined) ?? undefined;
   const view = (sp.view as "grid" | "list" | undefined) ?? "grid";
 
+    // filter + search
+  let filtered = items;
+  if (bucket) filtered = filtered.filter((it) => (it.primaryCategory ?? inferFromTags(it.tags)) === bucket);
+  if (q) {
+    const qq = q.toLowerCase();
+    filtered = filtered.filter(
+      (it) =>
+        it.title.toLowerCase().includes(qq) ||
+        (it.summary?.toLowerCase().includes(qq) ?? false) ||
+        (it.tags ?? []).some((t) => t.toLowerCase().includes(qq))
+    );
+  }
+
+
   return (
     <main className="py-10">
       <CenteredFilterShell
@@ -84,13 +99,7 @@ export default async function BlogPage({
 
           <SearchViewBar placeholder="Search posts..." />
 
-          <BucketBoard
-            items={items}
-            filterBucket={bucket}
-            q={q}
-            view={view}
-            visibleBuckets={BLOG_BUCKETS}
-          />
+          <ItemsGridList items={filtered} view={view} />
         </div>
       </CenteredFilterShell>
     </main>
