@@ -8,6 +8,8 @@ type Brand = {
   pad?: number;   // inner padding in px (default 8)
   scale?: number; // 0.8–1.3 visual scale (default 1)
   align?: "center" | "top" | "bottom"; // default center
+  shiftX?: number; // nudge logo horizontally (px)
+  shiftY?: number; // nudge logo vertically (px)
   mono?: boolean;        // opt-in grayscale
   invertDark?: boolean;  // opt-in dark-mode invert
   filtersOnSvg?: boolean;// opt-in filters for SVG
@@ -23,6 +25,7 @@ export default function BrandBadges({
   brands,
   // Responsive size via CSS vars (override on parent via className if you like)
   className,
+  gridClassName,
   bordered = false,
   priority = false,
   mono = false,
@@ -30,6 +33,7 @@ export default function BrandBadges({
 }: {
   brands: Brand[];
   className?: string;
+  gridClassName?: string;
   bordered?: boolean;
   priority?: boolean;
   mono?: boolean;
@@ -43,13 +47,12 @@ export default function BrandBadges({
 
       {/* Responsive grid keeps the row tidy on mobile */}
       <div
-            className="
-            grid gap-3
-            grid-cols-1
-            sm:grid-cols-2
-            md:auto-cols-max md:grid-flow-col
-            justify-center
-            "
+        className={`
+          grid w-full justify-items-center gap-4
+          grid-cols-1
+          sm:grid-cols-1 sm:gap-6
+          ${gridClassName ?? ""}
+        `}
         style={{
           // default sizes; override via parent: [--bb-h:28px] [--bb-w:112px]
           // example: className="[--bb-h:28px] [--bb-w:112px] sm:[--bb-h:32px] sm:[--bb-w:136px]"
@@ -68,6 +71,8 @@ export default function BrandBadges({
 
           const pad = (b.pad ?? 8) + "px";
           const scale = b.scale ?? 1;
+          const shiftX = b.shiftX ?? 0;
+          const shiftY = b.shiftY ?? 0;
           const align = b.align ?? "center";
           const objectPosition =
             align === "top" ? "center top" : align === "bottom" ? "center bottom" : "center";
@@ -99,7 +104,7 @@ export default function BrandBadges({
                   ].join(" ")}
                   style={{
                     padding: pad,
-                    transform: `scale(${scale})`,
+                    transform: `translate(${shiftX}px, ${shiftY}px) scale(${scale})`,
                     transformOrigin: "center",
                     objectPosition,
                   }}

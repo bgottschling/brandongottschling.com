@@ -59,10 +59,14 @@ export default async function HomePage() {
             sm:[--bb-h:30px] sm:[--bb-w:128px]
             md:[--bb-h:32px] md:[--bb-w:136px]
           "
+          gridClassName="
+            gap-5 sm:gap-6
+            md:grid-cols-3 md:grid-flow-row md:justify-items-center md:justify-center
+          "          
           brands={[
-            // WBD often ships with generous whitespace → reduce padding + bump scale slightly
-            { name: "Warner Bros Discovery", src: "/logos/WBD.png", pad: 5, scale: 2.24, align: "center" },
-            { name: "Tricentis", src: "/logos/tricentis.webp", pad: 10, scale: 2.0 },
+            // WBD asset has extra transparent padding → nudge and scale to center the mark
+            { name: "Warner Bros Discovery", src: "/logos/WBD.png", pad: 3, scale: 2.0, align: "center", shiftX: 1, shiftY: -1 },
+            { name: "Tricentis", src: "/logos/tricentis.webp", pad: 10, scale: 2.0},
             { name: "Becton Dickinson", src: "/logos/bd.svg", pad: 10, scale: 2.0 },
           ]}
           priority
