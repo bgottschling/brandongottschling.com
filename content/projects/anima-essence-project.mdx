@@ -21,11 +21,11 @@ links:
 />
 
 > **Why**  
-> I’ve noticed how AI personas are ephemeral—trapped in provider silos and lost between sessions. With **Anima**, I’m creating a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
+> I’ve noticed how AI personas are ephemeral – trapped in provider silos and lost between sessions. With **Anima**, I’m creating a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
 
 ## Stack Overview
 
-- **Format:** I created the **Essence File (.ess)** — human-readable JSON (YAML editing later), with optional MessagePack compile.  
+- **Format:** I created the **Essence File (.ess)**  –  human-readable JSON (YAML editing later), with optional MessagePack compile.  
 - **Core runtime:** Push-to-Talk → **Whisper.cpp** (STT) → **Context Planner** → **llama.cpp** (GGUF) → **Piper** (TTS).  
 - **Retrieval:** In v0.1 I’m using BM25 over local docs; vectors are coming later.  
 - **Hardware targets:** Raspberry Pi 5 (8GB) or Jetson Orin Nano (8GB), battery-powered with mic+speaker.  
@@ -36,7 +36,7 @@ links:
 
 ## What’s in v0.1
 
-### Essence File (.ess) — schema draft
+### Essence File (.ess)  –  schema draft
 I designed the file as a portable persona & memory container:
 
 - **persona:** name, values, tone, style, boundaries.  
@@ -82,7 +82,7 @@ I designed the file as a portable persona & memory container:
 
 ---
 
-## Essence File — sample (trimmed)
+## Essence File  –  sample (trimmed)
 
 ```json
 {
