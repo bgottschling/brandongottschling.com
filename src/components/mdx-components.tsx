@@ -18,7 +18,7 @@ export type MDXComponentsMap = {
   CTA?: React.FC<CTAProps>;
 
   // ✅ add this
-  Mermaid?: React.FC<any>;
+  Mermaid?: React.FC<MermaidProps>;
 };
 
 function cls(...parts: Array<string | undefined>) {
@@ -48,7 +48,9 @@ const Pre: React.FC<PreProps> = ({ className, ...rest }) => (
   />
 );
 
-const Mermaid: React.FC<{ children: string }> = ({ children }) => {
+type MermaidProps = { children: string };
+
+const Mermaid: React.FC<MermaidProps> = ({ children }) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
