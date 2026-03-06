@@ -17,9 +17,10 @@ export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 }
 
 export async function generateMetadata(
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ): Promise<Metadata> {
-  const joined = params.slug.join("/");
+  const { slug } = await params;
+  const joined = slug.join("/");
   const entry = await getBySlug(joined).catch(() => null);
   if (!entry || entry.meta.draft) return {};
   return {
@@ -30,8 +31,9 @@ export async function generateMetadata(
   };
 }
 
-export default async function ContentPage({ params }: { params: { slug: string[] } }) {
-  const joined = params.slug.join("/");
+export default async function ContentPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
+  const joined = slug.join("/");
   const entry = await getBySlug(joined).catch(() => null);
   if (!entry || entry.meta.draft) notFound();
 

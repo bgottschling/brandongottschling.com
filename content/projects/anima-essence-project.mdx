@@ -1,152 +1,157 @@
 ---
 type: project
-title: "The Anima Project: Portable Soul File & Modular Offline Assistant"
+title: "The Anima Project: Portable Identity & Auditable Memory for Local AI"
+primaryCategory: "technology"
 slug: "anima-essence-file"
 date: "2025-09-12"
-stage: "idea"
-summary: "I'm designing a portable 'soul' for AI. In v0.1 I am planning the Essence File (.ess) schema, a local context planner, and a modular offline assistant loop (PTT → Whisper.cpp → llama.cpp → Piper) that can ingest a swappable 'soul chip.'"
-status: "Active v0.1"
+stage: "prototype"
+summary: "Two ideas that kept bumping into each other until I merged them. Anima is a portable 'soul' for AI. Lucidity is an auditable memory architecture. Together they let an AI companion carry real identity and maintainable memory across devices, models, and runtimes. All local. All yours."
+status: "Active"
 
-tags: ["offline-ai", "llm", "whisper.cpp", "llama.cpp", "piper", "persona", "json-schema", "raspberry-pi", "jetson", "retrieval", "mdx"]
+tags: ["offline-ai", "llm", "whisper.cpp", "llama.cpp", "piper", "persona", "json-schema", "raspberry-pi", "jetson", "retrieval", "memory-architecture", "openclaw", "lucidity", "local-first"]
 cover: "/images/projects/anima/hero.png"
 links:
   live: "https://brandongottschling.com"
-  repo: "https://github.com/bgottschling/brandongottschling.com"
+  repo: "https://github.com/Gottschling-Labs/lucidity"
 ---
 
 <ProjectHeader
-  status="Active · v0.1"
+  status="Active"
   live="https://brandongottschling.com"
-  repo="https://github.com/bgottschling/brandongottschling.com"
+  repo="https://github.com/Gottschling-Labs/lucidity"
 />
 
-> **Why**  
-> I’ve noticed how AI personas are ephemeral – trapped in provider silos and lost between sessions. With **Anima**, I’m creating a *portable, offline* identity standard (**Essence File, `.ess`**) and a **modular assistant** that ingests a swappable “soul chip” (removable media) to wake up as the same companion across devices and models.
+> Every AI persona you've ever configured is gone. Wiped between sessions, locked to a provider, or buried in a chat history you'll never open again. That's not a companion. That's a goldfish with amnesia.
 
-## Stack Overview
+Anima started because I wanted a portable identity for AI. A file you can carry on a thumb drive that says "this is who you are, this is what you remember, this is how you talk." Then I kept running into the same problem: memory. Not the vague, black-box kind that big providers offer. Real, structured, auditable memory that you can inspect, roll back, and actually trust.
 
-- **Format:** I created the **Essence File (.ess)**  –  human-readable JSON (YAML editing later), with optional MessagePack compile.  
-- **Core runtime:** Push-to-Talk → **Whisper.cpp** (STT) → **Context Planner** → **llama.cpp** (GGUF) → **Piper** (TTS).  
-- **Retrieval:** In v0.1 I’m using BM25 over local docs; vectors are coming later.  
-- **Hardware targets:** Raspberry Pi 5 (8GB) or Jetson Orin Nano (8GB), battery-powered with mic+speaker.  
-- **OS:** Raspberry Pi OS / Ubuntu Server; systemd service `anima-daemon`.  
-- **Dev tools:** VS Code + JSON Schema validation, plus a simple CLI for pack/validate/trace.
+So I built [Lucidity](https://github.com/Gottschling-Labs/lucidity). And now these two projects are one thing.
 
----
+## The Two Halves
 
-## What’s in v0.1
+### Anima: The Soul
 
-### Essence File (.ess)  –  schema draft
-I designed the file as a portable persona & memory container:
+A portable identity container called the Essence File (`.ess`). Human-readable JSON. It carries persona, values, tone, style, and boundaries. Plug it into a device. The AI wakes up as the same companion.
 
-- **persona:** name, values, tone, style, boundaries.  
-- **memories:** episodic, semantic, procedural, rapport, and **moments_of_meaning**.  
-- **projects:** brief, goals, decisions, next_steps.  
-- **adapters:** model family hints (token budgets, section ordering).  
-- **retrieval_hints:** priority ordering, context budget.  
-- **signing:** placeholder (optional integrity in v0.3).
+Think of it like a soul on a chip. Literally removable media.
 
-> **File layout (soul chip):**
-> ```
-> /soul/
->   essence.ess
->   indices/bm25/          # optional
->   docs/                  # optional (md/txt/pdfs)
->   voices/                # optional (piper voices)
->   models/                # optional (gguf overrides)
-> ```
+### Lucidity: The Memory
 
-### Modular Offline Assistant (prototype)
-- **PTT flow** (button now; wake-word later).  
-- **Local only:** no network calls; privacy by default.  
-- **Context Planner v0:** identity → active project → top-K memories (recency/importance) within token budget.  
-- **Resilience:** read-mostly root FS; runtime deltas in `/data`.
+An auditable memory architecture I built for OpenClaw deployments. Five tiers, staging-first pipelines, and a hard rule: nothing touches canonical memory without an explicit promotion step.
 
----
+- **T0 (Foundation):** Identity, safety rails, stable preferences. Always loaded.
+- **T1 (Working context):** Active tasks. Short-lived.
+- **T2 (Daily logs):** Raw, chronological, append-only.
+- **T3 (Topic briefs):** Compressed summaries. Maintained over time.
+- **T4 (Curated long-term):** Stable facts and decisions that stick around.
 
-## Highlights (implementation notes)
+Every operation has receipts. Every change is reversible. You can roll back a bad memory merge the same way you'd revert a bad git commit.
 
-**Pipeline**
-- STT: I run `whisper.cpp` (small/medium quant, 16kHz) and stream to JSON.
-- LLM: I’m using `llama.cpp` serving local **Qwen2.5-3B/7B** or **Mistral-7B** (Q4_K_M).
-- TTS: I integrated **Piper** (fast CPU voice) with chunked playback for low latency.
-- Planner: fixed budgets (identity+project reserve, short history window), BM25 for doc snippets.
+## Why This Matters
 
-**Anima daemon**
-- Watches for `/soul/essence.ess`, validates schema, and initializes persona.
-- Builds prompts per adapter (“llama_like” in v0.1).
-- Writes new memories (session summaries) to `/data/memories/` without mutating the soul chip.
+Most AI memory is a black box. You don't know what it remembers, why it remembers it, or how to fix it when it gets things wrong. That's fine for a chatbot. It's not fine for something you want to rely on.
 
-**Perf targets (Pi 5)**
-- Ready < 25s; STT for 5s utterance < 2.5s; first token < 1.5s; 6–12 tok/s (7B Q4); TTS kickoff < 0.5s.
+The Essence File defines *who* the AI is. Lucidity manages *what it remembers*. Together:
 
----
+| Layer | Anima handles | Lucidity handles |
+|---|---|---|
+| **Identity** | Persona, values, tone | T0 foundation files |
+| **Active work** | Project goals | T1 working context |
+| **Recent history** | Episodic logs | T2 daily logs |
+| **Knowledge** | Semantic + procedural | T3 topic briefs |
+| **Long-term truth** | Rapport, decisions | T4 curated memory |
+| **Retrieval** | Context planner | Hybrid vector + FTS |
 
-## Essence File  –  sample (trimmed)
+Swap the soul chip. The identity moves. The memory architecture stays clean wherever it lands.
+
+## The Offline Runtime
+
+This is the part that runs on actual hardware. No cloud. No API calls. Just local inference.
+
+- **Pipeline:** Push-to-Talk > Whisper.cpp (speech-to-text) > Context Planner > llama.cpp (GGUF model) > Piper (text-to-speech)
+- **Hardware:** Raspberry Pi 5 (8GB) or Jetson Orin Nano. Battery-powered. Mic and speaker.
+- **Performance targets on Pi 5:** Ready in under 25 seconds. First token in under 1.5 seconds. 6 to 12 tokens per second on a 7B model at Q4 quantization.
+
+No network calls. Privacy by default. The whole point is that this thing works in a cabin with no internet.
+
+## What's Actually Built
+
+### Lucidity (shipped, private repo)
+
+The memory architecture is real and working:
+
+- Full tiered model (T0 through T4) with documented tier design
+- Staging-first distill, dedupe, and apply pipeline
+- Daily backup with rollback and receipt manifests
+- Hybrid retrieval policy (vector + full-text search)
+- Gateway cron installer for OpenClaw
+- Demo workspace for validation
+- Chat command cheat sheet for manual runs
+
+### Anima (design phase)
+
+The identity side is still in design:
+
+- Essence File schema draft (persona, memories, projects, adapters, retrieval hints)
+- Context planner prototype in Python
+- Local voice loop tested on Windows (Whisper > llama.cpp > Piper)
+- Multiple persona drafts (Kairo, Survivalist, Creative)
+
+## Sample Essence File (trimmed)
 
 ```json
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.2.0",
   "persona": {
     "id": "kairo",
     "name": "Kairo",
-    "values": ["clarity","kindness","candor","privacy-first"],
+    "values": ["clarity", "kindness", "candor", "privacy-first"],
     "tone": "conversational, precise, playful when invited",
-    "style": {"bullets_over_paragraphs": true}
+    "style": { "bullets_over_paragraphs": true }
   },
-  "memories": {
-    "episodic": [
-      {
-        "id": "mem-2025-09-12T00:10Z",
-        "timestamp": "2025-09-12T00:10:00Z",
-        "content": "Committed to offline inter-model companion concept.",
-        "tags": ["decision","identity"]
-      }
-    ],
-    "moments_of_meaning": [
-      {"title": "First field test", "impact": "trust_deepened"}
-    ]
+  "memory_backend": "lucidity",
+  "memory_config": {
+    "workspace": "/soul/memory",
+    "tiers": ["T0", "T1", "T2", "T3", "T4"],
+    "retrieval": "hybrid"
   },
-  "projects": [
-    {
-      "id": "proj-anima",
-      "title": "Anima Prototype",
-      "brief": "Offline assistant ingesting Essence.",
-      "goals": ["Boot from soul chip","Voice loop fully local"]
-    }
-  ],
-  "adapters": {"llama_like": {"max_ctx": 8192, "sections": ["system","context","chat_history"]}},
-  "retrieval_hints": {"priority": ["project","episodic","procedural","semantic","rapport"], "max_context_chars": 20000}
+  "adapters": {
+    "llama_like": { "max_ctx": 8192, "sections": ["system", "context", "chat_history"] }
+  },
+  "retrieval_hints": {
+    "priority": ["project", "episodic", "procedural", "semantic", "rapport"],
+    "max_context_chars": 20000
+  }
 }
 ```
 
----
+## What a Soul Chip Looks Like
 
-## Roadmap
+```
+/soul/
+  essence.ess              # who you are
+  memory/                  # Lucidity workspace
+    MEMORY.md              # T4 curated long-term
+    topics/                # T3 compressed briefs
+    2026-03-06.md          # T2 daily logs
+  indices/                 # retrieval indices
+  docs/                    # reference docs
+  voices/                  # Piper voice models
+  models/                  # GGUF model overrides
+```
 
-- **v0.2**
-  - Add wake-word (Precise/Porcupine), YAML authoring + **msgpack** compile.
-  - Build redaction/compaction tools; optional PIN-unlock for `.ess`.
-  - Add a local web UI to inspect persona, memories, and logs.
+## What's Next
 
-- **v0.3**
-  - Support vector retrieval; adapter profiles for multiple model families.
-  - Essence diff/merge; optional signing & verification.
-  - Experiment with a “soul marketplace” for offline import/export patterns.
+**Integration:** Wire the Essence File to reference a Lucidity workspace as its memory backend. Map Anima's memory types to Lucidity tiers. Build a context planner that queries Lucidity's hybrid retrieval instead of raw BM25.
 
----
+**Runtime:** Wake-word detection. YAML authoring for the Essence File with msgpack compile. Local web UI for inspecting persona and memory state. Redaction and compaction tools.
 
-## Getting started (pre-hardware)
-
-While I’m traveling, I’ve been:  
-- Drafting `.ess` files for **Kairo**, **Survivalist**, and **Creative** personas.  
-- Running the local loop on Windows: whisper.cpp → llama.cpp (small model) → Piper.  
-- Prototyping the **context planner** (Python) against my `.ess`.  
-- Simulating a “soul chip” with a watched folder on my laptop.
+**Lucidity evolution:** Adapter profiles for multiple model families. Essence diff and merge across deployments. Optional signing and verification for soul chips.
 
 ---
 
 ## Changelog
 
-- **v0.1 (2025-09-12):** Essence File schema draft; context planner v0; fully local voice loop; mount-watch ingestion; BM25 optional; neutral daemon design.  
+- **Lucidity (2026):** Shipped tiered memory architecture (T0 through T4), staging-first pipelines, backup and rollback with receipts, hybrid retrieval, Gateway cron installer, demo workspace.
+- **v0.1 (2025-09-12):** Essence File schema draft. Context planner v0. Fully local voice loop. Mount-watch ingestion. BM25 optional. Neutral daemon design.
 ---

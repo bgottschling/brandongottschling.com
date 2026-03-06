@@ -3,10 +3,10 @@ type: blog
 title: "Technical Debt, On Purpose: Moving from Files to a Real CMS"
 slug: "technical-debt-cms-migration"
 date: "2025-09-05"
-summary: "What ‘technical debt’ really is, when to take it, and how I’m evolving a file-based MDX workflow into a lean, server-side CMS with an editor, auth, and a relational database – without losing speed or portability."
+summary: "What ‘technical debt’ really is, when to take it, and how I’m evolving a file-based MDX workflow into a lean, server-side CMS with an editor, auth, and a relational database without losing speed or portability."
 primaryCategory: "technology"
 tags: ["technical-debt","mdx","cms","next.js","auth","security","database","rsc"]
-image: "/images/blog/tech-debt-cms/cover.png"
+# image: "/images/blog/tech-debt-cms/cover.png"  # placeholder — file does not exist yet
 ---
 
 > **TL;DR**  
@@ -33,7 +33,7 @@ I’m keeping MDX for the **body**, and moving metadata + workflow to a **lean C
 
 ## Editor & workflow
 - The editor only exposes blocks I actually use (CTA, ProjectHeader, etc.).  
-- Preview uses the exact MDX components map production uses – no surprises.  
+- Preview uses the exact MDX components map production uses, no surprises.  
 - Every save creates a **revision**; “Restore” is one click.  
 - Publishing is permissioned: authors write, editors publish.
 

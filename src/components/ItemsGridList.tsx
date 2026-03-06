@@ -1,5 +1,5 @@
 import Link from "next/link";
-import FancyCard from "@/components/FancyCard";
+import FancyCard, { type CardVariant } from "@/components/FancyCard";
 
 export type Item = {
   href: string;
@@ -8,6 +8,8 @@ export type Item = {
   cover?: string;
   date?: string;
   tags?: string[];
+  variant?: CardVariant;
+  badge?: string;
 };
 
 export default function ItemsGridList({
@@ -19,7 +21,7 @@ export default function ItemsGridList({
 }) {
   if (view === "list") {
     return (
-      <div className="overflow-hidden rounded-2xl border border-white/10">
+      <div className="overflow-hidden rounded-md border border-white/10">
         {items.map((it, idx) => (
           <Link
             key={it.href}
@@ -40,7 +42,7 @@ export default function ItemsGridList({
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-6 sm:grid-cols-2">
       {items.map((it) => (
         <FancyCard
           key={it.href}
@@ -50,6 +52,8 @@ export default function ItemsGridList({
           cover={it.cover}
           date={it.date}
           tags={it.tags}
+          variant={it.variant}
+          badge={it.badge}
         />
       ))}
     </div>

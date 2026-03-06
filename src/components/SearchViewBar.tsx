@@ -42,10 +42,10 @@ export default function SearchViewBar({ placeholder = "Search posts..." }: { pla
             onValueChange={(v: string | undefined) => setParam("view", v || undefined)}
             className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1"
           >
-            <ToggleGroupItem value="grid" aria-label="Grid view" className="h-9 w-9 rounded-full data-[state=on]:bg-amber-400 data-[state=on]:text-black">
+            <ToggleGroupItem value="grid" aria-label="Grid view" className="h-9 w-9 rounded-full data-[state=on]:bg-accent data-[state=on]:text-black">
               <LayoutGrid className="h-4 w-4" />
             </ToggleGroupItem>
-            <ToggleGroupItem value="list" aria-label="List view" className="h-9 w-9 rounded-full data-[state=on]:bg-amber-400 data-[state=on]:text-black">
+            <ToggleGroupItem value="list" aria-label="List view" className="h-9 w-9 rounded-full data-[state=on]:bg-accent data-[state=on]:text-black">
               <List className="h-4 w-4" />
             </ToggleGroupItem>
           </ToggleGroup>
