@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About | Brandon Gottschling",
   description:
-    "Why this site exists: one place for my work, ideas, and values. A living workshop where I build in public.",
+    "Why this site exists: a working record of my projects, ideas, and values.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/about" },
 };
@@ -39,22 +39,23 @@ export default function AboutPage() {
 
       <article className="prose prose-neutral dark:prose-invert">
         <p>
-          I believe in owning your narrative. Not because the world is out to get you,
-          but because the best way to be understood is to show your work. This site is where
-          I do that: one place to share what I am building, what I am learning, and what I
-          care about.
+          I started this site because I wanted one place where my work could speak
+          for itself. Not a highlight reel, not a pitch deck. A real, working record
+          of what I am ideating, prototyping, and developing right now, and what I
+          have learned getting here.
         </p>
 
         <p>
-          It is a portfolio, a living resume, and a workshop. I ship in public here. I write
-          about things I find interesting or important. I document projects as they evolve,
-          not just when they are finished. The goal is transparency and craft, not performance.
+          Everything here is a work in progress, and that is the point. I document
+          projects while they are still messy, write about problems before I have
+          clean answers, and put my reasoning where people can see it. The goal is
+          craft and honesty, not polish.
         </p>
 
         <p>
-          I am also a person of faith. I keep seeking God and my ultimate purpose, and I aim
-          to be steady at home and useful in the world. That shapes how I work and why I work.
-          You will see it in the writing.
+          I am also a person of faith. I keep seeking God and my ultimate purpose,
+          and I aim to be steady at home and useful in the world. That shapes how I
+          work and why I work. You will see it in the writing.
         </p>
 
         <hr />
@@ -65,7 +66,7 @@ export default function AboutPage() {
             <strong>Research and notes:</strong> ideas in progress, sources, and comparisons.
           </li>
           <li>
-            <strong>Projects and demos:</strong> small, useful tools and shipped artifacts.
+            <strong>Projects and demos:</strong> working prototypes and finished artifacts.
           </li>
           <li>
             <strong>Writing:</strong> direct, practical posts with a bias toward clarity.
