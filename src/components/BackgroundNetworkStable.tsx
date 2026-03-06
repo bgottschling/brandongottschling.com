@@ -53,21 +53,55 @@ export default function BackgroundNetworkStable({
     const context = canvas.getContext('2d')
     if (!context) return
 
-    // theme hue (reactive — CSS @property transition handles smoothing,
-    // canvas just reads the already-transitioning computed value)
+    // ── Dissolve-based hue transition ──
+    // Linear hue interpolation sweeps through wrong colors on the wheel
+    // (e.g. cyan→amber passes through green). Instead we dissolve:
+    //   fade accent out → snap hue while invisible → fade accent back in.
     let accentHue = hue ?? 38
+    let targetHue = accentHue
+    let accentAlpha = 1.0
+    let dissolveState: 0 | 1 | 2 = 0 // 0 idle, 1 fading-out, 2 fading-in
+    const FADE_OUT_SPEED = 0.045 // ~22 frames ≈ 0.37s at 60fps
+    const FADE_IN_SPEED  = 0.025 // ~40 frames ≈ 0.67s at 60fps
+    const HUE_SNAP_THRESHOLD = 15 // degrees
     let hueCheckCounter = 0
-    const HUE_READ_INTERVAL = 6 // re-read CSS every ~6 frames (~100ms at 60fps)
+    const HUE_READ_INTERVAL = 3 // re-read CSS every ~3 frames
 
     function readAccentHue() {
       const raw = getComputedStyle(document.documentElement)
         .getPropertyValue('--accent-h').trim()
       const parsed = parseFloat(raw)
-      if (!isNaN(parsed)) accentHue = parsed
+      if (!isNaN(parsed)) targetHue = parsed
+    }
+
+    function updateDissolve() {
+      if (dissolveState === 0) {
+        if (Math.abs(targetHue - accentHue) > HUE_SNAP_THRESHOLD) {
+          dissolveState = 1 // start dissolve
+        } else {
+          accentHue = targetHue // small tweak, just snap
+        }
+      }
+      if (dissolveState === 1) {
+        accentAlpha = Math.max(0, accentAlpha - FADE_OUT_SPEED)
+        if (accentAlpha <= 0) {
+          accentAlpha = 0
+          accentHue = targetHue // snap while invisible
+          dissolveState = 2
+        }
+      }
+      if (dissolveState === 2) {
+        accentAlpha = Math.min(1, accentAlpha + FADE_IN_SPEED)
+        if (accentAlpha >= 1) {
+          accentAlpha = 1
+          dissolveState = 0
+        }
+      }
     }
 
     // initial read
     readAccentHue()
+    accentHue = targetHue
 
     // helpers
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -354,7 +388,7 @@ export default function BackgroundNetworkStable({
           ctx.lineTo(sx[j], sy[j])
           ctx.lineTo(sx[k], sy[k])
           ctx.closePath()
-          ctx.fillStyle = `hsl(${accentHue} 75% ${light}% / ${alpha})`
+          ctx.fillStyle = `hsl(${accentHue} 75% ${light}% / ${alpha * accentAlpha})`
           ctx.fill()
         }
       }
@@ -365,7 +399,7 @@ export default function BackgroundNetworkStable({
           const j = ni[idx]
           if (j <= i) continue
           const t = dist01(i, j)
-          ctx.strokeStyle = `hsl(${accentHue} 70% 45% / ${0.1 + 0.28 * t})`
+          ctx.strokeStyle = `hsl(${accentHue} 70% 45% / ${(0.1 + 0.28 * t) * accentAlpha})`
           ctx.lineWidth = 1
           ctx.beginPath()
           ctx.moveTo(sx[i], sy[i])
@@ -374,7 +408,7 @@ export default function BackgroundNetworkStable({
         }
       }
 
-      ctx.fillStyle = `hsl(${accentHue} 70% 50% / 0.75)`
+      ctx.fillStyle = `hsl(${accentHue} 70% 50% / ${0.75 * accentAlpha})`
       for (let i = 0; i < N; i++) {
         ctx.beginPath()
         ctx.arc(sx[i], sy[i], 1.6, 0, τ)
@@ -408,13 +442,13 @@ export default function BackgroundNetworkStable({
       const dt = Math.min(32, now - last)
       last = now
 
-      // periodically re-read CSS accent hue (CSS @property transition
-      // provides the smoothing — no extra lerp needed)
+      // periodically re-read CSS accent hue, then run dissolve logic
       hueCheckCounter++
       if (hueCheckCounter >= HUE_READ_INTERVAL) {
         hueCheckCounter = 0
         readAccentHue()
       }
+      updateDissolve()
 
       const tSec = (now * 0.001) % 3600
       step(tSec, dt)

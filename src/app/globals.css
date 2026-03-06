@@ -54,8 +54,8 @@
   --code:      240 6% 10%;
   --code-fg:   0 0% 100%;
 
-  /* Smooth accent transition (slow + ease-in-out for subtle crossfade) */
-  transition: --accent-h 1.6s ease-in-out, --accent-s 1.6s ease-in-out, --accent-l 1.6s ease-in-out;
+  /* No @property transition on hue — linear interpolation sweeps through
+     wrong colors on the wheel.  Canvas handles its own dissolve instead. */
 }
 
 /* ── Route-driven accent overrides ── */
