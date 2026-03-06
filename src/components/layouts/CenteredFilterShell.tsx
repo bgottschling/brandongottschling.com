@@ -15,8 +15,8 @@ export default function CenteredFilterShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 md:px-6 lg:px-8">
-      <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(0,1fr)]">
+    <div className="mx-auto w-full max-w-[1440px] px-4 md:px-6 lg:px-8">
+      <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,64rem)_minmax(0,1fr)]">
         {/* Left gutter with right-aligned sidebar so it's further from the center */}
         <aside className="relative hidden md:block">
           <div className="sticky top-24 flex justify-end pr-2">

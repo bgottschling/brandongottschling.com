@@ -1,9 +1,10 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import EdgeScrim from "@/components/EdgeScrim";
 import MobileNavClient from "@/components/MobileNavClient";
 import BackgroundNetworkStable from "@/components/BackgroundNetworkStable";
+import ThemeSync from "@/components/ThemeSync";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://brandongottschling.com"),
@@ -40,6 +41,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
+};
+
+export const viewport: Viewport = {
   themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#111111" }],
 };
 
@@ -47,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-white text-zinc-900 antialiased">
+        <ThemeSync />
         {/* Create isolated stacking context */}
         <div className="relative isolate min-h-dvh">
           {/* Background LOWEST */}

@@ -37,7 +37,9 @@ export default async function ProjectsPage({
       cover: p.image,
       date: p.date,
       tags: p.tags,
-      stage: p.stage
+      stage: p.stage,
+      variant: "project" as const,
+      badge: p.stage ? PROJECT_STAGE_INFO[p.stage as ProjectStage]?.label : undefined,
     };
   });
 
@@ -81,7 +83,7 @@ export default async function ProjectsPage({
       <CenteredFilterShell
         sidebar={<SidebarCategoryGrid title="Project Stage" options={options} param="stage" />}
       >
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           {/* Mobile trigger */}
           <div className="mb-4 flex items-center justify-between md:hidden">
             <h1 className="text-2xl font-bold">Projects</h1>
@@ -89,7 +91,7 @@ export default async function ProjectsPage({
           </div>
 
           {/* Desktop title */}
-          <div className="mb-6 hidden md:block">
+          <div className="mb-6 hidden border-l-4 border-accent pl-4 md:block">
             <h1 className="text-3xl font-bold">Projects</h1>
             <p className="text-white/70">Apps and experiments by stage.</p>
           </div>

@@ -6,7 +6,14 @@ const isDev = process.env.NODE_ENV !== "production";
 const nextConfig: NextConfig = {
   transpilePackages: ["framer-motion"],
 
-  // --- IMPORTANT for the PDF route + QR generation ---
+  /* Hide "X-Powered-By: Next.js" — minor security hygiene */
+  poweredByHeader: false,
+
+  /* Serve AVIF (smaller) before WebP for next/image */
+  images: { formats: ["image/avif", "image/webp"] },
+
+  /* Allow preview tools to reach /_next/* without cross-origin warnings */
+  allowedDevOrigins: ["127.0.0.1"],
 
   async headers() {
     const csp = [

@@ -85,9 +85,26 @@ function devWarn(msg: string) {
 }
 
 // ------------------------------
+// In-memory cache — survives HMR reloads via globalThis
+// (same pattern as Prisma/DB clients in Next.js dev).
+// Avoids re-walking the filesystem + re-parsing every MDX file
+// on every navigation.  TTL keeps edits visible within seconds.
+// In production with force-static this only runs once at build.
+// ------------------------------
+const ALL_CACHE_TTL = 2_000; // ms — 2 s in dev, effectively infinite in prod
+
+type ContentCache = { items: ContentMeta[] | null; time: number };
+const _g = globalThis as unknown as { __contentCache?: ContentCache };
+if (!_g.__contentCache) _g.__contentCache = { items: null, time: 0 };
+
+// ------------------------------
 // Load all content
 // ------------------------------
 export async function getAllContent(): Promise<ContentMeta[]> {
+  const cache = _g.__contentCache!;
+  const now = Date.now();
+  if (cache.items && now - cache.time < ALL_CACHE_TTL) return cache.items;
+
   const base = await firstExistingDir();
   if (!base) return [];
 
@@ -134,7 +151,10 @@ export async function getAllContent(): Promise<ContentMeta[]> {
     });
   }
 
-  return items.sort((a, b) => toMs(b.date) - toMs(a.date));
+  const sorted = items.sort((a, b) => toMs(b.date) - toMs(a.date));
+  cache.items = sorted;
+  cache.time = Date.now();
+  return sorted;
 }
 
 // ------------------------------
