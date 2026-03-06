@@ -5,6 +5,9 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import GenerativeThumb from "@/components/GenerativeThumb";
+
+export type CardVariant = "blog" | "project" | "research";
 
 type Props = {
   href: string;
@@ -13,14 +16,50 @@ type Props = {
   cover?: string;
   date?: string;
   tags?: string[];
+  variant?: CardVariant;
+  badge?: string;
   className?: string;
   priority?: boolean;
   disableOverlay?: boolean;
 };
 
-const TITLE_MIN_H = 48;   // ~2 lines
-const SUMMARY_MIN_H = 78; // ~3 lines
-const MAX_TAGS = 9999;    // we now fade instead of capping; keep all
+/* ── variant-driven style maps ── */
+
+const FOCUS_OUTLINE: Record<CardVariant, string> = {
+  blog: "focus-visible:outline-amber-400",
+  project: "focus-visible:outline-cyan-400",
+  research: "focus-visible:outline-indigo-400",
+};
+
+const TITLE_COLOR: Record<CardVariant, string> = {
+  blog: "text-white",
+  project: "text-white",
+  research: "text-white",
+};
+
+const MEDIA_BG: Record<CardVariant, string> = {
+  blog: "bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800",
+  project: "bg-gradient-to-b from-cyan-50 to-sky-50 dark:from-neutral-800 dark:to-neutral-800",
+  research: "bg-gradient-to-b from-indigo-50 to-violet-50 dark:from-neutral-800 dark:to-neutral-800",
+};
+
+const SCRIM_GRADIENT: Record<CardVariant, string> = {
+  blog: "from-amber-950/80 via-amber-950/40",
+  project: "from-cyan-950/80 via-cyan-950/40",
+  research: "from-indigo-950/80 via-indigo-950/40",
+};
+
+const STRIPE_BG: Record<CardVariant, string> = {
+  blog: "bg-amber-50/80 dark:bg-amber-200/8 border-amber-200/60 dark:border-amber-300/10",
+  project: "bg-cyan-50/80 dark:bg-cyan-200/8 border-cyan-200/60 dark:border-cyan-300/10",
+  research: "bg-indigo-50/80 dark:bg-indigo-200/8 border-indigo-200/60 dark:border-indigo-300/10",
+};
+
+const BADGE_COLOR: Record<CardVariant, string> = {
+  blog: "bg-amber-600/90 text-white dark:bg-amber-500/90",
+  project: "bg-cyan-600/90 text-white dark:bg-cyan-500/90",
+  research: "bg-indigo-600/90 text-white dark:bg-indigo-500/90",
+};
 
 export default function FancyCard({
   href,
@@ -29,19 +68,17 @@ export default function FancyCard({
   cover,
   date,
   tags,
+  variant = "blog",
+  badge,
   className,
   priority,
   disableOverlay = false,
 }: Props) {
-  const [imgOk, setImgOk] = React.useState(true);
   const [loaded, setLoaded] = React.useState(false);
   const [broken, setBroken] = React.useState(false);
-  const visibleTags = (tags ?? []).slice(0, MAX_TAGS);
-
-  // Show image if cover is provided and not broken
+  const visibleTags = tags ?? [];
   const showImage = !!cover && !broken;
 
-  // Simple shimmer placeholder
   function Shimmer() {
     return (
       <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-800" />
@@ -51,7 +88,7 @@ export default function FancyCard({
   return (
     <article
       className={cn(
-        "group relative h-full overflow-hidden rounded-2xl border border-black/5 bg-white",
+        "group relative flex h-full flex-col overflow-hidden rounded-md border border-black/5 bg-white",
         "shadow-[0_10px_28px_-18px_rgba(0,0,0,0.45)] transition-all",
         "hover:-translate-y-[1px] hover:shadow-[0_18px_40px_-20px_rgba(0,0,0,0.55)]",
         "dark:border-white/10 dark:bg-zinc-900",
@@ -62,19 +99,20 @@ export default function FancyCard({
         <Link
           href={href}
           aria-label={title}
-          className="absolute inset-0 z-[5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+          className={cn(
+            "absolute inset-0 z-[5] focus-visible:outline-2 focus-visible:outline-offset-2",
+            FOCUS_OUTLINE[variant]
+          )}
         />
       )}
 
-
-      {/* MEDIA (no vertical margins, no baseline drift) */}
+      {/* MEDIA + TITLE OVERLAY */}
       <div
         className={cn(
-          "relative aspect-[16/9] min-h-[160px] w-full overflow-hidden rounded-t-2xl",
-          "bg-gradient-to-b from-amber-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800",
-          "block leading-none text-[0]" // kill baseline/line-height gaps
+          "relative aspect-[4/3] w-full overflow-hidden rounded-t-md",
+          MEDIA_BG[variant],
+          "block leading-none text-[0]"
         )}
-        style={{ marginTop: 0, marginBottom: 0 }} // hard reset
       >
         {showImage ? (
           <>
@@ -95,51 +133,67 @@ export default function FancyCard({
             />
           </>
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-neutral-400">
-            No Image
-          </div>
+          <GenerativeThumb
+            title={title}
+            variant={variant}
+            className="h-full w-full object-cover"
+          />
         )}
-      </div>
 
-      {/* Title band */}
-      <div className="px-4 pb-1 pt-2 md:px-5" style={{ minHeight: TITLE_MIN_H }}>
-        <h3 className="m-0 text-[1.05rem] font-semibold leading-snug tracking-tight sm:text-[1.1rem]">
-          <Link
-            href={href}
-            className="relative z-[6] text-amber-800 underline-offset-[4px] hover:underline dark:text-amber-300"
+        {/* Badge overlay (top-left) */}
+        {badge && (
+          <span
+            className={cn(
+              "absolute left-3 top-3 z-[2] rounded px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider",
+              BADGE_COLOR[variant]
+            )}
           >
-            <span className="line-clamp-2">{title}</span>
-          </Link>
-        </h3>
+            {badge}
+          </span>
+        )}
+
+        {/* Title scrim + title (bottom of image) */}
+        <div
+          className={cn(
+            "absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t to-transparent px-5 pb-4 pt-16",
+            SCRIM_GRADIENT[variant]
+          )}
+        >
+          <h3 className="m-0 text-[1.1rem] font-bold leading-snug tracking-tight drop-shadow-sm sm:text-[1.2rem]">
+            <Link
+              href={href}
+              className={cn(
+                "relative z-[6] no-underline",
+                TITLE_COLOR[variant]
+              )}
+            >
+              <span className="line-clamp-3">{title}</span>
+            </Link>
+          </h3>
+        </div>
       </div>
 
-      {/* Summary band */}
-      <div
-        className={cn(
-          "px-4 py-3 md:px-5",
-          "bg-gradient-to-r from-amber-50/85 via-amber-50 to-amber-100/80 ring-1 ring-inset ring-amber-100/80",
-          "dark:from-amber-200/10 dark:via-amber-200/10 dark:to-amber-200/10 dark:ring-white/10"
-        )}
-        style={{ minHeight: SUMMARY_MIN_H }}
-      >
-        {summary ? (
-          <p className="m-0 line-clamp-3 text-[0.95rem] leading-6 text-neutral-800 dark:text-neutral-100/90">
+      {/* Summary stripe */}
+      {summary && (
+        <div
+          className={cn(
+            "border-y px-5 py-3",
+            STRIPE_BG[variant]
+          )}
+        >
+          <p className="m-0 line-clamp-3 text-[0.9rem] leading-relaxed text-neutral-700 dark:text-neutral-200/90">
             {summary}
           </p>
-        ) : (
-          <div className="h-[1px] opacity-0" />
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Footer — single row tags with fade, date pinned */}
+      {/* Footer */}
       {(visibleTags.length > 0 || date) && (
-        <div className="px-4 pb-4 pt-3 md:px-5">
+        <div className="mt-auto px-5 pb-4 pt-3">
           <div className="relative flex items-center gap-3">
-            {/* Tags rail (no wrap, no scrollbars, fade on the right) */}
             <div className="min-w-0 flex-1">
               <div
-                className="flex gap-2 whitespace-nowrap overflow-hidden pr-24"
-                // Fade the last ~20% so tags visually disappear behind the date
+                className="flex gap-2 overflow-hidden whitespace-nowrap pr-24"
                 style={{
                   maskImage: "linear-gradient(to right, black 80%, transparent 100%)",
                   WebkitMaskImage: "linear-gradient(to right, black 80%, transparent 100%)",
@@ -156,7 +210,6 @@ export default function FancyCard({
               </div>
             </div>
 
-            {/* Date pinned at the far right */}
             {date && (
               <time
                 dateTime={date}

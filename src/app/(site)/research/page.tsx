@@ -28,15 +28,20 @@ export default async function ResearchPage({
   const raw = await getAllContent();
   const all = filterVisible(raw).filter((x) => (x.type ?? "research") === "research");
 
-  const items = all.map((p) => ({
-    href: `/research/${p.slug.split("/").pop()}`,
-    title: p.title,
-    summary: p.summary,
-    cover: p.image,
-    date: p.date,
-    tags: p.tags,
-    area: inferAreaFromTags(p.tags),
-  }));
+  const items = all.map((p) => {
+    const area = inferAreaFromTags(p.tags);
+    return {
+      href: `/research/${p.slug.split("/").pop()}`,
+      title: p.title,
+      summary: p.summary,
+      cover: p.image,
+      date: p.date,
+      tags: p.tags,
+      area,
+      variant: "research" as const,
+      badge: RESEARCH_AREA_INFO[area]?.label,
+    };
+  });
 
   // counts
   const counts: Partial<Record<CountKey, number>> = {};
@@ -74,7 +79,7 @@ export default async function ResearchPage({
       <CenteredFilterShell
         sidebar={<SidebarCategoryGrid title="Research Areas" options={options} param="area" />}
       >
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           {/* Mobile trigger */}
           <div className="mb-4 flex items-center justify-between md:hidden">
             <h1 className="text-2xl font-bold">Research</h1>
@@ -82,7 +87,7 @@ export default async function ResearchPage({
           </div>
 
           {/* Desktop title */}
-          <div className="mb-6 hidden md:block">
+          <div className="mb-6 hidden border-l-4 border-accent pl-4 md:block">
             <h1 className="text-3xl font-bold">Research</h1>
             <p className="text-white/70">Briefings, notes, and investigations by area.</p>
           </div>

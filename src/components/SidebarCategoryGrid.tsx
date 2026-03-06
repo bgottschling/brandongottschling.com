@@ -83,10 +83,10 @@ export default function SidebarCategoryGrid({
             className={cn(
               "relative grid w-full grid-cols-[auto_1fr_auto] items-start gap-3 rounded-xl border p-3 text-left transition",
               "border-white/12 bg-white/6 hover:bg-white/10",
-              !active && "ring-2 ring-amber-400/60"
+              !active && "ring-2 ring-accent/60"
             )}
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-400/20 font-semibold text-amber-600">All</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/20 font-semibold text-accent">All</div>
             <div>
               <div className="text-sm font-semibold">All</div>
               <div className="text-xs text-muted-foreground">Show everything</div>
@@ -105,7 +105,7 @@ export default function SidebarCategoryGrid({
               className={cn(
                 "relative grid w-full grid-cols-[auto_1fr_auto] items-start gap-3 rounded-xl border p-3 text-left transition",
                 "border-white/12 bg-white/6 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-sm",
-                on && "ring-2 ring-amber-400/60"
+                on && "ring-2 ring-accent/60"
               )}
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">

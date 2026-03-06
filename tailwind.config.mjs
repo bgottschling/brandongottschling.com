@@ -18,7 +18,7 @@ export default {
         muted:  'hsl(var(--muted))',
         card:   'hsl(var(--card))',
         border: 'hsl(var(--border))',
-        accent: 'hsl(var(--accent))',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
         accent50: 'hsl(var(--accent-50))',
         code:   'hsl(var(--code))',
         codefg: 'hsl(var(--code-fg))',

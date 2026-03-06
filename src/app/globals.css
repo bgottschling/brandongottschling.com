@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Animatable accent properties ── */
+@property --accent-h {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 38;
+}
+@property --accent-s {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 92;
+}
+@property --accent-l {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 50;
+}
+
 /* Theme tokens */
 :root {
   /* Monochrome base (Zinc) */
@@ -11,13 +28,51 @@
   --card:      0 0% 100%;
   --border:    240 5% 90%;
 
-  /* Accent (Amber) */
-  --accent:    38 92% 50%;
-  --accent-50: 38 100% 96%;
+  /* Accent (composed from animatable sub-properties) */
+  --accent-h: 38;
+  --accent-s: 92;
+  --accent-l: 50;
+  --accent:    var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%);
+  --accent-50: var(--accent-h) 100% 96%;
+
+  /* Type accents — Blog (warm amber) */
+  --type-blog:        38 92% 50%;
+  --type-blog-50:     38 100% 96%;
+  --type-blog-ring:   38 80% 90%;
+
+  /* Type accents — Projects (cool cyan) */
+  --type-project:     192 82% 45%;
+  --type-project-50:  192 80% 96%;
+  --type-project-ring:192 60% 88%;
+
+  /* Type accents — Research (indigo) */
+  --type-research:     245 58% 56%;
+  --type-research-50:  245 60% 96%;
+  --type-research-ring:245 50% 90%;
 
   /* Code block bg */
   --code:      240 6% 10%;
   --code-fg:   0 0% 100%;
+
+  /* Smooth accent transition (slow + ease-in-out for subtle crossfade) */
+  transition: --accent-h 1.6s ease-in-out, --accent-s 1.6s ease-in-out, --accent-l 1.6s ease-in-out;
+}
+
+/* ── Route-driven accent overrides ── */
+:root[data-theme="blog"] {
+  --accent-h: 38;
+  --accent-s: 92;
+  --accent-l: 50;
+}
+:root[data-theme="project"] {
+  --accent-h: 192;
+  --accent-s: 82;
+  --accent-l: 45;
+}
+:root[data-theme="research"] {
+  --accent-h: 245;
+  --accent-s: 58;
+  --accent-l: 56;
 }
 
 /* Dark mode (class-based) */
@@ -28,23 +83,55 @@
   --card:      240 5% 12%;
   --border:    240 4% 20%;
 
-  --accent:    38 92% 60%;
-  --accent-50: 38 100% 12%;
+  --accent-l: 60;
+  --accent-50: var(--accent-h) 100% 12%;
+
+  /* Type accents — Blog (warm amber) */
+  --type-blog:        38 92% 60%;
+  --type-blog-50:     38 100% 12%;
+  --type-blog-ring:   38 40% 25%;
+
+  /* Type accents — Projects (cool cyan) */
+  --type-project:     192 82% 55%;
+  --type-project-50:  192 80% 10%;
+  --type-project-ring:192 40% 25%;
+
+  /* Type accents — Research (indigo) */
+  --type-research:     245 58% 65%;
+  --type-research-50:  245 60% 12%;
+  --type-research-ring:245 30% 25%;
 
   --code:      240 5% 12%;
   --code-fg:   0 0% 100%;
 }
 
+/* Dark mode + route overrides */
+.dark[data-theme="blog"] {
+  --accent-h: 38;
+  --accent-s: 92;
+  --accent-l: 60;
+}
+.dark[data-theme="project"] {
+  --accent-h: 192;
+  --accent-s: 82;
+  --accent-l: 55;
+}
+.dark[data-theme="research"] {
+  --accent-h: 245;
+  --accent-s: 58;
+  --accent-l: 65;
+}
+
 /* very soft, neutral elevation that works on white and dark */
 .shadow-soft { box-shadow: 0 8px 30px rgba(0,0,0,.06); }
 
-/* Subtle paper-ish background + vignette (adds life without noise files) */
+/* Subtle paper-ish background + vignette (accent-aware) */
 html, body {
   background-color: hsl(var(--bg));
   background-image:
-    radial-gradient(60rem 30rem at 120% -10%, hsl(38 100% 97% / 0.6), transparent 60%),
+    radial-gradient(60rem 30rem at 120% -10%, hsl(var(--accent-h) 100% 97% / 0.6), transparent 60%),
     radial-gradient(40rem 20rem at -10% -10%, hsl(220 20% 96% / 0.6), transparent 60%),
-    radial-gradient(100rem 40rem at 50% 120%, hsl(38 100% 92% / 0.25), transparent 70%);
+    radial-gradient(100rem 40rem at 50% 120%, hsl(var(--accent-h) 100% 92% / 0.25), transparent 70%);
   background-attachment: fixed;
 }
 

@@ -1,12 +1,12 @@
 // src/app/page.tsx
 import Link from "next/link";
 import { getAllContent, type ContentMeta } from "@/lib/content";
-import FancyCard from "@/components/FancyCard";
+import FancyCard, { type CardVariant } from "@/components/FancyCard";
 import MissionCard from "@/components/mission-card";
 import ServicesList from "@/components/ServicesList";
 import BrandBadges from "@/components/BrandBadges";
 
-function toCardProps(m: ContentMeta) {
+function toCardProps(m: ContentMeta, variant: CardVariant) {
   return {
     href: `/${m.slug}`,
     title: m.title ?? "(Untitled)",
@@ -14,6 +14,7 @@ function toCardProps(m: ContentMeta) {
     cover: m.image as string | undefined,
     date: m.date as string | undefined,
     tags: Array.isArray(m.tags) ? (m.tags as string[]) : [],
+    variant,
   };
 }
 
@@ -93,9 +94,9 @@ export default async function HomePage() {
           </Link>
         </header>
         {latestBlog.length ? (
-          <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-[1fr] gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {latestBlog.map((p) => {
-              const props = toCardProps(p);
+              const props = toCardProps(p, "blog");
               return <FancyCard key={p.slug} {...props} />;
             })}
           </div>
@@ -115,9 +116,9 @@ export default async function HomePage() {
           </Link>
         </header>
         {latestProjects.length ? (
-          <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-[1fr] gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {latestProjects.map((p) => {
-              const props = toCardProps(p);
+              const props = toCardProps(p, "project");
               return <FancyCard key={p.slug} {...props} />;
             })}
           </div>
@@ -137,9 +138,9 @@ export default async function HomePage() {
           </Link>
         </header>
         {latestResearch.length ? (
-          <div className="grid auto-rows-[1fr] gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-[1fr] gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {latestResearch.map((p) => {
-              const props = toCardProps(p);
+              const props = toCardProps(p, "research");
               return <FancyCard key={p.slug} {...props} />;
             })}
           </div>
