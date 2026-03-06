@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add src/components/BucketBoard.tsx src/components/ContentCard.tsx src/components/ContentScrim.tsx src/components/FiltersBar.tsx src/components/SidebarFilter.tsx src/components/TagList.tsx src/lib/origin.ts)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
