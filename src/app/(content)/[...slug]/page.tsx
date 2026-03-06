@@ -28,6 +28,17 @@ export async function generateMetadata(
     description: entry.meta.summary ?? undefined,
     alternates: { canonical: `/${joined}` },
     robots: { index: true, follow: true },
+    openGraph: {
+      title: entry.meta.title,
+      description: entry.meta.summary ?? undefined,
+      images: [`/api/og?title=${encodeURIComponent(entry.meta.title)}`],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: entry.meta.title,
+      description: entry.meta.summary ?? undefined,
+      images: [`/api/og?title=${encodeURIComponent(entry.meta.title)}`],
+    },
   };
 }
 
