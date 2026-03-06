@@ -4,6 +4,7 @@ import Link from "next/link";
 import EdgeScrim from "@/components/EdgeScrim";
 import MobileNavClient from "@/components/MobileNavClient";
 import BackgroundNetworkStable from "@/components/BackgroundNetworkStable";
+import ThemeSync from "@/components/ThemeSync";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://brandongottschling.com"),
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-white text-zinc-900 antialiased">
+        <ThemeSync />
         {/* Create isolated stacking context */}
         <div className="relative isolate min-h-dvh">
           {/* Background LOWEST */}

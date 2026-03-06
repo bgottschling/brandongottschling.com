@@ -38,6 +38,8 @@ export default async function BlogPage({
     date: p.date,
     tags: p.tags,
     primaryCategory: p.primaryCategory,
+    variant: "blog" as const,
+    badge: BLOG_CATEGORY_INFO[p.primaryCategory ?? inferFromTags(p.tags)]?.label,
   }));
 
   // counts
@@ -84,7 +86,7 @@ export default async function BlogPage({
           <SidebarCategoryGrid title="Blog" options={options} />
         }
       >
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           {/* Mobile filter trigger */}
           <div className="mb-4 flex items-center justify-between md:hidden">
             <h1 className="text-2xl font-bold">Blog</h1>
@@ -92,7 +94,7 @@ export default async function BlogPage({
           </div>
 
           {/* Desktop title */}
-          <div className="mb-6 hidden md:block">
+          <div className="mb-6 hidden border-l-4 border-accent pl-4 md:block">
             <h1 className="text-3xl font-bold">Blog</h1>
             <p className="text-white/70">Browse by theme or search across posts.</p>
           </div>

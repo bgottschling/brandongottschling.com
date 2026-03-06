@@ -2,11 +2,11 @@
 type: project
 title: "This website - the living workshop"
 slug: "brandongottschling-site"
-date: "2025-09-10"
-summary: "v0.5 focuses on privacy-first contact sharing (auth-gated QR with single-use tokens), a refined proposal PDF (clean typography, ToC, mission page, circular avatar), routing/CSP fixes, and UX polish across the CV header and downloads."
-status: "Active v0.5"
+date: "2026-03-06"
+summary: "v0.6 brings route-aware accent theming (amber/cyan/indigo crossfade via CSS @property), generative algorithmic thumbnails, wider card layouts with sharper corners, and a full content-tone pass."
+status: "Active v0.6"
 stage: "prototype"
-tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv"]
+tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv", "css-houdini", "canvas", "generative-art"]
 cover: "/images/projects/site/hero.png"
 links:
   live: "https://brandongottschling.com"
@@ -14,99 +14,123 @@ links:
 ---
 
 <ProjectHeader
-  status="Active · v0.5"
+  status="Active · v0.6"
   live="https://brandongottschling.com"
   repo="https://github.com/bgottschling/brandongottschling.com"
 />
 
-> **Why**  
-> I want one home for my research notes, projects, and writing – lightweight, fast, and easy to grow. This site is a “living workshop” where I ship in public and keep improving the craft.
+> **Why**
+> One home for research notes, projects, and writing. Lightweight, fast, easy to grow. This site is a living workshop where I ship in public and keep improving the craft.
 
 ## Stack Overview
 
-- **Core:** Next.js 15 (App Router), MDX from the filesystem, Tailwind, shadcn/ui.  
-- **Content tooling:** `remark-gfm`, `rehype-slug`, autolinked headings.  
-- **PDF:** `pdf-lib` (portable; no headless browser), with WinAnsi-safe text.  
-- **Contact sharing:** server-rendered **QR** (SVG) with HMAC tokens, enforced by Edge middleware.  
-- **State & limits:** serverless key–value store over HTTP for single-use tokens and gentle rate limits.  
+- **Core:** Next.js 15 (App Router), MDX from the filesystem, Tailwind, shadcn/ui.
+- **Content tooling:** `remark-gfm`, `rehype-slug`, autolinked headings.
+- **Theming:** CSS `@property` registration for animatable accent color transitions, route-driven `data-theme` attributes, reactive canvas background.
+- **Generative art:** Deterministic canvas thumbnails (honeycomb, flower-of-life, isometric blocks) seeded by content slug.
+- **PDF:** `pdf-lib` (portable, no headless browser), with WinAnsi-safe text.
+- **Contact sharing:** server-rendered QR (SVG) with HMAC tokens, enforced by Edge middleware.
+- **State & limits:** serverless key-value store over HTTP for single-use tokens and gentle rate limits.
 - **Hosting:** Vercel.
+
+---
+
+## What changed in v0.6
+
+### Route-aware accent theming
+The entire page environment now shifts color based on what you are looking at. Blog pages go warm amber. Projects go cool cyan. Research goes indigo. The transition between views is a soft 1.6-second crossfade, not a hard cut.
+
+Under the hood: CSS `@property` declarations register `--accent-h`, `--accent-s`, `--accent-l` as animatable numbers. A tiny client component (`ThemeSync`) sets a `data-theme` attribute on `<html>` using `useLayoutEffect` so the swap happens before paint. The background canvas animation reads the already-transitioning CSS value every few frames rather than running its own interpolation. One smoothing layer, zero flicker.
+
+### Generative algorithmic thumbnails
+Every card now gets a unique, deterministic thumbnail generated on canvas. Blog posts get a honeycomb pattern. Projects get a flower-of-life geometry. Research gets isometric data blocks. Each one is seeded from the content slug so the same post always produces the same visual. No stock photos, no placeholder images.
+
+### Wider cards, sharper corners
+Cards are wider on large viewports (center column pushed to 64rem, container to 1440px). Border radius dialed down from rounded-lg to rounded-md across FancyCard, mission card, and list view items. Titles get more room. Summaries show up to three lines.
+
+### Per-type color identity everywhere
+Sidebar category grids, search/view toggles, page headers, and card badges all respond to the current accent color. Previously these were hardcoded to amber regardless of content type. Now they follow the theme automatically via Tailwind's `accent` token backed by CSS custom properties with alpha-value support.
+
+### Content tone pass
+Removed m-dashes across all project content. Rewrote in a more direct, conversational register. Less documentation voice, more “here is what this does and why.”
 
 ---
 
 ## What changed in v0.5
 
-### Private contact card (QR-first; NFC later)
+### Private contact card (QR-first, NFC later)
 I tightened the sharing flow so I control who sees my contact details and when.
 
-- **/card** is private, and **/card/qr** is **challenge-gated** (simple PIN → versioned cookie).  
-- Every QR encodes a **short-lived, signed token**. The **vCard endpoint requires the token** (cookies are ignored).  
-- Tokens are **single-use** and gently **rate-limited** to discourage scraping. A second scan returns **410 Gone**.  
-- The code **auto-rotates** (refreshes) before expiry.  
-- The QR now points **directly to the vCard download**, and the vCard includes my avatar inline.  
-- If I unlock from `/card/qr`, the flow sends me **back to that page** after the PIN using a safe `next` parameter.  
-- I also fixed form submissions under my **Content Security Policy** and optionally canonicalize the host to avoid apex/`www` mismatches.
+- **/card** is private. **/card/qr** is challenge-gated (simple PIN, versioned cookie).
+- Every QR encodes a short-lived, signed token. The vCard endpoint requires the token (cookies are ignored).
+- Tokens are single-use and gently rate-limited to discourage scraping. A second scan returns 410 Gone.
+- The code auto-rotates (refreshes) before expiry.
+- The QR now points directly to the vCard download, and the vCard includes my avatar inline.
+- If I unlock from `/card/qr`, the flow sends me back to that page after the PIN using a safe `next` parameter.
+- I also fixed form submissions under my Content Security Policy and optionally canonicalize the host to avoid apex/www mismatches.
 
-> **Note on ops:** In public posts I keep security at a high level. I don’t publish environment details; those live in my private runbook.
+> **Note on ops:** In public posts I keep security at a high level. I do not publish environment details. Those live in my private runbook.
 
 ### Proposal PDF (executive-ready)
 The proposal export moved to a portable generator so it works the same everywhere and looks good.
 
-- Dedicated **Mission & Executive Summary** page with my statement.  
-- **Experience** renders **time / scope / metrics / highlights** with dividers and breathing room.  
-- **Skills** follow experience in clean two columns.  
-- **Table of Contents** with dotted leaders and page numbers.  
-- Supports a **circular avatar** (prefers a transparent PNG; falls back to JPG).  
-- Consistent 1″ margins, subtle rules, and tidy type scale; text is sanitized so there are no encoding surprises.
+- Dedicated Mission and Executive Summary page with my statement.
+- Experience renders time, scope, metrics, and highlights with dividers and breathing room.
+- Skills follow experience in clean two columns.
+- Table of Contents with dotted leaders and page numbers.
+- Supports a circular avatar (prefers a transparent PNG, falls back to JPG).
+- Consistent 1-inch margins, subtle rules, and tidy type scale. Text is sanitized so there are no encoding surprises.
 
-### CV & UI polish
-- The **Download** actions show a clear **“Preparing…”** busy state.  
-- The **QR page** scales nicely on mobile and stays visually centered.
+### CV and UI polish
+- The Download actions show a clear “Preparing...” busy state.
+- The QR page scales nicely on mobile and stays visually centered.
 
-### Routing & content fixes
-- Middleware is Edge-safe (WebCrypto) and typed.  
-- MDX page rendering is stabilized (server serialization + component map).  
+### Routing and content fixes
+- Middleware is Edge-safe (WebCrypto) and typed.
+- MDX page rendering is stabilized (server serialization + component map).
 - I removed brittle build flags and simplified the deployment config.
 
 ---
 
 ## Highlights (implementation notes)
 
-**Endpoints & files**
-- **Middleware:** gated `/card` + `/card/qr`; token-only check on the vCard endpoint; optional host canonicalization.  
-- **Tokens:** compact HMAC SHA-256 payloads (base64url) with short TTL and a nonce for one-time use.  
-- **KV store:** small helpers to “burn” tokens on first use and throttle downloads per IP.  
-- **Contact:** PIN → versioned cookie, safe `next` redirect, avatar embedded in the vCard.  
-- **QR:** server-generated SVG with an auto-refresh interval.  
-- **Proposal PDF:** mission, ToC, experience, and skills; page numbers and consistent spacing.  
+**Endpoints and files**
+- **Middleware:** gated `/card` + `/card/qr`, token-only check on the vCard endpoint, optional host canonicalization.
+- **Tokens:** compact HMAC SHA-256 payloads (base64url) with short TTL and a nonce for one-time use.
+- **KV store:** small helpers to “burn” tokens on first use and throttle downloads per IP.
+- **Contact:** PIN to versioned cookie, safe `next` redirect, avatar embedded in the vCard.
+- **QR:** server-generated SVG with an auto-refresh interval.
+- **Proposal PDF:** mission, ToC, experience, and skills with page numbers and consistent spacing.
 - **CV header:** busy state during downloads.
 
 **Security posture (high-level)**
-- Private contact area with a simple unlock, **single-use links**, and **short TTL**.  
-- **Rate-limits** on sensitive endpoints.  
-- **Instant revoke** by rotating a secret or bumping a version value in config.
+- Private contact area with a simple unlock, single-use links, and short TTL.
+- Rate-limits on sensitive endpoints.
+- Instant revoke by rotating a secret or bumping a version value in config.
 
 ---
 
 ## Before / After (at a glance)
 
-- **Before:** QR could be reached without a fresh challenge; PDF export was brittle; the cover layout felt cramped; experience read like a wall of text.  
-- **After:** QR is **private, rotating, and single-use**; the proposal PDF is **clean and portable** with a ToC; the cover and contact row have breathing room; experience is broken up with dividers and spacing.
+- **Before:** QR could be reached without a fresh challenge. PDF export was brittle. The cover layout felt cramped. Experience read like a wall of text.
+- **After:** QR is private, rotating, and single-use. The proposal PDF is clean and portable with a ToC. The cover and contact row have breathing room. Experience is broken up with dividers and spacing.
 
 ---
 
 ## Known issues / Next up
 
-- Add **NFC / Apple Wallet** pass that opens the same tokenized flow.  
-- Optional **Exec one-pager** PDF theme (summary-first).  
-- Brand accents for PDFs (color, link styling), clickable email/URL.  
-- Consider moving the KV usage to a native provider in my host for simpler ops.  
+- Add NFC / Apple Wallet pass that opens the same tokenized flow.
+- Optional exec one-pager PDF theme (summary-first).
+- Brand accents for PDFs (color, link styling), clickable email/URL.
+- Consider moving the KV usage to a native provider in my host for simpler ops.
 - Site search (`/search?q=`) and `SearchAction` JSON-LD.
 
 ---
 
 ## Changelog
 
-- **v0.5 (2025-09-10):** Private contact flow (auth-gated QR, single-use tokens, rate-limits), proposal PDF with ToC/mission/clean typography, circular avatar support, safer redirects & CSP, CV download busy state, QR layout fixes.  
-- **v0.4 (2025-09-05):** CV overhaul (Exec Summary, scope/metrics, mobile collapse), robust PDF export with live canvas capture, scrim refinement, sidebar spacing, export/import fixes.  
-- **v0.3 (2025-09-03):** Centered reading layout with column-blur scrim; descriptive sidebar grids + mobile Filters sheet; Blog/Research/Projects overhauled; Next 15 fixes; stricter taxonomy.  
+- **v0.6 (2026-03-06):** Route-aware accent theming with CSS @property crossfade (amber/cyan/indigo), generative algorithmic thumbnails (honeycomb/flower-of-life/isometric), wider card layouts with sharper corners, per-type color identity across all navigation and sidebar components, content tone humanization.
+- **v0.5 (2025-09-10):** Private contact flow (auth-gated QR, single-use tokens, rate-limits), proposal PDF with ToC/mission/clean typography, circular avatar support, safer redirects and CSP, CV download busy state, QR layout fixes.
+- **v0.4 (2025-09-05):** CV overhaul (Exec Summary, scope/metrics, mobile collapse), robust PDF export with live canvas capture, scrim refinement, sidebar spacing, export/import fixes.
+- **v0.3 (2025-09-03):** Centered reading layout with column-blur scrim, descriptive sidebar grids and mobile Filters sheet, Blog/Research/Projects overhauled, Next 15 fixes, stricter taxonomy.
 - **v0.2 (2025-08-28):** Trust pages, mobile command palette, JSON-LD, lazy-loading, a11y touches.

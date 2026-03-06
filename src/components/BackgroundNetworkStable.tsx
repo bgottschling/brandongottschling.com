@@ -53,12 +53,21 @@ export default function BackgroundNetworkStable({
     const context = canvas.getContext('2d')
     if (!context) return
 
-    // theme hue
+    // theme hue (reactive — CSS @property transition handles smoothing,
+    // canvas just reads the already-transitioning computed value)
     let accentHue = hue ?? 38
-    const m = /hsl\((\d+)/i.exec(
-      getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
-    )
-    if (m) accentHue = Number(m[1])
+    let hueCheckCounter = 0
+    const HUE_READ_INTERVAL = 6 // re-read CSS every ~6 frames (~100ms at 60fps)
+
+    function readAccentHue() {
+      const raw = getComputedStyle(document.documentElement)
+        .getPropertyValue('--accent-h').trim()
+      const parsed = parseFloat(raw)
+      if (!isNaN(parsed)) accentHue = parsed
+    }
+
+    // initial read
+    readAccentHue()
 
     // helpers
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -398,6 +407,15 @@ export default function BackgroundNetworkStable({
       if (paused) return
       const dt = Math.min(32, now - last)
       last = now
+
+      // periodically re-read CSS accent hue (CSS @property transition
+      // provides the smoothing — no extra lerp needed)
+      hueCheckCounter++
+      if (hueCheckCounter >= HUE_READ_INTERVAL) {
+        hueCheckCounter = 0
+        readAccentHue()
+      }
+
       const tSec = (now * 0.001) % 3600
       step(tSec, dt)
       if (context) {
