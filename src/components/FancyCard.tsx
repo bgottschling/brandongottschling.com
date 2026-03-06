@@ -61,7 +61,14 @@ const BADGE_COLOR: Record<CardVariant, string> = {
   research: "bg-indigo-600/90 text-white dark:bg-indigo-500/90",
 };
 
-export default function FancyCard({
+/* Extracted outside the render path — avoids re-creating on every frame */
+function Shimmer() {
+  return (
+    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-800" />
+  );
+}
+
+function FancyCardInner({
   href,
   title,
   summary,
@@ -78,12 +85,6 @@ export default function FancyCard({
   const [broken, setBroken] = React.useState(false);
   const visibleTags = tags ?? [];
   const showImage = !!cover && !broken;
-
-  function Shimmer() {
-    return (
-      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-800" />
-    );
-  }
 
   return (
     <article
@@ -228,3 +229,7 @@ export default function FancyCard({
     </article>
   );
 }
+
+/** Memoized — prevents re-renders when parent (grid list) updates but props haven't changed */
+const FancyCard = React.memo(FancyCardInner);
+export default FancyCard;

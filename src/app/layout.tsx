@@ -1,5 +1,5 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import EdgeScrim from "@/components/EdgeScrim";
 import MobileNavClient from "@/components/MobileNavClient";
@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
+};
+
+export const viewport: Viewport = {
   themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#111111" }],
 };
 
