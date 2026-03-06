@@ -23,7 +23,7 @@ export default async function CVPage() {
         <CvClientShell
           experiences={EXPERIENCES}
           skills={SKILLS}
-          headline="Proposal & Product development with incident leadership; I turn messy asks into shipped outcomes."
+          headline="Proposal and product development grounded in incident leadership. I work through ambiguity, bring the right people together, and deliver clear, dependable results."
         />
       </Suspense>
     </main>
