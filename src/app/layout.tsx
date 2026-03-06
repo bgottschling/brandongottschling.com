@@ -9,15 +9,15 @@ import ThemeSync from "@/components/ThemeSync";
 export const metadata: Metadata = {
   metadataBase: new URL("https://brandongottschling.com"),
   title: {
-    default: "Brandon Gottschling — Consulting, Research, Projects, Writing",
+    default: "Brandon Gottschling — Projects, Research, Writing",
     template: "%s | brandongottschling.com",
   },
   description:
-    "Boutique consulting by Brandon Gottschling — MVPs, AI integrations, performance & accessibility, dashboards, workflow automation, strategy — plus research, projects, and writing.",
+    "A working record of projects, research, and writing by Brandon Gottschling. Technology, life, faith, and work — documented as it happens.",
   openGraph: {
     title: "Brandon Gottschling",
     description:
-      "MVPs and modern systems — built fast with enterprise-tested craft. AI, performance, dashboards, automation, and strategy.",
+      "Projects, research, and writing on technology, life, faith, and work. Built in the open, documented as it happens.",
     url: "https://brandongottschling.com",
     siteName: "brandongottschling.com",
     images: ["/api/og?title=Brandon%20Gottschling"],
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@brandon_afk",
     creator: "@brandon_afk",
-    title: "Brandon Gottschling — Consulting & Research",
+    title: "Brandon Gottschling — Projects, Research, Writing",
     description:
-      "MVPs, AI, performance, dashboards, automation, and strategy — plus research and writing.",
+      "Projects, research, and writing on technology, life, faith, and work.",
     images: ["/api/og?title=Brandon%20Gottschling"],
   },
   robots: { index: true, follow: true },
@@ -117,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               }}
             />
 
-            {/* Services / OfferCatalog for rich/AI results */}
+            {/* OfferCatalog JSON-LD — commented out until services page is active
             <script
               type="application/ld+json"
               suppressHydrationWarning
@@ -127,91 +127,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@type": "OfferCatalog",
                   name: "Consulting Services",
                   url: "https://brandongottschling.com/services",
-                  itemListElement: [
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "MVP / Custom App (Next.js + Supabase + Tailwind)",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 10000, maxPrice: 50000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "AI Integrations / LLM (fine-tuning, embeddings)",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 20000, maxPrice: 60000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "Performance & Accessibility",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 2000, maxPrice: 10000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "Dashboards & Analytics",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 2000, maxPrice: 10000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "Workflow Automation (Notion, Zapier, Airtable)",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "SEO Audit (Technical, Content, JSON-LD)",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "Strategy & CX Architecture",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 10000, maxPrice: 50000 },
-                    },
-                    {
-                      "@type": "Offer",
-                      itemOffered: {
-                        "@type": "Service",
-                        name: "Maintenance & Support",
-                        areaServed: ["US", "CA"],
-                        provider: { "@type": "Person", name: "Brandon Gottschling" },
-                      },
-                      priceSpecification: { "@type": "PriceSpecification", priceCurrency: "USD", minPrice: 1000, maxPrice: 5000, unitText: "MON" },
-                    },
-                  ],
+                  itemListElement: [],
                 }),
               }}
             />
+            */}
 
             <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
               <Link href="/" className="font-semibold tracking-tight hover:text-accent transition">
