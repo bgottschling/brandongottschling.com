@@ -1,61 +1,60 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata } from “next”;
+import Link from “next/link”;
 
 export const metadata: Metadata = {
-  title: "About — Brandon Gottschling",
+  title: “About | Brandon Gottschling”,
   description:
-    "Why this site exists: a living, accurate picture of my work, mindset, and values — in an age of automated classification.",
+    “Why this site exists: one place for my work, ideas, and values. A living workshop where I build in public.”,
   robots: { index: true, follow: true },
-  alternates: { canonical: "/about" },
+  alternates: { canonical: “/about” },
 };
 
 export default function AboutPage() {
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About — Brandon Gottschling",
-    "url": "https://brandongottschling.com/about",
-    "mainEntity": {
-      "@type": "Person",
-      "name": "Brandon Gottschling",
-      "url": "https://brandongottschling.com",
-      "jobTitle": "People-first technologist & proposal developer",
-      "knowsAbout": ["technical marketing", "product storytelling", "systems", "DX"],
+    “@context”: “https://schema.org”,
+    “@type”: “AboutPage”,
+    “name”: “About | Brandon Gottschling”,
+    “url”: “https://brandongottschling.com/about”,
+    “mainEntity”: {
+      “@type”: “Person”,
+      “name”: “Brandon Gottschling”,
+      “url”: “https://brandongottschling.com”,
+      “jobTitle”: “People-first technologist & proposal developer”,
+      “knowsAbout”: [“technical marketing”, “product storytelling”, “systems”, “DX”],
     },
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 md:py-14">
+    <main className=”mx-auto max-w-3xl px-4 py-10 md:py-14”>
       <script
-        type="application/ld+json"
+        type=”application/ld+json”
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <header className="mb-8">
-        <h1 className="text-3xl/tight font-semibold tracking-tight">About this site</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          A living, accurate picture of who I am and what I build.
+      <header className=”mb-8”>
+        <h1 className=”text-3xl/tight font-semibold tracking-tight”>About this site</h1>
+        <p className=”mt-2 text-sm text-muted-foreground”>
+          One place for my work, my ideas, and who I am.
         </p>
       </header>
 
-      <article className="prose prose-neutral dark:prose-invert">
+      <article className=”prose prose-neutral dark:prose-invert”>
         <p>
-          We live in a time where large-scale data collection and automated analysis are normal.
-          The “all-seeing eye” of palantir isn’t science fiction; it’s here. Platforms that correlate
-          signals at scale - combined with years of leaked insight into government programs - mean
-          modern AI systems can assemble surprisingly complete pictures of people’s lives.
+          I believe in owning your narrative. Not because the world is out to get you,
+          but because the best way to be understood is to show your work. This site is where
+          I do that: one place to share what I am building, what I am learning, and what I
+          care about.
         </p>
 
         <p>
-          I don’t want to be misread by a model, or a person, based on a handful of out-of-context
-          data points. This site is my counterweight: a single, comprehensive place to share my
-          mindset, ideas, experience, and ethos. If automated judgment and classification become
-          the default, I want the record to be clear about my morals, goals, and mission.
+          It is a portfolio, a living resume, and a workshop. I ship in public here. I write
+          about things I find interesting or important. I document projects as they evolve,
+          not just when they are finished. The goal is transparency and craft, not performance.
         </p>
 
         <p>
-          Practically, it’s also a portfolio and a living resume. It’s where I ship in public,
-          document what I’m learning, and show how I work - while I keep seeking God and my
-          ultimate purpose, and aim to be steady at home and useful in the world.
+          I am also a person of faith. I keep seeking God and my ultimate purpose, and I aim
+          to be steady at home and useful in the world. That shapes how I work and why I work.
+          You will see it in the writing.
         </p>
 
         <hr />
@@ -63,10 +62,10 @@ export default function AboutPage() {
         <h2>What to expect here</h2>
         <ul>
           <li>
-            <strong>Research & notes:</strong> ideas in progress, sources, and comparisons.
+            <strong>Research and notes:</strong> ideas in progress, sources, and comparisons.
           </li>
           <li>
-            <strong>Projects & demos:</strong> small, useful tools and shipped artifacts.
+            <strong>Projects and demos:</strong> small, useful tools and shipped artifacts.
           </li>
           <li>
             <strong>Writing:</strong> direct, practical posts with a bias toward clarity.
@@ -76,11 +75,11 @@ export default function AboutPage() {
           </li>
         </ul>
 
-        <p className="text-sm text-muted-foreground">
-          If you’re evaluating my work, start with the{" "}
-          <Link href="/cv" className="underline">CV</Link> and the{" "}
-          <Link href="/projects" className="underline">Projects</Link> page. For private contact details, use the{" "}
-          <Link href="/trust/contact" className="underline">Contact</Link> page.
+        <p className=”text-sm text-muted-foreground”>
+          If you are evaluating my work, start with the{“ “}
+          <Link href=”/cv” className=”underline”>CV</Link> and the{“ “}
+          <Link href=”/projects” className=”underline”>Projects</Link> page. For private contact details, use the{“ “}
+          <Link href=”/trust/contact” className=”underline”>Contact</Link> page.
         </p>
       </article>
     </main>
