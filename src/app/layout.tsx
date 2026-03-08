@@ -82,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
 
           {/* Header / Nav (ABOVE scrim) */}
-          <header className="sticky top-0 z-50 border-b border-border bg-white/70 backdrop-blur">
+          <header className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70">
             {/* Person */}
             <script type="application/ld+json" suppressHydrationWarning>
               {JSON.stringify({
