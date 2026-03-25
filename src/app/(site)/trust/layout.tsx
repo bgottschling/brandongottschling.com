@@ -5,7 +5,6 @@ export const metadata: Metadata = {
   title: "Trust — Policies & Contact",
   description: "Contact, Privacy Policy, and Terms of Use for brandongottschling.com.",
   robots: { index: true, follow: true },
-  alternates: { canonical: "/trust" },
 };
 
 export default function TrustLayout({ children }: { children: React.ReactNode }) {
