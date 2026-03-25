@@ -31,7 +31,14 @@ const links = [
 
 export default function TrustPage() {
   return (
-    <div className="grid gap-4 sm:grid-cols-3">
+    <>
+      <header className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight">Trust</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Plain-language policies and how to reach me.
+        </p>
+      </header>
+      <div className="grid gap-4 sm:grid-cols-3">
       {links.map((link) => (
         <Link
           key={link.href}
@@ -48,5 +55,6 @@ export default function TrustPage() {
         </Link>
       ))}
     </div>
+    </>
   );
 }
