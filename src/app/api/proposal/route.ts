@@ -200,7 +200,7 @@ export async function GET(req: Request) {
     const bulletsData = (Array.isArray(EXEC_SUMMARY) && EXEC_SUMMARY.length)
       ? EXEC_SUMMARY
       : [
-          "Builder-minded marketer who translates messy needs into clear proposals and shippable artifacts.",
+          "Builder-minded marketer who translates messy needs into clear proposals and working deliverables.",
           "Facilitator who gets the right people in the room and keeps decisions legible.",
           "Direction of travel: reliable programs where quality execution and trust are the product.",
         ];

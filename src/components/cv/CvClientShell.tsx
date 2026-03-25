@@ -10,6 +10,7 @@ import { EMAIL } from "@/data/cv";
 import { cn } from "@/lib/utils";
 import CvHeaderBar from "./CvHeaderBar";
 import { ExecutiveSummary } from "./ExecutiveSummary";
+import CareerTimeline from "./CareerTimeline";
 import { EXEC_SUMMARY } from "@/data/cv";
 
 type Mode = "experience" | "skills";
@@ -130,6 +131,7 @@ export default function CvClientShell({
         )}
 
         <div id="cv-print-root" className="mt-8 md:mt-10">
+          {mode === "experience" && <CareerTimeline experiences={experiences} />}
           {mode === "experience" ? <ExperienceView items={experiences} /> : <SkillsView groups={skillsFiltered} />}
         </div>
       </div>

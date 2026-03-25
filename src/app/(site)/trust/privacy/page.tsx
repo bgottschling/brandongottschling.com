@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Trust",
+  title: "Privacy Policy",
   description: "Plain-language privacy policy for brandongottschling.com.",
   robots: { index: true, follow: true },
   alternates: { canonical: "/trust/privacy" },
@@ -21,7 +23,10 @@ export default function PrivacyPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <h2>Privacy Policy</h2>
+      <Link href="/trust" className="inline-flex items-center gap-1 text-sm text-muted-foreground no-underline hover:text-foreground transition-colors mb-4">
+        <ChevronLeft className="h-3.5 w-3.5" />Trust
+      </Link>
+      <h1>Privacy Policy</h1>
       <p className="text-sm text-muted-foreground">Last updated: {updated}</p>
 
       <h3>Summary</h3>

@@ -26,6 +26,7 @@ export async function generateMetadata(
   return {
     title: entry.meta.title ?? "Untitled",
     description: entry.meta.summary ?? undefined,
+    keywords: entry.meta.tags ?? undefined,
     alternates: { canonical: `/${joined}` },
     robots: { index: true, follow: true },
     openGraph: {

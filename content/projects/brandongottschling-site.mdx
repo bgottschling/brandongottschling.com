@@ -3,9 +3,9 @@ type: project
 title: "This website - the living workshop"
 primaryCategory: "technology"
 slug: "brandongottschling-site"
-date: "2026-03-06"
-summary: "v0.6 brings route-aware accent theming (amber/cyan/indigo crossfade via CSS @property), generative algorithmic thumbnails, wider card layouts with sharper corners, and a full content-tone pass."
-status: "Active v0.6"
+date: "2026-03-25"
+summary: "v0.7 adds animated card thumbnails, a mission canvas, polished CV with brand logo badges, a draggable career timeline, and content grounding across the site."
+status: "Active v0.7"
 stage: "prototype"
 tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv", "css-houdini", "canvas", "generative-art"]
 cover: "/images/projects/site/hero.png"
@@ -15,13 +15,13 @@ links:
 ---
 
 <ProjectHeader
-  status="Active · v0.6"
+  status="Active · v0.7"
   live="https://brandongottschling.com"
   repo="https://github.com/bgottschling/brandongottschling.com"
 />
 
 > **Why**
-> One home for research notes, projects, and writing. Lightweight, fast, easy to grow. This site is a living workshop where I ship in public and keep improving the craft.
+> One home for research notes, projects, and writing. Lightweight, fast, easy to grow. This site is a living workshop where I build in the open and keep improving the craft.
 
 ## Stack Overview
 
@@ -33,6 +33,27 @@ links:
 - **Contact sharing:** server-rendered QR (SVG) with HMAC tokens, enforced by Edge middleware.
 - **State & limits:** serverless key-value store over HTTP for single-use tokens and gentle rate limits.
 - **Hosting:** Vercel.
+
+---
+
+## What changed in v0.7
+
+### Animated card thumbnails
+Homepage artifact cards now feature animated canvas thumbnails that drift gently in their theme color. Each content type gets its own palette (amber for blog, cyan for projects, indigo for research), and the animation pauses when off-screen via IntersectionObserver to save resources.
+
+### Mission canvas
+The mission card gained an animated canvas background with a soft gradient overlay. The quote and body text stagger in on scroll. The body text stretches wider across the card for better readability.
+
+### CV polish: brand logos and career timeline
+Every experience card now displays the company's actual brand logo in a badge (BD, Warner Bros. Discovery, Tricentis, Alfresco, Vertafore, Encompass). Logos are sourced as SVG/PNG from official brand resources for crisp rendering at any size.
+
+The career timeline is draggable with a grab cursor, uses exact month offsets so adjacent tenures (like Encompass to Vertafore) sit flush without overlap, and shows brand badge icons instead of text labels. Hovering any bar surfaces a tooltip with company name, role, and date range. Tooltips render via React portal so they escape the scrollable container and display cleanly over page content.
+
+### Content grounding
+Replaced abstract shipping and launch metaphors across the site with grounded, direct language. The tone reads more like a person talking, less like a press release.
+
+### 180 Life Church project
+Added the 180 Life Church digital renovation as a portfolio project.
 
 ---
 
@@ -130,6 +151,7 @@ The proposal export moved to a portable generator so it works the same everywher
 
 ## Changelog
 
+- **v0.7 (2026-03-25):** Animated card thumbnails with theme-colored canvas, mission canvas background, CV brand logo badges (BD, WBD, Tricentis, Alfresco, Vertafore, Encompass), draggable career timeline with icon badges and portal tooltips, content grounding pass, 180 Life Church project.
 - **v0.6 (2026-03-06):** Route-aware accent theming with CSS @property crossfade (amber/cyan/indigo), generative algorithmic thumbnails (honeycomb/flower-of-life/isometric), wider card layouts with sharper corners, per-type color identity across all navigation and sidebar components, content tone humanization.
 - **v0.5 (2025-09-10):** Private contact flow (auth-gated QR, single-use tokens, rate-limits), proposal PDF with ToC/mission/clean typography, circular avatar support, safer redirects and CSP, CV download busy state, QR layout fixes.
 - **v0.4 (2025-09-05):** CV overhaul (Exec Summary, scope/metrics, mobile collapse), robust PDF export with live canvas capture, scrim refinement, sidebar spacing, export/import fixes.
