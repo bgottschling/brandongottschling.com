@@ -32,6 +32,7 @@ export const metadata: Metadata = {
       "Projects, research, and writing on technology, life, faith, and work.",
     images: ["/api/og?title=Brandon%20Gottschling"],
   },
+  keywords: ["Gottschling", "Brandon Gottschling", "projects", "research", "writing", "technology", "software engineering"],
   robots: { index: true, follow: true },
   icons: {
     icon: [
@@ -89,7 +90,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "@context": "https://schema.org",
                 "@type": "Person",
                 name: "Brandon Gottschling",
+                givenName: "Brandon",
+                familyName: "Gottschling",
                 url: "https://brandongottschling.com",
+                jobTitle: "Proposal Development",
+                worksFor: {
+                  "@type": "Organization",
+                  name: "Becton, Dickinson and Company (BD)",
+                },
+                description: "Proposal and product development grounded in incident leadership. Technology, faith, and work — documented as it happens.",
+                knowsAbout: ["proposal development", "incident management", "pharmacy automation", "software engineering", "AI", "Next.js"],
                 sameAs: [
                   "https://github.com/bgottschling",
                   "https://www.linkedin.com/in/bgottschling/",

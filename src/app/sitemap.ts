@@ -1,7 +1,8 @@
 // app/sitemap.ts
 import type { MetadataRoute } from "next";
+import { getAllContent, filterVisible } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const site = process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://brandongottschling.com";
   const now = new Date().toISOString();
 
@@ -19,6 +20,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site}/trust/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  // Optionally: append dynamic content (blog posts, projects) here.
+  // Dynamic content: blog posts, projects, research
+  const all = filterVisible(await getAllContent());
+  for (const item of all) {
+    // Skip pages/now — they're already in static routes or not indexable
+    if (item.type === "page" || item.type === "now") continue;
+    urls.push({
+      url: `${site}/${item.slug}`,
+      lastModified: item.date ?? now,
+      changeFrequency: "monthly",
+      priority: item.type === "blog" ? 0.6 : 0.7,
+    });
+  }
+
   return urls;
 }

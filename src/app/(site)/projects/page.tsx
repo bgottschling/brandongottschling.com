@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { getAllContent, filterVisible } from "@/lib/content";
 import { PROJECT_STAGES, PROJECT_STAGE_INFO, inferStageFromMeta, type ProjectStage } from "@/lib/projects-facets";
+import { collectionPageJsonLd } from "@/lib/jsonld";
 import CenteredFilterShell from "@/components/layouts/CenteredFilterShell";
 import SidebarCategoryGrid, { type GridOption } from "@/components/SidebarCategoryGrid";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
@@ -7,7 +9,22 @@ import SearchViewBar from "@/components/SearchViewBar";
 import ItemsGridList from "@/components/ItemsGridList";
 
 export const runtime = "nodejs";
-export const metadata = { title: "Projects" };
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Portfolio of apps, experiments, and builds by Brandon Gottschling.",
+  keywords: ["projects", "portfolio", "next.js", "web development", "Brandon Gottschling"],
+  openGraph: {
+    title: "Projects",
+    description: "Portfolio of apps, experiments, and builds by Brandon Gottschling.",
+    images: ["/api/og?title=Projects"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Projects",
+    description: "Portfolio of apps, experiments, and builds by Brandon Gottschling.",
+    images: ["/api/og?title=Projects"],
+  },
+};
 
 export const viewport = {
   themeColor: [
@@ -29,7 +46,7 @@ export default async function ProjectsPage({
   const all = filterVisible(raw).filter((x) => (x.type ?? "project") === "project");
 
   const items = all.map((p) => {
-    const stage = inferStageFromMeta(p.status, p.tags);
+    const _stage = inferStageFromMeta(p.status, p.tags);
     return {
       href: `/projects/${p.slug.split("/").pop()}`,
       title: p.title,
@@ -78,8 +95,21 @@ export default async function ProjectsPage({
     );
   }
 
+  const origin = process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://brandongottschling.com";
+  const jsonLd = collectionPageJsonLd({
+    name: "Projects",
+    description: "Portfolio of apps, experiments, and builds by Brandon Gottschling.",
+    url: `${origin}/projects`,
+    items: items.map((it) => ({ name: it.title, url: `${origin}${it.href}` })),
+  });
+
   return (
     <main className="py-10">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CenteredFilterShell
         sidebar={<SidebarCategoryGrid title="Project Stage" options={options} param="stage" />}
       >

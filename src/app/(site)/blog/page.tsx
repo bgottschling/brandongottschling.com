@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { getAllContent, filterVisible } from "@/lib/content";
 import { BLOG_BUCKETS, BLOG_CATEGORY_INFO, inferFromTags, type PrimaryCategory } from "@/lib/buckets";
+import { collectionPageJsonLd } from "@/lib/jsonld";
 import CenteredFilterShell from "@/components/layouts/CenteredFilterShell";
 import SidebarCategoryGrid, { type GridOption } from "@/components/SidebarCategoryGrid";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
@@ -7,7 +9,22 @@ import SearchViewBar from "@/components/SearchViewBar";
 import ItemsGridList, { type Item as ItemsGridItem } from "@/components/ItemsGridList";
 
 export const runtime = "nodejs";
-export const metadata = { title: "Blog" };
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Posts on technology, faith, life, and work by Brandon Gottschling.",
+  keywords: ["blog", "technology", "faith", "software engineering", "Brandon Gottschling"],
+  openGraph: {
+    title: "Blog",
+    description: "Posts on technology, faith, life, and work by Brandon Gottschling.",
+    images: ["/api/og?title=Blog"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog",
+    description: "Posts on technology, faith, life, and work by Brandon Gottschling.",
+    images: ["/api/og?title=Blog"],
+  },
+};
 
 // themeColor belongs in `export const viewport`, not metadata
 export const viewport = {
@@ -78,8 +95,21 @@ export default async function BlogPage({
   }
 
 
+  const origin = process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://brandongottschling.com";
+  const jsonLd = collectionPageJsonLd({
+    name: "Blog",
+    description: "Posts on technology, faith, life, and work by Brandon Gottschling.",
+    url: `${origin}/blog`,
+    items: items.map((it) => ({ name: it.title, url: `${origin}${it.href}` })),
+  });
+
   return (
     <main className="py-10">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CenteredFilterShell
         sidebar={
           // purely a Client Component; no handlers passed down
