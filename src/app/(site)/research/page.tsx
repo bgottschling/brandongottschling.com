@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { getAllContent, filterVisible } from "@/lib/content";
 import { RESEARCH_AREAS, RESEARCH_AREA_INFO, inferAreaFromTags, type ResearchArea } from "@/lib/research-facets";
+import { collectionPageJsonLd } from "@/lib/jsonld";
 import CenteredFilterShell from "@/components/layouts/CenteredFilterShell";
 import SidebarCategoryGrid, { type GridOption } from "@/components/SidebarCategoryGrid";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
@@ -7,7 +9,22 @@ import SearchViewBar from "@/components/SearchViewBar";
 import ItemsGridList from "@/components/ItemsGridList";
 
 export const runtime = "nodejs";
-export const metadata = { title: "Research" };
+export const metadata: Metadata = {
+  title: "Research",
+  description: "Research briefings and analysis on economics, technology, and policy by Brandon Gottschling.",
+  keywords: ["research", "economics", "technology", "policy", "analysis", "Brandon Gottschling"],
+  openGraph: {
+    title: "Research",
+    description: "Research briefings and analysis on economics, technology, and policy by Brandon Gottschling.",
+    images: ["/api/og?title=Research"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Research",
+    description: "Research briefings and analysis on economics, technology, and policy by Brandon Gottschling.",
+    images: ["/api/og?title=Research"],
+  },
+};
 
 export const viewport = {
   themeColor: [
@@ -74,8 +91,21 @@ export default async function ResearchPage({
     );
   }
 
+  const origin = process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://brandongottschling.com";
+  const jsonLd = collectionPageJsonLd({
+    name: "Research",
+    description: "Research briefings and analysis on economics, technology, and policy by Brandon Gottschling.",
+    url: `${origin}/research`,
+    items: items.map((it) => ({ name: it.title, url: `${origin}${it.href}` })),
+  });
+
   return (
     <main className="py-10">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CenteredFilterShell
         sidebar={<SidebarCategoryGrid title="Research Areas" options={options} param="area" />}
       >

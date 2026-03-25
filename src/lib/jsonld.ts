@@ -31,6 +31,31 @@ export function articleJsonLd(meta: BasicMeta, url: string) {
   };
 }
 
+export function collectionPageJsonLd(opts: {
+  name: string;
+  description: string;
+  url: string;
+  items: { name: string; url: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: opts.items.length,
+      itemListElement: opts.items.map((item, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: item.name,
+        url: item.url,
+      })),
+    },
+  };
+}
+
 export function creativeWorkJsonLd(meta: BasicMeta, url: string) {
   const modified = meta.updated || meta.date || new Date().toISOString();
   return {
