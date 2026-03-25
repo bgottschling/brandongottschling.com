@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import Image from "next/image";
 import type { Experience } from "@/data/cv";
 import { cn } from "@/lib/utils";
@@ -43,15 +44,68 @@ const BAR_COLORS = [
 
 // Icon-only versions for logos that are wordmarks (unreadable at badge size)
 const TIMELINE_ICON_OVERRIDES: Record<string, string> = {
-  "/logos/vertafore.svg": "/logos/vertafore-icon.svg",
+  "/logos/vertafore.svg": "/logos/vertafore-icon.png",
   "/logos/tricentis.svg": "/logos/tricentis-icon.svg",
 };
+
+/* ── Floating tooltip that escapes overflow containers ── */
+
+function FloatingTooltip({
+  barRef,
+  company,
+  role,
+  startDate,
+  endDate,
+  isCurrent,
+}: {
+  barRef: React.RefObject<HTMLDivElement | null>;
+  company: string;
+  role: string;
+  startDate: Date;
+  endDate: Date;
+  isCurrent: boolean;
+}) {
+  const [pos, setPos] = React.useState<{ top: number; left: number } | null>(null);
+
+  React.useEffect(() => {
+    if (!barRef.current) return;
+    const rect = barRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 8,
+      left: rect.left + rect.width / 2 + window.scrollX,
+    });
+  }, [barRef]);
+
+  if (!pos) return null;
+
+  return ReactDOM.createPortal(
+    <div
+      className="fixed z-50 pointer-events-none"
+      style={{
+        top: pos.top - window.scrollY,
+        left: pos.left - window.scrollX,
+        transform: "translateX(-50%)",
+      }}
+    >
+      <div className="mx-auto h-0 w-0 border-x-[5px] border-b-[5px] border-x-transparent border-b-neutral-900 dark:border-b-neutral-700" />
+      <div className="rounded-md bg-neutral-900 px-3 py-2 text-[11px] text-white whitespace-nowrap shadow-xl dark:bg-neutral-700">
+        <div className="font-semibold text-xs">{company}</div>
+        <div className="text-white/70 text-[10px]">{role}</div>
+        <div className="text-white/60 text-[10px] mt-0.5">
+          {formatDate(startDate, false)} – {formatDate(endDate, isCurrent)}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 /* ── component ── */
 
 export default function CareerTimeline({ experiences }: { experiences: Experience[] }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = React.useState<number | null>(null);
+  const barRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   if (!experiences?.length) return null;
 
@@ -140,17 +194,17 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
               })}
             </div>
 
-            {/* Bars — taller for bigger badges */}
+            {/* Bars */}
             <div className="space-y-2">
               {sorted.map((span, i) => {
                 const startOffset = (monthsBetween(earliest, span.start) / totalMonths) * 100;
                 const endOffset = (monthsBetween(earliest, span.end) / totalMonths) * 100;
                 const barWidth = Math.max(2, endOffset - startOffset);
-                const isHovered = hovered === i;
 
                 return (
                   <div key={i} className="relative h-10 flex items-center">
                     <div
+                      ref={(el) => { barRefs.current[i] = el; }}
                       className={cn(
                         "absolute h-9 rounded-lg transition-all duration-200",
                         BAR_COLORS[i % BAR_COLORS.length],
@@ -165,7 +219,7 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
                       onMouseEnter={() => setHovered(i)}
                       onMouseLeave={() => setHovered(null)}
                     >
-                      {/* Brand badge — no box, just the logo directly on the bar */}
+                      {/* Brand badge icon */}
                       <span className="absolute inset-0 flex items-center justify-center">
                         {span.logo ? (
                           <Image
@@ -180,21 +234,19 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
                           <Building2 className="h-5 w-5 text-white/80" />
                         )}
                       </span>
-
-                      {/* Tooltip — below bar to avoid edge clipping */}
-                      {isHovered && (
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 z-20 pointer-events-none">
-                          <div className="mx-auto h-0 w-0 border-x-[5px] border-b-[5px] border-x-transparent border-b-neutral-900 dark:border-b-neutral-700" />
-                          <div className="rounded-md bg-neutral-900 px-3 py-2 text-[11px] text-white whitespace-nowrap shadow-xl dark:bg-neutral-700">
-                            <div className="font-semibold text-xs">{span.company}</div>
-                            <div className="text-white/70 text-[10px]">{span.role}</div>
-                            <div className="text-white/60 text-[10px] mt-0.5">
-                              {formatDate(span.start, false)} – {formatDate(span.end, span.isCurrent)}
-                            </div>
-                          </div>
-                        </div>
-                      )}
                     </div>
+
+                    {/* Portal tooltip — escapes overflow container */}
+                    {hovered === i && (
+                      <FloatingTooltip
+                        barRef={{ current: barRefs.current[i] }}
+                        company={span.company}
+                        role={span.role}
+                        startDate={span.start}
+                        endDate={span.end}
+                        isCurrent={span.isCurrent}
+                      />
+                    )}
                   </div>
                 );
               })}
