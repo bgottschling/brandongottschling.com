@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyCardToken } from "@/lib/cardToken";
 
-export const config = { matcher: ["/card", "/card/qr", "/api/vcard"] };
+export const config = { matcher: ["/((?!_next|api/og|favicon|images|logos|.*\\.).*)"] };
 
 function cookieOK(req: NextRequest) {
   const version = process.env.CARD_AUTH_VERSION || "1";
@@ -11,6 +11,15 @@ function cookieOK(req: NextRequest) {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Redirect www → non-www (canonical host)
+  const host = req.headers.get("host") || "";
+  if (host.startsWith("www.")) {
+    const url = req.nextUrl.clone();
+    url.host = host.replace(/^www\./, "");
+    url.port = "";
+    return NextResponse.redirect(url, 301);
+  }
 
   // Helper to send to access with ?next=<original>
   const sendToAccess = () => {
