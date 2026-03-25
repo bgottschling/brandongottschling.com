@@ -4,7 +4,19 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About | Brandon Gottschling",
   description:
-    "Why this site exists: a working record of my projects, ideas, and values.",
+    "About Brandon Gottschling — proposal development, incident management, and software engineering. A working record of projects, ideas, and values.",
+  keywords: ["Gottschling", "Brandon Gottschling", "about", "proposal development", "incident management", "software engineering"],
+  openGraph: {
+    title: "About Brandon Gottschling",
+    description: "Proposal development, incident management, and software engineering. A working record of projects, ideas, and values.",
+    images: ["/api/og?title=About%20Brandon%20Gottschling"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Brandon Gottschling",
+    description: "Proposal development, incident management, and software engineering.",
+    images: ["/api/og?title=About%20Brandon%20Gottschling"],
+  },
   robots: { index: true, follow: true },
   alternates: { canonical: "/about" },
 };
