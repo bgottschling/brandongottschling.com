@@ -29,7 +29,7 @@ export default async function ProjectsPage({
   const all = filterVisible(raw).filter((x) => (x.type ?? "project") === "project");
 
   const items = all.map((p) => {
-    const stage = inferStageFromMeta(p.status, p.tags);
+    const _stage = inferStageFromMeta(p.status, p.tags);
     return {
       href: `/projects/${p.slug.split("/").pop()}`,
       title: p.title,
