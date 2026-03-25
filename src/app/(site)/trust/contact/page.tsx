@@ -2,7 +2,9 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { z } from "zod";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Schema = z.object({
@@ -87,6 +89,9 @@ async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 
   return (
     <main className="mx-auto max-w-2xl">
+      <Link href="/trust" className="inline-flex items-center gap-1 text-sm text-muted-foreground no-underline hover:text-foreground transition-colors mb-4">
+        <ChevronLeft className="h-3.5 w-3.5" />Trust
+      </Link>
       <h1 className="text-3xl/tight font-semibold tracking-tight">Contact</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Short intro + what you’re looking for. I’ll reply as soon as possible.
