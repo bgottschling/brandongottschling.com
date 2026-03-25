@@ -102,6 +102,9 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = React.useState<number | null>(null);
   const barRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const isDragging = React.useRef(false);
+  const startX = React.useRef(0);
+  const scrollLeftRef = React.useRef(0);
 
   if (!experiences?.length) return null;
 
@@ -123,11 +126,6 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
   // Generous width — 120px per year for roomy bars and clear badges
   const years = latest.getFullYear() - earliest.getFullYear() + 1;
   const minWidth = Math.max(900, years * 120);
-
-  /* ── drag-to-scroll ── */
-  const isDragging = React.useRef(false);
-  const startX = React.useRef(0);
-  const scrollLeftRef = React.useRef(0);
 
   const onMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
