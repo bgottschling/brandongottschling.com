@@ -85,7 +85,7 @@ export default function MissionCard() {
         <Item
           {...(!reduced && { variants: item })}
         >
-          <p className="m-0 max-w-[58ch] text-[15px] leading-7 text-neutral-700 dark:text-neutral-300">
+          <p className="m-0 max-w-[72ch] text-[15px] leading-7 text-neutral-700 dark:text-neutral-300">
             {body}
           </p>
         </Item>
