@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${site}/trust/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${site}/trust/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${site}/trust/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${site}/search`, lastModified: now, changeFrequency: "monthly", priority: 0.3 },
   ];
 
   // Dynamic content: blog posts, projects, research

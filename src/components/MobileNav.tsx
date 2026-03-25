@@ -39,6 +39,7 @@ const EXTERNAL: NavItem[] = [
 export default function MobileNav() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   // Keyboard shortcuts: ⌘K / Ctrl+K, and '/' to open
   React.useEffect(() => {
@@ -97,10 +98,40 @@ export default function MobileNav() {
         <span className="sr-only">Open menu</span>
       </Button>
 
-      <CommandDialog open={open} onOpenChange={setOpen} className="bg-zinc-900 text-white">
-        <CommandInput placeholder="Type to search… (⌘K)" />
+      <CommandDialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSearchQuery(""); }} className="bg-zinc-900 text-white">
+        <CommandInput
+          placeholder="Search site… (⌘K)"
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && searchQuery.trim()) {
+              router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+              setOpen(false);
+              setSearchQuery("");
+            }
+          }}
+        />
         <CommandList className="bg-zinc-900 text-white">
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>No navigation match. Press Enter to search the site.</CommandEmpty>
+          {searchQuery.trim() && (
+            <>
+              <CommandGroup heading="Search">
+                <CommandItem
+                  value={`search ${searchQuery}`}
+                  onSelect={() => {
+                    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                    setOpen(false);
+                    setSearchQuery("");
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Search className="size-4 shrink-0" />
+                  <span>Search for &ldquo;{searchQuery.trim()}&rdquo;</span>
+                </CommandItem>
+              </CommandGroup>
+              <CommandSeparator />
+            </>
+          )}
           {renderGroup('Main', MAIN)}
           <CommandSeparator />
           {renderGroup('Trust & Legal', TRUST)}
