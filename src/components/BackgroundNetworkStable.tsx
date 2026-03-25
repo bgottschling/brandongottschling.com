@@ -40,18 +40,20 @@ export default function BackgroundNetworkStable({
     const canvas = ref.current
     if (!canvas) return
 
-    if (
-      respectReducedMotion &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      canvas.style.display = 'none'
-      return
-    } else {
-      canvas.style.display = ''
-    }
-
     const context = canvas.getContext('2d')
     if (!context) return
+
+    // Detect reduced-motion preference — render a static frame instead of hiding
+    const reducedMotion = respectReducedMotion &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    canvas.style.display = ''
+
+    try { // ── guard against canvas init failures ──
+
+    // Legacy-compatible color helper (hsla comma syntax works everywhere)
+    const hsla = (h: number, s: number, l: number, a: number) =>
+      `hsla(${h}, ${s}%, ${l}%, ${a})`
 
     // ── Dissolve-based hue transition ──
     // Linear hue interpolation sweeps through wrong colors on the wheel
@@ -388,7 +390,7 @@ export default function BackgroundNetworkStable({
           ctx.lineTo(sx[j], sy[j])
           ctx.lineTo(sx[k], sy[k])
           ctx.closePath()
-          ctx.fillStyle = `hsl(${accentHue} 75% ${light}% / ${alpha * accentAlpha})`
+          ctx.fillStyle = hsla(accentHue, 75, light, alpha * accentAlpha)
           ctx.fill()
         }
       }
@@ -399,7 +401,7 @@ export default function BackgroundNetworkStable({
           const j = ni[idx]
           if (j <= i) continue
           const t = dist01(i, j)
-          ctx.strokeStyle = `hsl(${accentHue} 70% 45% / ${(0.1 + 0.28 * t) * accentAlpha})`
+          ctx.strokeStyle = hsla(accentHue, 70, 45, (0.1 + 0.28 * t) * accentAlpha)
           ctx.lineWidth = 1
           ctx.beginPath()
           ctx.moveTo(sx[i], sy[i])
@@ -408,7 +410,7 @@ export default function BackgroundNetworkStable({
         }
       }
 
-      ctx.fillStyle = `hsl(${accentHue} 70% 50% / ${0.75 * accentAlpha})`
+      ctx.fillStyle = hsla(accentHue, 70, 50, 0.75 * accentAlpha)
       for (let i = 0; i < N; i++) {
         ctx.beginPath()
         ctx.arc(sx[i], sy[i], 1.6, 0, τ)
@@ -469,16 +471,36 @@ export default function BackgroundNetworkStable({
       }
     }
 
+    // Paint one frame for initial state (and static fallback for reduced-motion)
     resize(canvas, context)
-    const ro = new ResizeObserver(() => resize(canvas, context))
+    step(performance.now() * 0.001, 16)
+    drawFrame(context)
+
+    const ro = new ResizeObserver(() => {
+      resize(canvas, context)
+      if (reducedMotion) {
+        // Re-paint static frame at new size
+        step(performance.now() * 0.001, 16)
+        drawFrame(context)
+      }
+    })
     ro.observe(document.documentElement)
-    document.addEventListener('visibilitychange', onVis)
-    animId = requestAnimationFrame(tick)
+
+    // Only start the animation loop when motion is allowed
+    if (!reducedMotion) {
+      document.addEventListener('visibilitychange', onVis)
+      animId = requestAnimationFrame(tick)
+    }
 
     return () => {
       document.removeEventListener('visibilitychange', onVis)
       ro.disconnect()
       cancelAnimationFrame(animId)
+    }
+
+    } catch (err) {
+      console.warn('BackgroundNetworkStable: init failed', err)
+      return undefined
     }
   }, [
     density,
