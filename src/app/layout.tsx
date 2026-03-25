@@ -118,6 +118,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@type": "WebSite",
                   name: "brandongottschling.com",
                   url: "https://brandongottschling.com",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: "https://brandongottschling.com/search?q={query}",
+                    "query-input": "required name=query",
+                  },
                 }),
               }}
             />
