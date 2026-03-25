@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import EdgeScrim from "@/components/EdgeScrim";
 import MobileNavClient from "@/components/MobileNavClient";
+import NavSearch from "@/components/NavSearch";
 import BackgroundNetworkStable from "@/components/BackgroundNetworkStable";
 import ThemeSync from "@/components/ThemeSync";
 
@@ -144,9 +145,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             */}
 
             <div className="mx-auto max-w-3xl px-4 py-3 flex items-center justify-between">
-              <Link href="/" className="font-semibold tracking-tight hover:text-accent transition">
+              <Link href="/" className="font-semibold tracking-tight hover:text-accent transition shrink-0">
                 brandongottschling.com
               </Link>
+
+              {/* Desktop search */}
+              <NavSearch />
 
               {/* Desktop nav */}
               <nav className="hidden md:flex gap-4 text-sm" aria-label="Primary">
