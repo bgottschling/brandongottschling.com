@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { createRng } from "@/lib/seeded-random";
-import { getContentTheme, type ContentTheme } from "@/lib/content-colors";
+import { getContentTheme } from "@/lib/content-colors";
 
 /* ── Catmull-Rom spline through seeded control points ── */
 
@@ -175,7 +175,7 @@ export default function CardThumbnailCanvas({
         const step = 3;
         ctx.beginPath();
         ctx.moveTo(0, h);
-        let firstY = sampleSmooth(pts, scroll);
+        const firstY = sampleSmooth(pts, scroll);
         ctx.lineTo(0, firstY);
 
         for (let x = step; x <= w; x += step) {
