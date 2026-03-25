@@ -18,8 +18,14 @@ function parseDate(s: string): Date {
   return new Date(parseInt(s), 0);
 }
 
-function monthDiff(a: Date, b: Date): number {
-  return Math.max(1, (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth()));
+function formatDate(d: Date, isCurrent: boolean): string {
+  if (isCurrent) return "Present";
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function monthsBetween(a: Date, b: Date): number {
+  return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
 }
 
 const BAR_COLORS = [
@@ -57,9 +63,9 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
 
   const earliest = sorted[0].start;
   const latest = new Date();
-  const totalMonths = monthDiff(earliest, latest);
+  const totalMonths = Math.max(1, monthsBetween(earliest, latest));
 
-  // Each year gets ~90px so shorter tenures still have room for labels
+  // Wider timeline so short tenures have room
   const years = latest.getFullYear() - earliest.getFullYear() + 1;
   const minWidth = Math.max(700, years * 90);
 
@@ -68,24 +74,17 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
       <div className="mb-6 rounded-xl border border-white/10 bg-white/50 backdrop-blur p-4 dark:bg-neutral-900/50">
         <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Career Timeline</div>
 
-        {/* Scrollable container — scrollbar hidden, scroll-wheel works on hover */}
+        {/* Single scrollable container with hidden scrollbar */}
         <div
-          className="overflow-x-auto pb-2 -mx-1 px-1"
+          className="timeline-scroll overflow-x-auto pb-2 -mx-1 px-1"
           style={{
-            scrollbarWidth: "none",       /* Firefox */
-            msOverflowStyle: "none",      /* IE/Edge */
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
         >
-          {/* Hide WebKit scrollbar via inline style workaround */}
           <style>{`.timeline-scroll::-webkit-scrollbar { display: none; }`}</style>
-          <div
-            className="timeline-scroll overflow-x-auto"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              minWidth: `${minWidth}px`,
-            }}
-          >
+
+          <div style={{ minWidth: `${minWidth}px` }}>
             {/* Year markers */}
             <div className="relative h-5 mb-1">
               {Array.from(
@@ -108,27 +107,39 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
             {/* Bars */}
             <div className="space-y-1.5">
               {sorted.map((span, i) => {
-                const startPx = (monthDiff(earliest, span.start) / totalMonths) * 100;
-                const endPx = (monthDiff(earliest, span.end) / totalMonths) * 100;
-                const width = Math.max(3, endPx - startPx);
+                // Use exact month offsets — no minimum padding that would cause overlap
+                const startOffset = (monthsBetween(earliest, span.start) / totalMonths) * 100;
+                const endOffset = (monthsBetween(earliest, span.end) / totalMonths) * 100;
+                const barWidth = Math.max(2, endOffset - startOffset);
+
+                const tooltip = `${span.company} · ${span.role}\n${formatDate(span.start, false)} – ${formatDate(span.end, span.isCurrent)}`;
 
                 return (
-                  <div key={i} className="relative h-7 flex items-center">
+                  <div key={i} className="group relative h-7 flex items-center">
                     <div
+                      title={tooltip}
                       className={cn(
-                        "absolute h-6 rounded transition-all duration-200",
+                        "absolute h-6 rounded cursor-default transition-all duration-200 hover:brightness-110 hover:scale-y-110 origin-center",
                         BAR_COLORS[i % BAR_COLORS.length],
                         span.isCurrent && "ring-1 ring-amber-400/50"
                       )}
                       style={{
-                        left: `${startPx}%`,
-                        width: `${width}%`,
-                        minWidth: "4rem",
+                        left: `${startOffset}%`,
+                        width: `${barWidth}%`,
+                        minWidth: "2.5rem",
                       }}
                     >
                       <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-white whitespace-nowrap">
                         {span.company}
                       </span>
+
+                      {/* Hover tooltip with dates */}
+                      <div className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10">
+                        <div className="rounded bg-neutral-900 px-2 py-1 text-[10px] font-medium text-white whitespace-nowrap shadow-lg dark:bg-neutral-700">
+                          {formatDate(span.start, false)} – {formatDate(span.end, span.isCurrent)}
+                        </div>
+                        <div className="mx-auto h-0 w-0 border-x-4 border-t-4 border-x-transparent border-t-neutral-900 dark:border-t-neutral-700" />
+                      </div>
                     </div>
                   </div>
                 );
