@@ -3,6 +3,7 @@ export type Experience = {
   role: string
   org?: string
   location?: string
+  logo?: string            // path to company logo in /public
   start: string // ISO or "Mon YYYY"
   end?: string  // "Present" or Mon YYYY
   scope?: string           // NEW: one-line scope statement
@@ -17,9 +18,8 @@ export const LINKEDIN = "https://www.linkedin.com/in/bgottschling/"
 export const GITHUB = "https://github.com/bgottschling"
 
 export const EXEC_SUMMARY: string[] = [
-  "Builder of calm, repeatable operations: led the response to the highest-severity incidents for streaming properties; turned chaos into simple playbooks teams can run under pressure.",
+  "Builder of calm, repeatable operations: turned the highest-severity streaming incidents into simple playbooks by getting the right people in the room and keeping decisions legible.",
   "Proposal developer for hospital systems at BD MMS: translate product limits and customer needs into clear, compliant responses that Sales can win with; maintain a reusable content library to speed cycle time.",
-  "Hands-on facilitator who gets the right people in the room (engineering, operations, editorial, product) and keeps decisions legible with short memos and checklists.",
   "Direction of travel: lead response and reliability programs (or proposal operations) where quality of execution and cross-functional trust are the product."
 ];
 
@@ -29,22 +29,26 @@ export const EXPERIENCES: Experience[] = [
     role: "Proposal Development",
     org: "Medication Management Solutions (MMS)",
     location: "San Diego, CA (Remote)",
+    logo: "/logos/bd.svg",
     start: "Jun 2024",
     end: "Present",
+    scope: "Lead the Pharmacy Automation proposal process for BD MMS; collaborate with CAD designers and engineering on complex system concepts; drive AI-assisted knowledge management and sales intelligence initiatives.",
     bullets: [
-      "Write clear, compliant proposals for RFPs (Requests for Proposals), RFQs (Requests for Quotes), RFIs (Requests for Information), and Sources Sought for the Pyxis, Alaris, and Parata product lines.",
-      "Run the proposal process end-to-end: meet with subject-matter experts and Sales, agree on scope and assumptions, and turn that into simple win themes and customer benefits.",
-      "Build and maintain a reusable proposal library so teams aren’t starting from scratch; standardize boilerplate, appendices, and Q&A to speed up turnaround and keep messaging consistent.",
-      "Keep content accurate by partnering with Marketing on knowledge management and with Product to capture voice-of-customer insights and clearly state product limits and workarounds.",
+      "Lead the Pharmacy Automation proposal process end-to-end, collaborating with CAD designers on concepts for conveyor systems, vial dispensing robotics, adherence and blister packaging robotics, automated sortation, and shipping/manifesting software that interfaces with orchestration platforms and Pharmacy Information Systems.",
+      "Write clear, compliant proposals for RFPs, RFQs, RFIs, and Sources Sought across the Pyxis, Alaris, and Parata product lines; translate scope and assumptions into win themes and customer benefits.",
+      "Configure and build AI agents to streamline knowledge management and proposal drafting, accelerating turnaround and improving content consistency across the proposal library.",
+      "Build AI-powered solutions that pull data from SAP, Salesforce, and other systems of record to inform sales strategy and competitive battleplans.",
+      "Build and maintain a reusable proposal library; standardize boilerplate, appendices, and Q&A to speed up turnaround and keep messaging consistent.",
       "Lead the proposal review process, track timelines, and check every submission for formatting, compliance, and portal requirements; update checklists and templates after each cycle to improve the next one."
     ],
-    tags: ["Proposals","Healthcare","RFP","Knowledge Mgmt"]
+    tags: ["Proposals","Healthcare","RFP","Pharmacy Automation","AI/ML","Knowledge Mgmt"]
   },
 
   {
     company: "Warner Bros. Discovery",
     role: "Incident Manager",
     location: "Atlanta, GA",
+    logo: "/logos/WBD.svg",
     start: "Sep 2019",
     end: "Nov 2023",
     scope: "Commanded Sev0/Sev1 response across streaming/web brands; orchestrated engineers, ops, editorial, production; maintained playbooks and post-incident improvements.",
@@ -56,14 +60,11 @@ export const EXPERIENCES: Experience[] = [
         "Readiness: 6–8 cross-team incident drills per quarter with >90% on-call participation; standardized game-day checklists and CDN failover rehearsals."
     ],
     bullets: [
-      "Led the response to the highest-severity outages on streaming and web properties; coordinated engineers, operations, editorial, and production until service was restored, with short, scheduled updates to executives.",
-      "Created a single, repeatable playbook: runbooks, on-call rotations, escalation paths, and a RACI (who is Responsible, Accountable, Consulted, Informed). Wrote status templates to cut confusion during live, high-pressure events.",
-      "Merged multiple monitoring sources (Conviva video quality, Datadog SLO alerts, AWS CloudWatch alarms) into one view of real customer impact; tuned alerts to reduce false alarms and improve how fast we detect and fix issues.",
-      "Prepared for big moments: game-day checklists, practice failovers of CDNs, and pre-planned rollback and feature-flag paths. Supported the HBO Max → Max migration under peak traffic.",
-      "Ran blameless reviews after incidents and followed through on fixes with Product and Engineering (for example, adding retries, circuit breakers, and rate limits) until the risk was actually reduced.",
-      "Agreed on “graceful degradation” plans with Product/Editorial (for example, temporarily lowering video quality or pausing promos) so core playback stays stable when the system is under stress.",
-      "Introduced problem management for recurring issues: removed duplicate or flaky monitors, grouped by service, and reduced the number of pages per incident.",
-      "Maintained incident playbooks, status macros, and a short FAQ library for common scenarios. Mentored new incident commanders and ran practice drills to build confidence before real events."
+      "Led response to the highest-severity outages across streaming and web properties, including the HBO Max launch and Max rebrand under peak traffic; coordinated engineers, ops, editorial, and production with scheduled executive updates.",
+      "Created a single, repeatable playbook: runbooks, on-call rotations, escalation paths, RACI, and status templates to cut confusion during live, high-pressure events.",
+      "Merged multiple monitoring sources (Conviva, Datadog SLO alerts, AWS CloudWatch) into one view of real customer impact; tuned alerts to reduce false alarms and improve detection speed.",
+      "Ran blameless post-incident reviews and drove follow-through on fixes (retries, circuit breakers, rate limits, graceful degradation plans) until the risk was actually reduced; introduced problem management to eliminate recurring issues.",
+      "Mentored new incident commanders and ran cross-team practice drills to build confidence before real events."
     ],
     tags: ["Incident Mgmt","ITSM/ITIL","Observability","Problem Mgmt","Streaming"]
   },
@@ -72,6 +73,7 @@ export const EXPERIENCES: Experience[] = [
     company: "Tricentis",
     role: "Application Engineer (Support)",
     location: "Greater Atlanta Area",
+    logo: "/logos/tricentis.svg",
     start: "Feb 2018",
     end: "Jun 2019",
     scope: "Implemented and supported enterprise customers on-prem/cloud; documented best practices and operated large POCs and rollouts.",
@@ -93,6 +95,7 @@ export const EXPERIENCES: Experience[] = [
     company: "Alfresco",
     role: "Technical Support Engineer",
     location: "Greater Atlanta Area",
+    logo: "/logos/alfresco.svg",
     start: "Jun 2017",
     end: "Dec 2017",
     scope: "Supported Java/Tomcat content platform across DB, identity, search; performed deep-dive diagnostics and tuned performance.",
@@ -112,6 +115,7 @@ export const EXPERIENCES: Experience[] = [
     company: "Vertafore",
     role: "Product Support Specialist",
     location: "Atlanta, GA",
+    logo: "/logos/vertafore.svg",
     start: "Jun 2015",
     end: "2017",
     scope: "Handled multi-product inbound queues; wrote KB articles; coached customers through fixes.",
@@ -128,6 +132,7 @@ export const EXPERIENCES: Experience[] = [
     company: "Encompass Supply Chain Solutions",
     role: "Junior System Administrator",
     location: "Lawrenceville, GA",
+    logo: "/logos/encompass.svg",
     start: "Jan 2015",
     end: "Jun 2015",
     bullets: [
@@ -143,7 +148,7 @@ export const SKILLS: SkillGroup[] = [
   {
     name: "Leadership & Operations",
     items: [
-      "Lead critical incidents (Sev0/Sev1) with short, scheduled executive updates and clear ownership until recovery.",
+      "Command Sev0/Sev1 incidents end-to-end: triage, coordinate, communicate, and drive to recovery.",
       "Build simple, repeatable processes: runbooks, on-call rotations, escalation maps, and RACI (who does what).",
       "Facilitate across teams (engineering, operations, editorial, product) and plan for rollbacks and feature-flags when needed.",
       "Coordinate projects and programs; align stakeholders and record decisions in plain language that travels well.",
@@ -155,7 +160,7 @@ export const SKILLS: SkillGroup[] = [
     items: [
       "Write responses for RFP/RFQ/RFI/Sources Sought that are easy to read and fully compliant with requirements.",
       "Turn scope and assumptions into win themes, benefits, and clear pricing narratives with Sales.",
-      "Maintain a proposal library so teams can reuse accurate boilerplate, appendices, and Q&A.",
+      "Build and govern a reusable content library: boilerplate, appendices, and Q&A organized for fast retrieval.",
       "Run peer reviews, manage deadlines, check compliance, and improve the checklist after each submission.",
       "Feed voice-of-customer insights and product limits back to Marketing and Product so content stays real."
     ]
