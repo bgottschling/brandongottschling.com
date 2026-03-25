@@ -50,6 +50,11 @@
   --type-research-50:  245 60% 96%;
   --type-research-ring:245 50% 90%;
 
+  /* Content-type hues */
+  --hue-blog:     38;
+  --hue-project:  210;
+  --hue-research: 165;
+
   /* Code block bg */
   --code:      240 6% 10%;
   --code-fg:   0 0% 100%;
