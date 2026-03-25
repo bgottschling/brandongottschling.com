@@ -42,11 +42,7 @@ const BAR_COLORS = [
   "bg-amber-300 dark:bg-amber-600",
 ];
 
-// Icon-only versions for logos that are wordmarks (unreadable at badge size)
-const TIMELINE_ICON_OVERRIDES: Record<string, string> = {
-  "/logos/vertafore.svg": "/logos/vertafore-icon.png",
-  "/logos/tricentis.svg": "/logos/tricentis-icon.svg",
-};
+// No overrides needed — cv.ts now points to icon versions directly
 
 /* ── Floating tooltip that escapes overflow containers ── */
 
@@ -112,7 +108,7 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
   const spans = experiences.map((exp) => ({
     company: exp.company,
     role: exp.role,
-    logo: exp.logo ? (TIMELINE_ICON_OVERRIDES[exp.logo] ?? exp.logo) : undefined,
+    logo: exp.logo,
     start: parseDate(exp.start),
     end: parseDate(exp.end ?? "Present"),
     isCurrent: !exp.end || exp.end === "Present",
