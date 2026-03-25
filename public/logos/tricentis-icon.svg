@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Tricentis diamond icon extracted from brand logo -->
+  <path d="M32 4 L4 32 L32 60 L60 32 Z" fill="none" stroke="#01499b" stroke-width="3"/>
+  <path d="M32 14 L14 32 L32 50 L50 32 Z" fill="#01499b"/>
+  <path d="M32 24 L24 32 L32 40 L40 32 Z" fill="white"/>
+</svg>

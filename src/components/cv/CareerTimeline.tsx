@@ -1,9 +1,13 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import type { Experience } from "@/data/cv";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "@/components/FadeIn";
+import { Building2 } from "lucide-react";
+
+/* ── helpers ── */
 
 function parseDate(s: string): Date {
   if (s === "Present") return new Date();
@@ -37,56 +41,88 @@ const BAR_COLORS = [
   "bg-amber-300 dark:bg-amber-600",
 ];
 
-function abbreviate(company: string): string {
-  if (company.includes("BD")) return "BD";
-  if (company.includes("Warner")) return "WBD";
-  if (company.includes("Tricentis")) return "Tricentis";
-  if (company.includes("Alfresco")) return "Alfresco";
-  if (company.includes("Vertafore")) return "Vertafore";
-  if (company.includes("Encompass")) return "Encompass";
-  return company.split(" ")[0];
-}
+// Icon-only versions for logos that are wordmarks (unreadable at badge size)
+const TIMELINE_ICON_OVERRIDES: Record<string, string> = {
+  "/logos/vertafore.svg": "/logos/vertafore-icon.svg",
+  "/logos/tricentis.svg": "/logos/tricentis-icon.svg",
+};
+
+/* ── component ── */
 
 export default function CareerTimeline({ experiences }: { experiences: Experience[] }) {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = React.useState<number | null>(null);
+
   if (!experiences?.length) return null;
 
   const spans = experiences.map((exp) => ({
-    company: abbreviate(exp.company),
+    company: exp.company,
     role: exp.role,
+    logo: exp.logo ? (TIMELINE_ICON_OVERRIDES[exp.logo] ?? exp.logo) : undefined,
     start: parseDate(exp.start),
     end: parseDate(exp.end ?? "Present"),
     isCurrent: !exp.end || exp.end === "Present",
   }));
 
-  // Sort chronologically (earliest first)
   const sorted = [...spans].sort((a, b) => a.start.getTime() - b.start.getTime());
 
   const earliest = sorted[0].start;
   const latest = new Date();
   const totalMonths = Math.max(1, monthsBetween(earliest, latest));
 
-  // Wider timeline so short tenures have room
+  // Generous width — 120px per year for roomy bars and clear badges
   const years = latest.getFullYear() - earliest.getFullYear() + 1;
-  const minWidth = Math.max(700, years * 90);
+  const minWidth = Math.max(900, years * 120);
+
+  /* ── drag-to-scroll ── */
+  const isDragging = React.useRef(false);
+  const startX = React.useRef(0);
+  const scrollLeftRef = React.useRef(0);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    scrollLeftRef.current = scrollRef.current?.scrollLeft ?? 0;
+    if (scrollRef.current) scrollRef.current.style.cursor = "grabbing";
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - startX.current;
+    scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
+  };
+
+  const onMouseUp = () => {
+    isDragging.current = false;
+    if (scrollRef.current) scrollRef.current.style.cursor = "grab";
+  };
 
   return (
     <FadeIn>
-      <div className="mb-6 rounded-xl border border-white/10 bg-white/50 backdrop-blur p-4 dark:bg-neutral-900/50">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3">Career Timeline</div>
+      <div className="mb-6 rounded-xl border border-white/10 bg-white/50 backdrop-blur p-4 sm:p-5 dark:bg-neutral-900/50">
+        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-4">Career Timeline</div>
 
-        {/* Single scrollable container with hidden scrollbar */}
+        {/* Drag-to-scroll container */}
         <div
-          className="timeline-scroll overflow-x-auto pb-2 -mx-1 px-1"
+          ref={scrollRef}
+          className="timeline-scroll overflow-x-auto pb-3 -mx-1 px-1 select-none"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
+            cursor: "grab",
           }}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
         >
           <style>{`.timeline-scroll::-webkit-scrollbar { display: none; }`}</style>
 
           <div style={{ minWidth: `${minWidth}px` }}>
             {/* Year markers */}
-            <div className="relative h-5 mb-1">
+            <div className="relative h-6 mb-2">
               {Array.from(
                 { length: years },
                 (_, i) => earliest.getFullYear() + i
@@ -95,7 +131,7 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
                 return (
                   <span
                     key={year}
-                    className="absolute text-[10px] text-muted-foreground/60"
+                    className="absolute text-[11px] font-medium text-muted-foreground/50"
                     style={{ left: `${Math.min(offset, 98)}%` }}
                   >
                     {year}
@@ -104,48 +140,71 @@ export default function CareerTimeline({ experiences }: { experiences: Experienc
               })}
             </div>
 
-            {/* Bars */}
-            <div className="space-y-1.5">
+            {/* Bars — taller for bigger badges */}
+            <div className="space-y-2">
               {sorted.map((span, i) => {
-                // Use exact month offsets — no minimum padding that would cause overlap
                 const startOffset = (monthsBetween(earliest, span.start) / totalMonths) * 100;
                 const endOffset = (monthsBetween(earliest, span.end) / totalMonths) * 100;
                 const barWidth = Math.max(2, endOffset - startOffset);
-
-                const tooltip = `${span.company} · ${span.role}\n${formatDate(span.start, false)} – ${formatDate(span.end, span.isCurrent)}`;
+                const isHovered = hovered === i;
 
                 return (
-                  <div key={i} className="group relative h-7 flex items-center">
+                  <div key={i} className="relative h-10 flex items-center">
                     <div
-                      title={tooltip}
                       className={cn(
-                        "absolute h-6 rounded cursor-default transition-all duration-200 hover:brightness-110 hover:scale-y-110 origin-center",
+                        "absolute h-9 rounded-lg transition-all duration-200",
                         BAR_COLORS[i % BAR_COLORS.length],
-                        span.isCurrent && "ring-1 ring-amber-400/50"
+                        span.isCurrent && "ring-1 ring-amber-400/50",
+                        "hover:brightness-110 hover:shadow-md"
                       )}
                       style={{
                         left: `${startOffset}%`,
                         width: `${barWidth}%`,
                         minWidth: "2.5rem",
                       }}
+                      onMouseEnter={() => setHovered(i)}
+                      onMouseLeave={() => setHovered(null)}
                     >
-                      <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-white whitespace-nowrap">
-                        {span.company}
+                      {/* Brand badge — no box, just the logo directly on the bar */}
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        {span.logo ? (
+                          <Image
+                            src={span.logo}
+                            alt={span.company}
+                            width={28}
+                            height={28}
+                            className="h-6 w-6 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
+                            draggable={false}
+                          />
+                        ) : (
+                          <Building2 className="h-5 w-5 text-white/80" />
+                        )}
                       </span>
 
-                      {/* Hover tooltip with dates */}
-                      <div className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10">
-                        <div className="rounded bg-neutral-900 px-2 py-1 text-[10px] font-medium text-white whitespace-nowrap shadow-lg dark:bg-neutral-700">
-                          {formatDate(span.start, false)} – {formatDate(span.end, span.isCurrent)}
+                      {/* Tooltip — below bar to avoid edge clipping */}
+                      {isHovered && (
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 z-20 pointer-events-none">
+                          <div className="mx-auto h-0 w-0 border-x-[5px] border-b-[5px] border-x-transparent border-b-neutral-900 dark:border-b-neutral-700" />
+                          <div className="rounded-md bg-neutral-900 px-3 py-2 text-[11px] text-white whitespace-nowrap shadow-xl dark:bg-neutral-700">
+                            <div className="font-semibold text-xs">{span.company}</div>
+                            <div className="text-white/70 text-[10px]">{span.role}</div>
+                            <div className="text-white/60 text-[10px] mt-0.5">
+                              {formatDate(span.start, false)} – {formatDate(span.end, span.isCurrent)}
+                            </div>
+                          </div>
                         </div>
-                        <div className="mx-auto h-0 w-0 border-x-4 border-t-4 border-x-transparent border-t-neutral-900 dark:border-t-neutral-700" />
-                      </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="mt-2 text-center text-[10px] text-muted-foreground/40">
+          Drag to scroll
         </div>
       </div>
     </FadeIn>
