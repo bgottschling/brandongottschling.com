@@ -1,0 +1,184 @@
+---
+type: blog
+title: "Branch Like You Mean It: Git Strategies from Solo Projects to Enterprise Teams"
+slug: "git-branching-strategies"
+date: "2026-03-25"
+summary: "A practical walkthrough of Git branching strategies. From the simple feature-branch flow I use on my personal site to the multi-environment promotion chains I've seen in enterprise. When to keep it simple, when to add gates, and why your branching model should match your team, not your ambition."
+primaryCategory: "technology"
+tags: ["git", "devops", "branching", "workflow", "technology", "engineering", "best-practices"]
+---
+
+> **TL;DR** Your branching strategy should match three things: the size of your team, how often you ship, and how much it hurts when you ship something broken. Most people overcomplicate this. Don't be most people.
+
+## How This Started
+
+I was sitting at my desk building this website. Just me. One repo, one branch, one deploy target. And I caught myself Googling "best git branching strategy" like I was running a 40-person engineering org.
+
+I'm not. I'm one guy with a Next.js site and a Vercel account.
+
+But here's the thing. I've also been on the other side. I've managed incidents at Warner Bros. Discovery where a bad deploy meant hundreds of engineers on a bridge call at 2 AM. I've worked at Tricentis where release cadence was the product. Now I'm at BD writing proposals and building tools in the margins.
+
+Every one of those worlds handles branching differently. And the differences aren't technical. They're cultural.
+
+So here's what I actually know. Not what I read on a blog. What I've lived.
+
+## Level 1: The Solo Flow
+
+This is what I run on this site right now. It is beautifully boring.
+
+```
+feature/cool-thing → PR → main → production
+```
+
+Every piece of work gets a branch. Every branch gets a PR. When the PR merges, Vercel deploys. Done.
+
+**Why it works:**
+
+- **Zero coordination overhead.** I'm the developer, the reviewer, the QA team, and the release manager. That's not a flex. That's just Tuesday.
+- **PRs create receipts.** Even working solo, I want to know *why* I changed something six months from now. Not just what changed. The diff tells you what. The PR tells you why.
+- **Rollback is one command.** Something breaks? `git revert`. Move on with your life.
+
+```bash
+# Start work
+git checkout -b feature/nav-search
+# ... write code ...
+git add -A && git commit -m "Add search bar to navbar"
+git push -u origin feature/nav-search
+
+# Open a PR
+gh pr create --title "Add nav search" --body "..."
+
+# Merge on GitHub. Vercel auto-deploys. Go eat lunch.
+```
+
+**When it falls apart:**
+
+The second you add another human. Or the second a bad deploy costs actual money. There's no gate between "merged" and "live." Every merge is a production deploy. For a portfolio site, fine. For an e-commerce checkout flow, that should make you nervous.
+
+## Level 2: The Staging Gate
+
+This is the first real upgrade. You add a branch in the middle that acts as a buffer.
+
+```
+feature branches → dev → staging → main
+   (daily work)    (integration)  (QA/preview)  (production)
+```
+
+Each branch maps to a real environment. With Vercel you'd set it up like:
+
+- `main` → **production** (yourdomain.com)
+- `staging` → **preview** (staging.yourdomain.com)
+- `dev` → **dev preview** (auto-generated URL)
+
+Code flows upward. Always upward. Like a promotion chain.
+
+```bash
+# 1. Feature → dev (daily)
+git checkout dev && git pull
+git merge feature/my-thing
+git push origin dev
+
+# 2. dev → staging (ready for QA)
+git checkout staging && git pull
+git merge dev
+git push origin staging
+
+# 3. staging → main (approved for production)
+git checkout main && git pull
+git merge staging
+git push origin main
+```
+
+Three rules. Follow them or don't bother with this pattern:
+
+| Rule | Why |
+|------|-----|
+| Never commit directly to `main` or `staging` | They only receive merges from below |
+| Use `--no-ff` merges | So every promotion shows up as a distinct event in your history |
+| Hotfixes go to `main` first, then cascade down | `main → staging → dev` keeps everything in sync |
+
+**When this makes sense:** You have 2 to 5 people. There's a QA step. Or you have a client who needs to see changes on a preview URL before anything goes live. If I brought on a collaborator tomorrow, this is exactly what I'd set up.
+
+## Level 3: Enterprise Patterns
+
+Past a handful of developers, the conversation gets real. Two dominant schools of thought.
+
+### GitFlow: Structure Over Speed
+
+GitFlow adds release branches and hotfix branches. It was built for software that ships on a schedule. Think versioned desktop apps. On-prem enterprise installations. Anything with a formal release process.
+
+```
+main ──────────────────────────────── (production)
+ │                        ↑
+ │                   release/1.2
+ │                    ↑        ↑
+develop ──────────────┘        │
+ ↑            ↑                │
+feature/a  feature/b     hotfix/urgent
+```
+
+The idea: `develop` is your integration branch. When you're ready to ship, you cut a `release/x.y` branch. Only bug fixes go in. When it passes QA, merge into `main`, tag it, merge back into `develop`. Hotfixes branch off `main` and get merged both ways.
+
+**Works when:** You version your software. You're in a regulated industry where auditors need to point at a specific release. QA needs a frozen codebase.
+
+**Doesn't work when:** You deploy continuously. Your releases are measured in hours, not sprints. In that world, GitFlow is a straightjacket.
+
+### Trunk-Based Development: Speed Over Structure
+
+Opposite philosophy. Everyone commits to `main` as often as possible. Multiple times a day. Long-lived branches are banned.
+
+```
+main ────●───●───●───●───●───●───●──── (always deployable)
+         ↑   ↑   ↑   ↑   ↑   ↑   ↑
+        (short-lived branches, < 1 day)
+```
+
+Branches live hours, not days. Feature flags control what users see, not branches. CI/CD has to be fast and bulletproof because every commit to trunk is a candidate for production.
+
+Google does this. Meta does this. But they also have thousands of engineers building the testing and deployment infrastructure to make it work. You probably don't. Be honest with yourself about that.
+
+**Works when:** Strong CI/CD. Comprehensive tests. A team culture that values small, frequent changes.
+
+**Doesn't work when:** Your test suite takes 45 minutes. You don't have feature flags. A bad deploy means waking up a VP.
+
+## The Cheat Sheet
+
+| | Solo Feature-Branch | Staging Gate | GitFlow | Trunk-Based |
+|---|---|---|---|---|
+| **Team size** | 1 to 2 | 2 to 8 | 5 to 50+ | 5 to 100+ |
+| **Release cadence** | On merge | On promotion | Scheduled | Continuous |
+| **Complexity** | Low | Medium | High | Medium (but needs infra) |
+| **Rollback** | Revert merge | Revert promotion | Revert release | Feature flag off |
+| **Best for** | Side projects, portfolios | Small teams, client work | Versioned software, regulated industries | High-velocity product teams |
+| **Overhead** | Minimal | Light coordination | Significant ceremony | CI/CD investment |
+
+## The Part Nobody Wants to Hear
+
+The best branching strategy is the one your team actually follows.
+
+I've seen GitFlow at a company with two developers in the same room. The release branches sat empty for months. The hotfix process was a formality nobody understood. It was process theater. Complexity cosplay.
+
+I've also seen solo developers push straight to `main` with no PRs, then burn a Saturday trying to figure out which of their last twelve commits broke the login page.
+
+Here's what actually matters:
+
+1. **Your team size.** More people, more coordination, more structure. That's not optional. That's physics.
+2. **Your deploy cost.** If a bad deploy is a 5-minute revert, you can afford less process. If it triggers an incident bridge with twenty people, you need gates. Real ones.
+3. **Your release cadence.** Ship weekly? Staging gate. Ship hourly? Trunk-based with flags. Ship quarterly? GitFlow with release branches.
+
+I use the solo flow on this site. Simple. Traceable. Matches my reality. One developer, continuous deployment, low stakes.
+
+If I were shipping pharmacy automation software, the kind where a bad deploy means a patient doesn't get their medication on time? Promotion gates. Approval workflows. Audit trails. All of it.
+
+Match the strategy to the stakes. Start simple. Add structure when the pain forces you to, not when a conference talk makes you feel inadequate.
+
+## Go Deeper
+
+If you want the source material:
+
+- **A Successful Git Branching Model** by Vincent Driessen (the original GitFlow post, 2010)
+- **trunkbaseddevelopment.com** (the definitive trunk-based reference)
+- **GitHub Flow** (GitHub's lightweight alternative)
+- **Ship / Show / Ask** (a framework for deciding which changes need review)
+
+Build to learn. Branch accordingly.
