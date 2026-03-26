@@ -108,13 +108,13 @@ Past a handful of developers, the conversation gets real. Two dominant schools o
 GitFlow adds release branches and hotfix branches. It was built for software that ships on a schedule. Think versioned desktop apps. On-prem enterprise installations. Anything with a formal release process.
 
 ```
-main ─────────────────────────────────── (production)
-  │                          ↑
-  │                     release/1.2
-  │                      ↑       ↑
-develop ─────────────────┘       │
-  ↑  ↑                          │
-feature/a  feature/b        hotfix/urgent
+main ──────────────────────────────── (production)
+ │                        ↑
+ │                   release/1.2
+ │                    ↑        ↑
+develop ──────────────┘        │
+ ↑    ↑                       │
+feature/a  feature/b     hotfix/urgent
 ```
 
 The idea: `develop` is your integration branch. When you're ready to ship, you cut a `release/x.y` branch. Only bug fixes go in. When it passes QA, merge into `main`, tag it, merge back into `develop`. Hotfixes branch off `main` and get merged both ways.
