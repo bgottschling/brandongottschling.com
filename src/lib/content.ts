@@ -33,8 +33,11 @@ export type ContentMeta = {
 const KNOWN_TYPES = ["blog", "research", "project", "page", "now"] as const;
 type KnownType = (typeof KNOWN_TYPES)[number];
 
+const DIR_TYPE_MAP: Record<string, KnownType> = { projects: "project", pages: "page" };
+
 function detectTypeFromSlug(rel: string): KnownType {
   const head = rel.split("/")[0] || "";
+  if (head in DIR_TYPE_MAP) return DIR_TYPE_MAP[head];
   return (KNOWN_TYPES as readonly string[]).includes(head) ? (head as KnownType) : "blog";
 }
 
