@@ -73,11 +73,11 @@ async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
           throw new Error(data.error || "Send failed. Please try again.");
         }
 
-        setOk("Thanks — I’ll get back to you soon.");
+        setOk("Thanks. I’ll get back to you soon.");
         (e.target as HTMLFormElement).reset();
       } catch (err) {
         if ((err as Error).name === "AbortError") {
-          setErr("Network timeout — please try again.");
+          setErr("The request timed out. Please try again.");
         } else {
           setErr(err instanceof Error ? err.message : "Send failed. Please try again.");
         }

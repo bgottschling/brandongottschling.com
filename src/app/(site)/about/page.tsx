@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About | Brandon Gottschling",
   description:
-    "About Brandon Gottschling — proposal development, incident management, and software engineering. A working record of projects, ideas, and values.",
+    "About Brandon Gottschling: proposal development, incident management, and software engineering. A working record of projects, ideas, and values.",
   keywords: ["Gottschling", "Brandon Gottschling", "about", "proposal development", "incident management", "software engineering"],
   openGraph: {
     title: "About Brandon Gottschling",

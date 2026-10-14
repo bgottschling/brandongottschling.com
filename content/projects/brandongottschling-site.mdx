@@ -3,11 +3,11 @@ type: project
 title: "This website - the living workshop"
 primaryCategory: "technology"
 slug: "brandongottschling-site"
-date: "2026-03-25"
-summary: "v0.7 adds animated card thumbnails, a mission canvas, polished CV with brand logo badges, a draggable career timeline, and content grounding across the site."
-status: "Active v0.7"
+date: "2026-10-14"
+summary: "v0.8 adds a Keystatic editor over the existing MDX files, global search with a command palette, a trust index, and a round of SEO plumbing. Still a folder of files underneath."
+status: "Active v0.8"
 stage: "prototype"
-tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv", "css-houdini", "canvas", "generative-art"]
+tags: ["next.js", "mdx", "tailwind", "shadcn", "vercel", "ui", "a11y", "seo", "pdf-lib", "qrcode", "security", "middleware", "csp", "kv", "css-houdini", "canvas", "generative-art", "keystatic", "cms", "search"]
 cover: "/images/projects/site/hero.png"
 links:
   live: "https://brandongottschling.com"
@@ -15,7 +15,7 @@ links:
 ---
 
 <ProjectHeader
-  status="Active · v0.7"
+  status="Active · v0.8"
   live="https://brandongottschling.com"
   repo="https://github.com/bgottschling/brandongottschling.com"
 />
@@ -26,6 +26,7 @@ links:
 ## Stack Overview
 
 - **Core:** Next.js 15 (App Router), MDX from the filesystem, Tailwind, shadcn/ui.
+- **Editing:** Keystatic in local mode, mounted at `/keystatic` in development only. It edits the same MDX files Git already tracks.
 - **Content tooling:** `remark-gfm`, `rehype-slug`, autolinked headings.
 - **Theming:** CSS `@property` registration for animatable accent color transitions, route-driven `data-theme` attributes, reactive canvas background.
 - **Generative art:** Deterministic canvas thumbnails (honeycomb, flower-of-life, isometric blocks) seeded by content slug.
@@ -33,6 +34,25 @@ links:
 - **Contact sharing:** server-rendered QR (SVG) with HMAC tokens, enforced by Edge middleware.
 - **State & limits:** serverless key-value store over HTTP for single-use tokens and gentle rate limits.
 - **Hosting:** Vercel.
+
+---
+
+## What changed in v0.8
+
+### An editor, not a CMS
+I spent a year planning a custom CMS with auth, passkeys, and a database, then added Keystatic in an evening instead. It mounts inside the app, reads the existing MDX files, and writes them back when I save. Every collection (blog, research, projects, pages, now) has its frontmatter spelled out as a schema so the editor shows the right controls, and a couple of legacy keys are marked ignored so they survive a save untouched. `ProjectHeader` and `CTA` show up as proper blocks in the editor. It only exists in development; production has no admin surface at all, and the only way content changes is still a Git commit.
+
+### Search
+A real `/search` page with styled results, search in the command palette, and a search field in the desktop navbar. The site's JSON-LD advertises a `SearchAction` so search engines know the page exists.
+
+### Trust index and canonical URLs
+`/trust` is now an index with cards for Contact, Privacy, and Terms, with breadcrumbs instead of a duplicated nav. The `www` host redirects to the bare domain and the trust pages carry proper canonicals, which cleaned up a duplicate-content warning.
+
+### SEO plumbing
+A dynamic sitemap, richer index-page metadata, `CollectionPage` JSON-LD on the listing pages, and keyword signals for the name people actually search for.
+
+### Worktree fixes
+Small things that only matter if you work out of Git worktrees on Windows: the Turbopack root is pinned so a nested checkout doesn't resolve modules against the parent, and pnpm's dependency folder names are capped so paths stay under the 260-character limit. The content validator script runs again, too.
 
 ---
 
@@ -145,12 +165,14 @@ The proposal export moved to a portable generator so it works the same everywher
 - Optional exec one-pager PDF theme (summary-first).
 - Brand accents for PDFs (color, link styling), clickable email/URL.
 - Consider moving the KV usage to a native provider in my host for simpler ops.
-- Site search (`/search?q=`) and `SearchAction` JSON-LD.
+- Keystatic GitHub storage mode, so I can edit from a browser away from this machine.
+- Cover images as real uploads in the editor instead of hand-typed paths.
 
 ---
 
 ## Changelog
 
+- **v0.8 (2026-10-14):** Keystatic editor over the existing MDX files (dev-only, no database), global search page with command palette and navbar search, trust index with breadcrumbs and canonicals, dynamic sitemap and CollectionPage JSON-LD, worktree build fixes, earliest posts rewritten in a more honest voice.
 - **v0.7 (2026-03-25):** Animated card thumbnails with theme-colored canvas, mission canvas background, CV brand logo badges (BD, WBD, Tricentis, Alfresco, Vertafore, Encompass), draggable career timeline with icon badges and portal tooltips, content grounding pass, 180 Life Church project.
 - **v0.6 (2026-03-06):** Route-aware accent theming with CSS @property crossfade (amber/cyan/indigo), generative algorithmic thumbnails (honeycomb/flower-of-life/isometric), wider card layouts with sharper corners, per-type color identity across all navigation and sidebar components, content tone humanization.
 - **v0.5 (2025-09-10):** Private contact flow (auth-gated QR, single-use tokens, rate-limits), proposal PDF with ToC/mission/clean typography, circular avatar support, safer redirects and CSP, CV download busy state, QR layout fixes.

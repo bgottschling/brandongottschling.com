@@ -15,7 +15,7 @@ export const RESEARCH_AREA_INFO: Record<ResearchArea, { label: string; descripti
   unity: { label: "Unity / Game", description: "Gameplay, shaders, tooling, Subject 33." },
   design: { label: "Design & UX", description: "Interfaces, content patterns, systems." },
   faithphilo: { label: "Faith & Philosophy", description: "Spiritual notes, worldview, first principles." },
-  other: { label: "Other", description: "Topics that don’t fit elsewhere—yet." },
+  other: { label: "Other", description: "Topics that don’t fit anywhere else yet." },
 };
 
 const TAGS: Record<ResearchArea, string[]> = {
