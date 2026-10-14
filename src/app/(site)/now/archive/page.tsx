@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: "Now — Archive",
+  title: "Now: Archive",
   description: "Past /now snapshots.",
   alternates: { canonical: "/now/archive" },
   robots: { index: true, follow: true },
@@ -34,7 +34,7 @@ export default async function NowArchivePage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 md:py-14">
       <header className="mb-6">
-        <h1 className="text-3xl/tight font-semibold tracking-tight">Now — Archive</h1>
+        <h1 className="text-3xl/tight font-semibold tracking-tight">Now: Archive</h1>
         <p className="mt-1 text-sm text-muted-foreground">Past snapshots by month.</p>
       </header>
 
@@ -48,7 +48,7 @@ export default async function NowArchivePage() {
                 <Link className="underline" href={`/${s.slug}`}>
                   {s.title || s.slug.replace("now/", "")}
                 </Link>
-                {s.date && <span className="text-sm text-muted-foreground"> — {fmt(s.date)}</span>}
+                {s.date && <span className="text-sm text-muted-foreground"> · {fmt(s.date)}</span>}
               </li>
             ))}
           </ul>

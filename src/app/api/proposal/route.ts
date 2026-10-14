@@ -188,7 +188,7 @@ export async function GET(req: Request) {
     const mission =
       "Build useful things, tell honest stories, and show up for people. " +
       "Share what I'm learning so others can move with more courage, clarity, and hope. " +
-      "I want this work to be more than output. I'm learning to be the kind of person who shows up—" +
+      "I want this work to be more than output. I'm learning to be the kind of person who shows up: " +
       "steady at home, useful in the world. That looks like working hard, seeking peace, and " +
       "making things that genuinely help.";
 
@@ -225,7 +225,7 @@ export async function GET(req: Request) {
       const when = exp.range || exp.dates || "";
 
       // Header row with right-aligned dates
-      const headerLeft = sanitize([role, company].filter(Boolean).join(" — "));
+      const headerLeft = sanitize([role, company].filter(Boolean).join(" at "));
       const headerRight = sanitize(when);
       page.drawText(headerLeft, { x: M, y, size: 12.5, font: helvBold });
       if (headerRight) {
