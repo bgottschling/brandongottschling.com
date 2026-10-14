@@ -3,11 +3,11 @@ type: project
 title: "180 Life Church: Digital Renovation"
 primaryCategory: "technology"
 slug: "180-life-church"
-date: "2026-03-20"
-stage: "prototype"
-summary: "A digital renovation for 180 Life Church, a non-denominational community in Bloomfield, Connecticut. Currently in discovery."
-status: "Discovery"
-tags: ["next.js", "church", "community", "web-design", "client-work"]
+date: "2026-10-14"
+stage: "beta"
+summary: "A ground-up site for 180 Life Church in Bloomfield, Connecticut: sermons synced from YouTube, giving, leadership pages, and a CMS the staff edit themselves. Built; now in hardening and hand-off."
+status: "Built · hand-off"
+tags: ["next.js", "church", "community", "web-design", "client-work", "cms", "youtube-api"]
 cover: "/images/projects/180life/hero.png"
 links:
   live: "https://180life.gottschling.dev"
@@ -15,28 +15,36 @@ links:
 ---
 
 <ProjectHeader
-  status="Discovery"
+  status="Built · hand-off"
   live="https://180life.gottschling.dev"
   repo="https://github.com/bgottschling/180lifechurch"
 />
 
 > **Why**
-> Every skill is a gift. When a local church needs a digital home that actually reflects who they are, that is an opportunity to serve with purpose. This project is about using the craft God gave me to help a growing community reach more people and make a real difference.
+> Every skill is a gift. When a local church needs a digital home that actually reflects who they are, that is a chance to serve with purpose. This project is me using the craft God gave me to help a growing community reach more people.
 
 ## The Church
 
-180 Life Church is a warm, non-denominational community in Bloomfield, Connecticut. Their doors are open to everyone. The heart behind 180 Life is simple: know God, find real connection, and take the next step together. They are building something life-giving, and their digital presence should reflect that same energy.
+180 Life Church is a warm, non-denominational community in Bloomfield, Connecticut. Their doors are open to everyone. The heart behind 180 Life is simple: know God, find real connection, and take the next step together. They are building something life-giving, and their website should feel like that.
 
 ## The Work
 
-This is a ground-up digital renovation. The goal is a modern, accessible, and inviting web presence that feels like walking through their doors for the first time. Fast load times, clear calls to action, mobile-first design, and a visual identity that communicates warmth and welcome before a single word is read.
+A ground-up rebuild. Modern, accessible, mobile-first, fast, and a visual identity that communicates welcome before a single word is read. Just as important: the people who run the church need to run the site without me on the phone.
 
 ## Where We Are
 
-We are in the discovery phase right now, learning the community's story, understanding what matters most to the congregation and leadership, and mapping out the experience we want to create together. Good foundations lead to good outcomes.
+Discovery is done and the site is built. Since the spring it has picked up:
+
+- Sermons synced from the church’s YouTube channel, with retries so a quota hiccup doesn’t break a build, plus an audio player for listening on the go.
+- Giving, leadership, and support-team pages the staff update themselves through the CMS.
+- A contact flow with verification and spam protection.
+- A security pass before launch: response headers, XSS hardening in the CMS, and personal emails pulled out of the public site.
+- Hosting cost tuning so pages revalidate on a sensible schedule instead of rebuilding constantly.
+
+What’s left is hand-off. Documentation, a walkthrough with the team, and the boring-but-important work of making sure nothing depends on me.
 
 ## Stack
 
 - **Core:** Next.js, Tailwind, Vercel
-- **Content:** Structured for easy updates by non-technical staff
-- **Hosting:** Edge-deployed for fast load times everywhere
+- **Content:** A CMS the staff edit directly; sermons pulled from the YouTube Data API
+- **Hosting:** Edge-deployed with incremental revalidation
