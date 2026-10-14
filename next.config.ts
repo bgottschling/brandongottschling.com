@@ -6,6 +6,10 @@ const isDev = process.env.NODE_ENV !== "production";
 const nextConfig: NextConfig = {
   transpilePackages: ["framer-motion"],
 
+  /* Pin the workspace root so git worktrees (which carry their own lockfile
+     and node_modules) don't resolve modules against the parent checkout. */
+  turbopack: { root: process.cwd() },
+
   /* Hide "X-Powered-By: Next.js" — minor security hygiene */
   poweredByHeader: false,
 
