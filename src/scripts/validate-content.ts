@@ -25,7 +25,17 @@ for (const dir of BLOG_DIRS) {
   for (const file of list(dir)) {
     const raw = fs.readFileSync(file, "utf8");
     const { data } = matter(raw);
-    const res = blogFrontmatter.safeParse({ ...data, collection: data.collection ?? "blog" });
+    // Keystatic writes dates unquoted (YAML parses them as Date) and derives the
+    // slug from the filename instead of frontmatter — normalize both before validating.
+    const date =
+      data.date instanceof Date ? data.date.toISOString().slice(0, 10) : data.date;
+    const slug = data.slug ?? path.basename(file).replace(/\.(mdx|md)$/, "");
+    const res = blogFrontmatter.safeParse({
+      ...data,
+      date,
+      slug,
+      collection: data.collection ?? "blog",
+    });
     if (!res.success) {
       console.error("❌ Frontmatter error:", path.relative(ROOT, file));
       console.error(JSON.stringify(res.error.format(), null, 2));
