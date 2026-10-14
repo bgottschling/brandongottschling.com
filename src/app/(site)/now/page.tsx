@@ -10,7 +10,7 @@ export const dynamic = "force-static";
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: "Now — What I’m focused on",
+  title: "Now: what I’m focused on",
   description: "What I’m doing now: focus, projects, learning, and life.",
   alternates: { canonical: "/now" },
   robots: { index: true, follow: true },
@@ -36,7 +36,7 @@ export default async function NowPage() {
       <main className="mx-auto max-w-3xl px-4 py-10 md:py-14">
         <header className="mb-6">
           <h1 className="text-3xl/tight font-semibold tracking-tight">Now</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Last updated: <em>—</em></p>
+          <p className="mt-1 text-sm text-muted-foreground">Last updated: <em>not yet</em></p>
         </header>
         {snapshots.length ? (
           <div className="prose prose-neutral dark:prose-invert">
@@ -45,7 +45,7 @@ export default async function NowPage() {
               {snapshots.map((s) => (
                 <li key={s.slug}>
                   <Link className="underline" href={`/${s.slug}`}>{s.title || s.slug.replace("now/", "")}</Link>
-                  {s.date && <span className="text-sm text-muted-foreground"> — {fmt(s.date)}</span>}
+                  {s.date && <span className="text-sm text-muted-foreground"> · {fmt(s.date)}</span>}
                 </li>
               ))}
             </ul>
@@ -64,7 +64,7 @@ export default async function NowPage() {
       <header className="mb-6">
         <h1 className="text-3xl/tight font-semibold tracking-tight">Now</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Last updated: {updated ? <time dateTime={meta.date}>{updated}</time> : <em>—</em>}
+          Last updated: {updated ? <time dateTime={meta.date}>{updated}</time> : <em>not yet</em>}
         </p>
       </header>
 
@@ -82,7 +82,7 @@ export default async function NowPage() {
               {snapshots.map((s) => (
                 <li key={s.slug}>
                   <Link className="underline" href={`/${s.slug}`}>{s.title || s.slug.replace("now/", "")}</Link>
-                  {s.date && <span className="text-sm text-muted-foreground"> — {fmt(s.date)}</span>}
+                  {s.date && <span className="text-sm text-muted-foreground"> · {fmt(s.date)}</span>}
                 </li>
               ))}
             </ul>

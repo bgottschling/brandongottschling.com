@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Trust — Policies & Contact",
+  title: "Trust: Policies and Contact",
   description: "Contact, Privacy Policy, and Terms of Use for brandongottschling.com.",
   robots: { index: true, follow: true },
 };

@@ -10,11 +10,11 @@ import ThemeSync from "@/components/ThemeSync";
 export const metadata: Metadata = {
   metadataBase: new URL("https://brandongottschling.com"),
   title: {
-    default: "Brandon Gottschling — Projects, Research, Writing",
+    default: "Brandon Gottschling: Projects, Research, Writing",
     template: "%s | brandongottschling.com",
   },
   description:
-    "A working record of projects, research, and writing by Brandon Gottschling. Technology, life, faith, and work — documented as it happens.",
+    "A working record of projects, research, and writing by Brandon Gottschling. Technology, life, faith, and work, written down as it happens.",
   openGraph: {
     title: "Brandon Gottschling",
     description:
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@brandon_afk",
     creator: "@brandon_afk",
-    title: "Brandon Gottschling — Projects, Research, Writing",
+    title: "Brandon Gottschling: Projects, Research, Writing",
     description:
       "Projects, research, and writing on technology, life, faith, and work.",
     images: ["/api/og?title=Brandon%20Gottschling"],
@@ -99,7 +99,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@type": "Organization",
                   name: "Becton, Dickinson and Company (BD)",
                 },
-                description: "Proposal and product development grounded in incident leadership. Technology, faith, and work — documented as it happens.",
+                description: "Proposal and product development grounded in incident leadership. Technology, faith, and work, written down as it happens.",
                 knowsAbout: ["proposal development", "incident management", "pharmacy automation", "software engineering", "AI", "Next.js"],
                 sameAs: [
                   "https://github.com/bgottschling",
