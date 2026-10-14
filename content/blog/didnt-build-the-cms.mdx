@@ -1,0 +1,58 @@
+---
+type: blog
+title: "I Didn’t Build the CMS"
+slug: "didnt-build-the-cms"
+date: "2026-10-14"
+summary: "A year ago I wrote a plan for a custom CMS with auth, passkeys, and a database. This is the note about why I didn’t build it, and what I did instead."
+primaryCategory: "technology"
+tags: ["cms", "keystatic", "mdx", "next.js", "technical-debt"]
+draft: true
+---
+
+Thirteen months ago I sat here and wrote a plan. A small CMS for this site: an editor, real auth, passkeys, a database for the metadata, a draft-to-publish workflow with revisions. I ended that post saying I’d report back.
+
+This is that. I didn’t build it.
+
+## What a year of not building it taught me
+
+The site has five blog posts on it. Five. The post that laid out the plan was about scale that never came: filters that “don’t crawl the filesystem,” roles, audit logs, review workflows. A few weeks ago I reread it and realized I’d designed a publishing system for a newsroom. I’m one guy writing after Therese goes to bed.
+
+Every problem on that list, in order.
+
+Filesystem crawling. The site is statically built. The crawl happens once, at build time, and costs nothing after that. Five files or five hundred, nobody can tell.
+
+Audit and history. That’s Git. Every change I’ve ever made to a post is a commit with a diff and a reason.
+
+Roles and review. There is one author. He reviews his own pull requests. He is lenient.
+
+An editor. This one was real. I wanted to write in a browser with a preview instead of staring at frontmatter in a text editor.
+
+One real want, three imaginary ones. I’d been planning to build auth, sessions, and a database to get a textarea.
+
+## What I did instead
+
+I added Keystatic. It’s a small, git-based CMS that mounts inside the Next.js app. It reads the same MDX files that were already in the repo, gives me a form for the frontmatter and a real editor for the body, and when I hit save it writes the file back. No database. Nothing new to host. The content is still a folder of MDX, which means if Keystatic disappears tomorrow I lose a nice editor and nothing else.
+
+The schema was the whole job. Every collection, blog, research, projects, pages, now, needed its fields spelled out so the editor would show the right controls and not throw away anything it didn’t understand. A couple of legacy keys I couldn’t drop got marked as ignored, which in Keystatic means “leave this exactly as you found it.” Then I opened an old post, changed one word, saved, and diffed the file. The frontmatter came back intact. The body came back with bullets turned from dashes into asterisks, which is the kind of thing that only bothers you if you go looking for it.
+
+It took an evening. The plan from a year ago would have taken a season.
+
+## The part where I almost built it anyway
+
+I want to be honest about this because it’s the real lesson. The custom CMS would have been fun. Passkeys are fun. I’d have learned WebAuthn properly, I’d have had a nice portfolio piece, and I’d have had a login page on my own domain that I’d need to keep patched for the rest of its life.
+
+That last part is what finally did it. A login page is a promise. A folder of files makes no promises. Keystatic in local mode doesn’t even exist in production. It’s a dev tool that commits through Git, so the attack surface of my blog is still exactly my GitHub account, same as it was before.
+
+If I ever want the auth project, it can be its own project. It doesn’t need to live underneath my writing.
+
+## The one actual bug
+
+The thing that went wrong had nothing to do with the CMS. I work out of Git worktrees, which nest a checkout a few folders deeper than usual, and pnpm names its dependency folders with long hashes. Together they pushed one path to exactly 260 characters, which is where Windows stops reading. The dev server failed with “module not found” for a package that was sitting right there on disk. An hour of my life, fixed with a one-line config to shorten the folder names. I’m writing it down so the next person who searches for it finds a shorter answer than I did.
+
+## Debt, revisited
+
+The September post was about debt you take on purpose, with a timer and a note about what “paid off” means. I did write the note. I just read it wrong for a year. “Paid off” didn’t mean building the thing I’d planned. It meant the shortcut was never charging interest in the first place, and I could stop treating it like a problem.
+
+I said back then that if the editor wasn’t actually faster than opening the file, that post was an expensive way to procrastinate. It wasn’t an expensive one. It was a cheap one. The expensive version was the one I didn’t build.
+
+The next post is going to be writing, not plumbing. That’s sort of the point.
