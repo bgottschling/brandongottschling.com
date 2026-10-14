@@ -8,7 +8,7 @@ export default function ServicesList() {
       id: "mvp",
       title: "MVP / Custom App (Next.js + Supabase + Tailwind)",
       price: "$10k–$50k",
-      blurb: "Lean builds with auth, data, and clean UI — prove the idea fast.",
+      blurb: "Lean builds with auth, data, and clean UI, so you can prove the idea fast.",
       bullets: ["Scoped MVP plan + milestones", "Auth, data model, basic CRUD", "Deployment + handover docs"],
     },
     {
@@ -22,14 +22,14 @@ export default function ServicesList() {
       id: "perf-a11y",
       title: "Performance & Accessibility",
       price: "$2k–$10k / $1.5k–$5k",
-      blurb: "Core Web Vitals, WCAG/ADA — faster, more inclusive experiences.",
+      blurb: "Core Web Vitals and WCAG/ADA work for faster, more inclusive experiences.",
       bullets: ["Perf audit + fixes", "A11y audit + remediations", "Before/after reporting"],
     },
     {
       id: "dash",
       title: "Dashboards & Analytics",
       price: "$2k–$10k",
-      blurb: "KPI design, GA4, Looker/BI — decision-ready views and alerts.",
+      blurb: "KPI design, GA4, and Looker/BI, turned into views and alerts you can decide from.",
       bullets: ["KPI design + source mapping", "Dashboard build + sharing", "Alerting + documentation"],
     },
     {
@@ -43,7 +43,7 @@ export default function ServicesList() {
       id: "seo",
       title: "SEO Audit (Tech + Content + JSON-LD)",
       price: "$1k–$5k",
-      blurb: "Crawl, IA, schema for rich/AI results — when it’s the right lever.",
+      blurb: "Crawl, IA, and schema for rich and AI results, when it’s the right lever.",
       bullets: ["Technical + content audit", "Schema/JSON-LD plan", "90-day roadmap"],
     },
     {

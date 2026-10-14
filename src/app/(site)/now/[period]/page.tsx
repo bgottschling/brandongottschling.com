@@ -21,7 +21,7 @@ export async function generateStaticParams(): Promise<{ period: string }[]> {
 
 export async function generateMetadata({ params }: { params: { period: string } }): Promise<Metadata> {
   if (!isPeriod(params.period)) return {};
-  const title = `Now — ${params.period}`;
+  const title = `Now: ${params.period}`;
   return { title, description: `What I focused on in ${params.period}.`, alternates: { canonical: `/now/${params.period}` } };
 }
 
@@ -38,7 +38,7 @@ export default async function NowPeriodPage({ params }: { params: { period: stri
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 md:py-14">
       <header className="mb-6">
-        <h1 className="text-3xl/tight font-semibold tracking-tight">Now — {period}</h1>
+        <h1 className="text-3xl/tight font-semibold tracking-tight">Now: {period}</h1>
         {meta.summary && <p className="mt-1 text-sm text-muted-foreground">{meta.summary}</p>}
       </header>
       <article className="prose prose-neutral dark:prose-invert">

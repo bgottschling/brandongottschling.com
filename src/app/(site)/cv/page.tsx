@@ -5,7 +5,7 @@ import CvClientShell from "@/components/cv/CvClientShell"; // ← normal import 
 
 export const metadata: Metadata = {
   title: "CV",
-  description: "Brandon Gottschling — CV / Résumé",
+  description: "Brandon Gottschling: CV and résumé",
 };
 
 export const viewport: Viewport = {
