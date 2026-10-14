@@ -53,7 +53,7 @@ export const EXPERIENCES: Experience[] = [
     end: "Nov 2023",
     scope: "Commanded Sev0/Sev1 response across streaming/web brands; orchestrated engineers, ops, editorial, production; maintained playbooks and post-incident improvements.",
     metrics: [
-        "Launch windows supported: HBO Max launch (May 27, 2020) and Max rebrand (May 23, 2023); no Sev0s during the primary launch windows; brief spikes cleared within minutes (validate with incident log).", 
+        "Launch windows supported: HBO Max launch (May 27, 2020) and Max rebrand (May 23, 2023); no Sev0s during the primary launch windows; brief spikes cleared within minutes.",
         "Time to detect and restore: MTTD improved from ~5–6 min → ~3 min; MTTR improved from ~50–55 min → ~32–36 min after playbooks, drills, and alert tuning (≈30–35% faster).",
         "Noise reduction: false pages reduced by ~35–45% via threshold tuning, de-duplication, and enrichment; pages/incident down from ~10–12 → ~5–7.",
         "Runbook coverage: top critical services with current runbooks increased from ~60-70% → ~80–90%; instituted quarterly review cadence.",
@@ -120,7 +120,7 @@ export const EXPERIENCES: Experience[] = [
     end: "2017",
     scope: "Handled multi-product inbound queues; wrote KB articles; coached customers through fixes.",
     metrics: [
-        "Throughput & quality: handled ~900–1,200 tickets/year across products; CSAT ≈ 4.6–4.8/5 (validate with survey export).",
+        "Throughput & quality: handled ~900–1,200 tickets/year across products; CSAT ≈ 4.6–4.8/5.",
         "Deflection: new KB articles for top issues reduced repeat tickets on those topics by ~15–25% over two quarters."
     ],
     bullets: [
