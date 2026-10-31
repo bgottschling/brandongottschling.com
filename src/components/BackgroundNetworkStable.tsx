@@ -1,6 +1,7 @@
 // src/components/BackgroundNetworkStable.tsx
 'use client'
 import React, { useEffect, useRef } from 'react'
+import { registerNetworkSnapshot, type NetworkSnapshot } from '@/lib/network-snapshot'
 
 type Props = {
   density?: number
@@ -418,6 +419,26 @@ export default function BackgroundNetworkStable({
       }
     }
 
+    // Geometry of the frame currently on screen, for re-drawing elsewhere (CV PDF)
+    function snapshot(): NetworkSnapshot {
+      rebuildBuckets()
+      const tmp: number[] = []
+      const nodes: NetworkSnapshot['nodes'] = []
+      const links: NetworkSnapshot['links'] = []
+      for (let i = 0; i < N; i++) nodes.push([sx[i], sy[i]])
+      for (let i = 0; i < N; i++) {
+        neighborsOf(i, tmp)
+        for (const j of tmp) if (j > i) links.push([i, j, clamp(dist01(i, j), 0, 1)])
+      }
+      const triangles: NetworkSnapshot['triangles'] = []
+      for (const [key, a] of triAlpha) {
+        if (a <= 0.003) continue
+        const [i, j, k] = key.split(',').map(Number)
+        if (i < N && j < N && k < N) triangles.push([i, j, k, a])
+      }
+      return { width: w, height: h, nodes, links, triangles }
+    }
+
     // FPS guard
     let frames = 0
     let lastFpsSample = performance.now()
@@ -485,6 +506,7 @@ export default function BackgroundNetworkStable({
       }
     })
     ro.observe(document.documentElement)
+    const unregisterSnapshot = registerNetworkSnapshot(snapshot)
 
     // Only start the animation loop when motion is allowed
     if (!reducedMotion) {
@@ -493,6 +515,7 @@ export default function BackgroundNetworkStable({
     }
 
     return () => {
+      unregisterSnapshot()
       document.removeEventListener('visibilitychange', onVis)
       ro.disconnect()
       cancelAnimationFrame(animId)
