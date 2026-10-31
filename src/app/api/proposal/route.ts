@@ -10,7 +10,7 @@ import {
 /* ---------- Types ---------- */
 interface Experience {
   title?: string; role?: string; company?: string; org?: string;
-  range?: string; dates?: string; scope?: string;
+  range?: string; dates?: string; start?: string; end?: string; scope?: string;
   metrics?: string[]; highlights?: string[]; bullets?: string[];
 }
 interface SkillGroup { name?: string; title?: string; items?: string[]; }
@@ -222,7 +222,7 @@ export async function GET(req: Request) {
     for (const exp of EXPERIENCES) {
       const role = exp.title || exp.role || "";
       const company = exp.company || exp.org || "";
-      const when = exp.range || exp.dates || "";
+      const when = exp.range || exp.dates || [exp.start, exp.end].filter(Boolean).join(" to ");
 
       // Header row with right-aligned dates
       const headerLeft = sanitize([role, company].filter(Boolean).join(" at "));
