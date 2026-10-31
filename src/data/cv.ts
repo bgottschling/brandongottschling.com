@@ -6,12 +6,16 @@ export type Experience = {
   logo?: string            // path to company logo in /public
   start: string // ISO or "Mon YYYY"
   end?: string  // "Present" or Mon YYYY
-  scope?: string           // NEW: one-line scope statement
-  metrics?: string[]       // NEW: optional measurable results
+  scope?: string           // one-line scope statement
+  metrics?: string[]       // optional measurable results
   bullets: string[]
   tags?: string[]
 }
 
+export const NAME = "Brandon Gottschling"
+export const HEADLINE =
+  "Proposal and product development grounded in incident leadership. I work through ambiguity, bring the right people together, and deliver clear, dependable results."
+export const LOCATION = "Atlanta, GA (US)"
 export const EMAIL = "b@gottschling.dev"
 export const WEBSITE = "https://brandongottschling.com"
 export const LINKEDIN = "https://www.linkedin.com/in/bgottschling/"
@@ -19,29 +23,39 @@ export const GITHUB = "https://github.com/bgottschling"
 
 export const EXEC_SUMMARY: string[] = [
   "Builder of calm, repeatable operations: turned the highest-severity streaming incidents into simple playbooks by getting the right people in the room and keeping decisions legible.",
-  "Proposal developer for hospital systems at BD MMS: translate product limits and customer needs into clear, compliant responses that Sales can win with; maintain a reusable content library to speed cycle time.",
-  "Direction of travel: lead response and reliability programs (or proposal operations) where quality of execution and cross-functional trust are the product."
+  "Proposal Development Manager on BD's Medication Management Solutions RFP team: owned 38 opportunities (~$89M) in FY26, led Parata and Central Fill content, built the content repository and process tooling the team now runs on, and trained two teammates to independent contribution.",
+  "Direction of travel: project or program management, technical operations, product management, or proposal development, anywhere the quality of execution and cross-functional trust are the product."
 ];
 
 export const EXPERIENCES: Experience[] = [
   {
     company: "Becton, Dickinson and Company (BD)",
-    role: "Proposal Development",
-    org: "Medication Management Solutions (MMS)",
+    role: "Proposal Development Manager",
+    org: "Medication Management Solutions (MMS) RFP Team",
     location: "San Diego, CA (Remote)",
     logo: "/logos/bd.svg",
     start: "Jun 2024",
     end: "Present",
-    scope: "Lead the Pharmacy Automation proposal process for BD MMS; collaborate with CAD designers and engineering on complex system concepts; drive AI-assisted knowledge management and sales intelligence initiatives.",
-    bullets: [
-      "Lead the Pharmacy Automation proposal process end-to-end, collaborating with CAD designers on concepts for conveyor systems, vial dispensing robotics, adherence and blister packaging robotics, automated sortation, and shipping/manifesting software that interfaces with orchestration platforms and Pharmacy Information Systems.",
-      "Write clear, compliant proposals for RFPs, RFQs, RFIs, and Sources Sought across the Pyxis, Alaris, and Parata product lines; translate scope and assumptions into win themes and customer benefits.",
-      "Configure and build AI agents to streamline knowledge management and proposal drafting, accelerating turnaround and improving content consistency across the proposal library.",
-      "Build AI-powered solutions that pull data from SAP, Salesforce, and other systems of record to inform sales strategy and competitive battleplans.",
-      "Build and maintain a reusable proposal library; standardize boilerplate, appendices, and Q&A to speed up turnaround and keep messaging consistent.",
-      "Lead the proposal review process, track timelines, and check every submission for formatting, compliance, and portal requirements; update checklists and templates after each cycle to improve the next one."
+    scope: "Own end-to-end proposal delivery for pharmacy automation and medication management pursuits across commercial, state, and federal buyers; lead Parata and Central Fill content; build the team's process, tracking, and knowledge systems. Joined as a contractor in June 2024 and converted to a full-time hire in May 2026.",
+    metrics: [
+        "FY26: owned 38 tracked opportunities (~$89M in potential revenue), roughly 20% of a ~192-opportunity team portfolio spanning Parata, Central Fill, Pyxis, Alaris, IV Prep, Logistics, and MedBank.",
+        "Coordinated 1,308 first-pass responses across 1,717 requirements (76% first-pass coverage); reached 100% first-pass coverage on four pursuits and 90%+ on three more.",
+        "De facto Parata lead on 19 opportunities (~$45M): authored 748 first-pass responses across 1,121 requirements and contributed to 5 documented wins, including two federal (VA) Parata awards.",
+        "Led a ~$7.5M Central Fill pursuit for a large academic health system that was recognized company-wide at a quarterly all-hands as a model of cross-functional execution.",
+        "Earned four named stakeholder testimonials, including a customer who ranked the process in the top 1% of their RFP experience.",
+        "Built the Parata content repository from scratch: ~400 curated assets (service, support, implementation, user guides, technical literature) in a shared SharePoint space, plus a reusable Central Fill response library.",
+        "Mapped the Central Fill RFP process end to end, identified 3 delay hotspots, and designed an 8-question \"Day Zero\" intake packet projected to recover 2 to 4 business days per RFP.",
+        "Trained and onboarded two RFP team members who now draft action items, coordinate SMEs, and support submissions independently."
     ],
-    tags: ["Proposals","Healthcare","RFP","Pharmacy Automation","AI/ML","Knowledge Mgmt"]
+    bullets: [
+      "Lead pharmacy automation proposals end to end: compliance matrices, question and exception logs, deliverable tracking, and submission control across RFPs, RFQs, RFIs, and Sources Sought.",
+      "Collaborate with CAD designers and engineering on concepts for conveyor systems, vial dispensing robotics, adherence and blister packaging robotics, automated sortation, and shipping and manifesting software that interfaces with orchestration platforms and Pharmacy Information Systems.",
+      "Translate scope, assumptions, and product limits into win themes and customer benefits; practice conservative, defensible exception-taking in partnership with Legal and Government Contracting.",
+      "Operationalized opportunity tracking (Monday.com) with first-pass metrics and governance cadences so turnaround can be measured and improved.",
+      "Configure AI agents for knowledge management and proposal drafting; proposed an AI-enabled government solicitation research agent and an RFP-insights initiative to turn proposal data into product and process strategy.",
+      "Build AI-assisted views that pull from SAP, Salesforce, and other systems of record to inform sales strategy and competitive battle plans."
+    ],
+    tags: ["Proposals","Healthcare","RFP","Pharmacy Automation","Content Governance","Process Improvement","AI/ML","Mentoring"]
   },
 
   {
@@ -152,6 +166,7 @@ export const SKILLS: SkillGroup[] = [
       "Build simple, repeatable processes: runbooks, on-call rotations, escalation maps, and RACI (who does what).",
       "Facilitate across teams (engineering, operations, editorial, product) and plan for rollbacks and feature-flags when needed.",
       "Coordinate projects and programs; align stakeholders and record decisions in plain language that travels well.",
+      "Onboard and mentor teammates to independent contribution; leave behind documentation that outlasts the hand-off.",
       "Reduce repetitive work by writing small scripts and using practical ML-assisted tools where they help."
     ]
   },
@@ -161,6 +176,7 @@ export const SKILLS: SkillGroup[] = [
       "Write responses for RFP/RFQ/RFI/Sources Sought that are easy to read and fully compliant with requirements.",
       "Turn scope and assumptions into win themes, benefits, and clear pricing narratives with Sales.",
       "Build and govern a reusable content library: boilerplate, appendices, and Q&A organized for fast retrieval.",
+      "Map the proposal process end to end, find the delay hotspots, and build intake tools that recover days per cycle.",
       "Run peer reviews, manage deadlines, check compliance, and improve the checklist after each submission.",
       "Feed voice-of-customer insights and product limits back to Marketing and Product so content stays real."
     ]
@@ -172,6 +188,7 @@ export const SKILLS: SkillGroup[] = [
       "Write PRDs in plain language; slice requirements and define small, testable MVP steps.",
       "Prioritize work with simple methods (RICE, MoSCoW) and keep a living roadmap.",
       "Interview users, apply JTBD (Jobs-To-Be-Done) thinking, and test ideas with quick prototypes.",
+      "Turn operational data (opportunity trackers, win/loss, first-pass coverage) into product and process insight.",
       "Track experiments with KPIs and short decision logs so changes can be explained and reversed."
     ]
   },
