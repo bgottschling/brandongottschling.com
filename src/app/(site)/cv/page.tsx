@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { EXPERIENCES, SKILLS } from "@/data/cv";
+import { EXPERIENCES, SKILLS, HEADLINE, LOCATION } from "@/data/cv";
 import { Suspense } from "react";
-import CvClientShell from "@/components/cv/CvClientShell"; // ← normal import (client component)
+import CvClientShell from "@/components/cv/CvClientShell";
 
 export const metadata: Metadata = {
   title: "CV",
@@ -23,7 +23,8 @@ export default async function CVPage() {
         <CvClientShell
           experiences={EXPERIENCES}
           skills={SKILLS}
-          headline="Proposal and product development grounded in incident leadership. I work through ambiguity, bring the right people together, and deliver clear, dependable results."
+          headline={HEADLINE}
+          location={LOCATION}
         />
       </Suspense>
     </main>

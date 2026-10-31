@@ -4,7 +4,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Sparkles, Mail, ChevronsUpDown } from "lucide-react";
+import { Briefcase, Sparkles, Mail, ChevronsUpDown, Download, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHeaderOffset } from "@/hooks/useHeaderOffset";
 import { useSmartCollapse } from "@/hooks/useSmartCollapse";
@@ -17,6 +17,8 @@ export default function CvHeaderBar({
   location,
   mode,
   setMode,
+  onDownload,
+  downloading = false,
   className,
 }: {
   name?: string;
@@ -24,6 +26,8 @@ export default function CvHeaderBar({
   location?: string;
   mode: Mode;
   setMode: (m: Mode) => void;
+  onDownload?: () => void;
+  downloading?: boolean;
   className?: string;
 }) {
   const top = useHeaderOffset();
@@ -63,9 +67,25 @@ export default function CvHeaderBar({
               )}
             </button>
 
-            {/* Right-aligned single primary action */}
-            <div className="justify-self-end">
-              <Button asChild className="h-9 px-4 text-sm">
+            {/* Right-aligned actions */}
+            <div className="justify-self-end flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+              {onDownload && (
+                <Button
+                  type="button"
+                  onClick={onDownload}
+                  disabled={downloading}
+                  aria-busy={downloading}
+                  className="h-9 px-4 text-sm"
+                >
+                  {downloading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" aria-hidden />
+                  )}
+                  {downloading ? "Preparing…" : "Download CV"}
+                </Button>
+              )}
+              <Button asChild variant="outline" className="h-9 px-4 text-sm">
                 <Link href="/trust/contact" prefetch={false}>
                   <Mail className="mr-2 h-4 w-4" /> Contact
                 </Link>
