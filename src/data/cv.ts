@@ -7,9 +7,15 @@ export type Experience = {
   start: string // ISO or "Mon YYYY"
   end?: string  // "Present" or Mon YYYY
   scope?: string           // one-line scope statement
+  highlights?: Highlight[] // headline numbers, shown as stat tiles in the PDF
   metrics?: string[]       // optional measurable results
   bullets: string[]
   tags?: string[]
+}
+
+export type Highlight = {
+  value: string            // the big number, e.g. "76%"
+  label: string            // what it measures, one short clause
 }
 
 export const NAME = "Brandon Gottschling"
@@ -37,6 +43,12 @@ export const EXPERIENCES: Experience[] = [
     start: "Jun 2024",
     end: "Present",
     scope: "Own end-to-end proposal delivery for pharmacy automation and medication management pursuits across commercial, state, and federal buyers; lead Parata and Central Fill content; build the team's process, tracking, and knowledge systems. Joined as a contractor in June 2024 and converted to a full-time hire in May 2026.",
+    highlights: [
+      { value: "38", label: "opportunities owned in FY26, ~$89M in potential revenue" },
+      { value: "76%", label: "first-pass coverage: 1,308 responses across 1,717 requirements" },
+      { value: "5 wins", label: "as Parata lead on 19 pursuits (~$45M), including two federal awards" },
+      { value: "~400", label: "curated assets in a Parata content repository built from scratch" },
+    ],
     metrics: [
         "FY26: owned 38 tracked opportunities (~$89M in potential revenue), roughly 20% of a ~192-opportunity team portfolio spanning Parata, Central Fill, Pyxis, Alaris, IV Prep, Logistics, and MedBank.",
         "Coordinated 1,308 first-pass responses across 1,717 requirements (76% first-pass coverage); reached 100% first-pass coverage on four pursuits and 90%+ on three more.",
@@ -66,6 +78,12 @@ export const EXPERIENCES: Experience[] = [
     start: "Sep 2019",
     end: "Nov 2023",
     scope: "Commanded Sev0/Sev1 response across streaming/web brands; orchestrated engineers, ops, editorial, production; maintained playbooks and post-incident improvements.",
+    highlights: [
+      { value: "~33%", label: "faster restore: MTTR from ~50 to 55 min down to ~32 to 36 min" },
+      { value: "~40%", label: "fewer false pages after threshold tuning and de-duplication" },
+      { value: "0 Sev0s", label: "during the HBO Max launch and Max rebrand windows" },
+      { value: "80 to 90%", label: "runbook coverage on critical services, up from ~60 to 70%" },
+    ],
     metrics: [
         "Launch windows supported: HBO Max launch (May 27, 2020) and Max rebrand (May 23, 2023); no Sev0s during the primary launch windows; brief spikes cleared within minutes.",
         "Time to detect and restore: MTTD improved from ~5–6 min → ~3 min; MTTR improved from ~50–55 min → ~32–36 min after playbooks, drills, and alert tuning (≈30–35% faster).",

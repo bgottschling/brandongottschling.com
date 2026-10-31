@@ -101,35 +101,39 @@ export default function CvHeaderBar({
             )}
           >
             <div className="mt-3 md:mt-4 flex justify-center">
-              <div className="inline-flex rounded-full border bg-white/80 backdrop-blur dark:bg-neutral-900/70 shadow-sm">
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => setMode("experience")}
-                  className={cn(
-                    "h-9 rounded-full px-4 text-sm",
-                    mode === "experience" ? "bg-black text-white dark:bg-white dark:text-black" : "bg-transparent"
-                  )}
-                  variant={mode === "experience" ? "default" : "ghost"}
-                  aria-pressed={mode === "experience"}
-                >
-                  <Briefcase className="mr-2 h-4 w-4" />
-                  Experience
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => setMode("skills")}
-                  className={cn(
-                    "h-9 rounded-full px-4 text-sm",
-                    mode === "skills" ? "bg-black text-white dark:bg-white dark:text-black" : "bg-transparent"
-                  )}
-                  variant={mode === "skills" ? "default" : "ghost"}
-                  aria-pressed={mode === "skills"}
-                >
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Skills
-                </Button>
+              {/* Plain buttons on purpose: the shared Button's ghost hover uses the
+                  full-strength site accent, which read as a second "active" pill. */}
+              <div
+                role="group"
+                aria-label="CV view"
+                className="inline-flex items-center gap-1 rounded-full border bg-neutral-100/80 p-1 dark:bg-neutral-800/70"
+              >
+                {(
+                  [
+                    { key: "experience", label: "Experience", Icon: Briefcase },
+                    { key: "skills", label: "Skills", Icon: Sparkles },
+                  ] as const
+                ).map(({ key, label, Icon }) => {
+                  const active = mode === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setMode(key)}
+                      aria-pressed={active}
+                      className={cn(
+                        "inline-flex h-8 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
+                        "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                        active
+                          ? "bg-neutral-900 text-white shadow-sm dark:bg-white dark:text-neutral-900"
+                          : "text-muted-foreground hover:bg-white/70 hover:text-foreground dark:hover:bg-neutral-700/60"
+                      )}
+                    >
+                      <Icon className="h-4 w-4" aria-hidden />
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
