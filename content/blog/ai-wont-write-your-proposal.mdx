@@ -1,0 +1,100 @@
+---
+type: blog
+title: "AI Won't Write Your Proposal, But It Will Change How You Build One"
+slug: "ai-wont-write-your-proposal"
+date: "2026-11-26"
+summary: "AI didn't write our proposals. It changed where the team spent its time: less finding, sorting and first-drafting, more strategy, review and craft. Here is how that worked, and where people mattered more than ever."
+primaryCategory: "work"
+tags: ["proposal-writing", "ai", "rfp", "rag", "knowledge-management", "process-improvement"]
+draft: false
+---
+
+AI transformed how I approached proposal development. It didn't write proposals for us. It changed where the team spent its time.
+
+Anyone who has worked an RFP knows the grind. You parse a 200-page solicitation, hunt through product documentation for the right answer, chase SMEs for input and stitch dozens of voices into one coherent response. All of that happens against a deadline that never moves. Most of that effort goes into finding, sorting and first-drafting, not into the strategic thinking that actually wins deals.
+
+During my time on the proposal team at BD, working AI agents into our process shifted that balance. Here is how, where it helped most, and where people mattered more than ever.
+
+## Start with the solicitation
+
+The first win came before a single word of the response was drafted. AI proved remarkably good at analyzing RFPs, RFIs and RFQs. It flagged unusual contractual language for legal review, surfaced risks for the team to weigh and built a compliance view of every requirement.
+
+That didn't replace a contracts expert; it gave that expert a head start. Instead of reading the whole solicitation cold, legal and risk reviewers got a list of the clauses worth their attention: indemnification terms, liability caps, data-handling obligations, service-level penalties. The team also got an early, shared picture of what the customer was really asking for.
+
+## Ground the agent in what's true
+
+An AI agent is only as good as the context it works from. A general-purpose model knows a lot about the world, but it knows nothing reliable about your product, your pricing or your past commitments to a customer.
+
+The fix was to ground the agent in authoritative sources: technical documentation, non-technical overviews and marketing materials, delivered through retrieval-augmented generation (RAG) or another curated knowledge source. When the agent answered a requirement, it drew on the same approved material our SMEs would use.
+
+I found one more source especially valuable: a library of previously submitted proposals. It did two things. First, the agent could compare new responses against past ones, which kept tone, terminology and positioning consistent from bid to bid. Second, it gave the agent precedent on non-standard topics that never appear in product documentation. Think remediation commitments when defending an incumbency, or how the team had handled a sensitive question before. Past proposals are institutional memory, and AI finally made that memory searchable.
+
+## Invest in the source, not the stockpile
+
+There's an important distinction here, and it's one where I have a firm position. Many proposal teams rely on a Q&A knowledge base such as Loopio: a repository of fixed, pre-approved responses that writers search and reuse. That model made sense when every answer was written by hand. A good answer was expensive to produce, so storing it for reuse saved real effort.
+
+AI changes that math. Picture marketing staff using AI to generate responses and then storing them in Loopio. Meanwhile, the SMEs are increasingly using AI to generate fresh answers instead of searching the repository for the vetted one. The library keeps growing, but much of what goes into it may never be used. In Lean terms, that's muda: effort that adds no value for the customer.
+
+It gets worse when a stored response does get reused. An AI-generated answer, pulled from the library and then edited by an AI-assisted SME, drifts further from the source with every pass. It's a copy of a copy. The response gets diluted, and outdated or inaccurate claims can carry forward without anyone noticing. It just doesn't make sense.
+
+The closer you are to the authoritative product documentation, the better the response. Instead of curating a growing pile of secondhand answers, the proposal writer works directly from the source. With AI grounded in that documentation, the writer becomes something like an SME, able to produce an accurate, current answer on demand.
+
+That shift depends on one thing above all: the documentation has to be kept up to date. It takes strict documentation review cycles, with clear owners and regular deadlines. If the source goes stale, every answer generated from it goes stale too. We didn't get there during my time at BD. There were competing ideas about the right approach, but this is where I land: invest in the source, not the stockpile.
+
+## Draft with citations, not guesses
+
+With that foundation, the agent drafted both narrative sections and inline requirement responses, technical and non-technical alike. The key was how we prompted it.
+
+The most effective guardrail I found was requiring every claim to cite a source. If the agent said a system supported a given integration or met a given standard, it had to point to the document that said so. That kept hallucinations in check. It also made review faster, because a reviewer could verify a claim in seconds instead of hunting for where it came from. A claim with no source was a red flag to resolve before it ever reached the customer.
+
+## Keep a human in the loop
+
+The biggest time savings came from changing what SMEs did. Instead of brainstorming and writing responses from a blank page, they peer-reviewed a cited draft. That was a far better use of scarce expert time. An engineer who would have spent an afternoon writing a security response could review and correct one in a fraction of the time.
+
+But review was never optional. Continuously checking generated content for accuracy and quality is what made it trustworthy. AI can be confidently wrong, and the person who knows the product is the last line of defense. The goal was never to remove experts from the process. It was to point their expertise at the step where it mattered most.
+
+## Interrogate the draft
+
+A citation is a starting point for review, not proof. More than once, I read a response that was well written and properly cited, yet something about it felt off. I learned to listen to that feeling.
+
+When it happened, I questioned the AI directly. Why did you reach this conclusion? Where exactly in the source documentation does it say that? Quote the passage. Sometimes the answer held up, and I moved on with more confidence. Other times the cited document said something close to the claim but not quite the same, or didn't support it at all. A claim that sounds plausible and points to a real document is precisely the kind of error that slips past a quick review.
+
+It helps to understand why this happens. AI is very good, but it's built to complete the task in front of it. It's far more inclined to give a satisfying answer than to disappoint us with "I couldn't find that." That pull toward pleasing the user is ultimately where hallucinations come from. So when a draft tells you exactly what you hoped to hear, that's the moment to dig in and really vet it.
+
+## Sharpen win themes and strategy
+
+This is where AI surprised me most. With the knowledge base and past proposals in place, it was remarkably strong at helping develop win themes and strategy. It got even better when we added context from the sales leads who had spent months or years building the customer relationship.
+
+Every detail mattered. What were the customer's existing pain points? Where had they said they wanted to improve? What did the sales team know that never made it into the solicitation? I also had the agent research the prospective customer and their business drivers, such as growth plans, regulatory pressure, staffing challenges and strategic initiatives. Then it tied each driver to how the vendor's products supported it. The result was a response that spoke to the customer's priorities, not just the vendor's feature list.
+
+Finally, how you frame a response matters as much as what it says. Grounding the writing in the psychology of persuasion makes the argument clearer and more compelling to evaluators. I explore that idea in more depth in [Psychology of Persuasion for Winning Proposals](/research/proposal-persuasion-psychology-and-nlp).
+
+## Turn gaps into product insight
+
+Not every requirement could be met, and that was useful information too. When the agent mapped a solicitation against what the vendor could deliver, the gaps stood out clearly. Tracked across many bids, they became a valuable signal for the product team.
+
+A requirement you can't meet once is a lost point. The same requirement showing up in ten RFPs is a roadmap item. Fed back to product management, those insights show where to invest and help steer the product in the most competitive direction. That turns the proposal team into a source of market intelligence, not just a response factory.
+
+## Craft still matters
+
+None of this replaces the craft of proposal writing. AI helps write the proposal, but it shouldn't be the author.
+
+The final narratives, graphics and executive summary still need to be shaped by people who know the customer. They can tell what will resonate with an evaluation committee and what will fall flat. An AI draft is often correct and well organized, yet it can still read as generic. The difference between a compliant proposal and a winning one is usually found in the details a person adds: a specific reference to the customer's situation, a graphic that makes a complex point instantly clear, an executive summary that sounds like it was written for one reader.
+
+AI gets us to a strong first draft faster. Human judgment and care are what make the proposal competitive.
+
+## Meetings still drive the strategy
+
+For all the work an agent can do, the most important decisions on a bid still happen when people talk. Kickoffs, strategy sessions and color-team reviews are where the team agrees on the win strategy and settles disagreements. They're also where the sales lead shares what they heard from the customer over coffee.
+
+The problem has always been capturing what was said. AI meeting tools now close that gap. [Facilitator in Microsoft Teams](https://support.microsoft.com/en-us/office/facilitator-in-microsoft-teams-meetings-37657f91-39b5-40eb-9421-45141e3ce9f6) takes shared notes as the meeting happens and tracks the agenda. It summarizes key decisions and open questions, and it can even turn a discussion into a Word document. Third-party tools such as Otter.ai, Fireflies.ai and Fathom offer similar capture across platforms. One caveat: always get everyone's consent before recording, especially on calls with customers.
+
+The real value comes from feeding those notes back into the agent's context. When the proposal agent knows what the team decided in the strategy session, its drafts reflect the team's actual thinking, not just what's in the documentation. That leads to better choices about which content to include and stronger writing overall.
+
+## The bottom line
+
+AI doesn't replace the proposal team; it multiplies what the team can do. It handles the heavy lifting of analysis, retrieval and first drafts. That frees SMEs, sales leads and proposal managers to focus on what actually wins deals: understanding the customer, sharpening the strategy and writing a response that is both compliant and compelling.
+
+Teams that combine AI's speed with human judgment and craft will consistently produce higher-quality, more competitive proposals. The ones that hand the whole job to a model, or ignore AI entirely, will find it increasingly hard to keep up.
+
+I'd welcome the chance to compare notes. If you're building AI into your own proposal process, or just want to talk shop, [reach out](/trust/contact).
