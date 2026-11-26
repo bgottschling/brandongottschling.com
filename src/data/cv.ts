@@ -29,7 +29,7 @@ export const GITHUB = "https://github.com/bgottschling"
 
 export const EXEC_SUMMARY: string[] = [
   "Builder of calm, repeatable operations: turned the highest-severity streaming incidents into simple playbooks by getting the right people in the room and keeping decisions legible.",
-  "Proposal Development Manager on BD's Medication Management Solutions RFP team: owned 38 opportunities (~$89M) in FY26, led Parata and Central Fill content, built the content repository and process tooling the team now runs on, and trained two teammates to independent contribution.",
+  "Most recently Proposal Development Manager on BD's Medication Management Solutions RFP team: owned 38 opportunities (~$89M) in FY26, led Parata and Central Fill content, built the team's content repository and process tooling, and trained two teammates to independent contribution.",
   "Direction of travel: project or program management, technical operations, product management, or proposal development, anywhere the quality of execution and cross-functional trust are the product."
 ];
 
@@ -41,8 +41,8 @@ export const EXPERIENCES: Experience[] = [
     location: "San Diego, CA (Remote)",
     logo: "/logos/bd.svg",
     start: "Jun 2024",
-    end: "Present",
-    scope: "Own end-to-end proposal delivery for pharmacy automation and medication management pursuits across commercial, state, and federal buyers; lead Parata and Central Fill content; build the team's process, tracking, and knowledge systems. Joined as a contractor in June 2024 and converted to a full-time hire in May 2026.",
+    end: "Nov 2026",
+    scope: "Owned end-to-end proposal delivery for pharmacy automation and medication management pursuits across commercial, state, and federal buyers; led Parata and Central Fill content; built the team's process, tracking, and knowledge systems. Joined as a contractor in June 2024 and converted to a full-time hire in May 2026.",
     highlights: [
       { value: "38", label: "opportunities owned in FY26, ~$89M in potential revenue" },
       { value: "76%", label: "first-pass coverage: 1,308 responses across 1,717 requirements" },
@@ -57,15 +57,15 @@ export const EXPERIENCES: Experience[] = [
         "Earned four named stakeholder testimonials, including a customer who ranked the process in the top 1% of their RFP experience.",
         "Built the Parata content repository from scratch: ~400 curated assets (service, support, implementation, user guides, technical literature) in a shared SharePoint space, plus a reusable Central Fill response library.",
         "Mapped the Central Fill RFP process end to end, identified 3 delay hotspots, and designed an 8-question \"Day Zero\" intake packet projected to recover 2 to 4 business days per RFP.",
-        "Trained and onboarded two RFP team members who now draft action items, coordinate SMEs, and support submissions independently."
+        "Trained and onboarded two RFP team members who went on to draft action items, coordinate SMEs, and support submissions independently."
     ],
     bullets: [
-      "Lead pharmacy automation proposals end to end: compliance matrices, question and exception logs, deliverable tracking, and submission control across RFPs, RFQs, RFIs, and Sources Sought.",
-      "Collaborate with CAD designers and engineering on concepts for conveyor systems, vial dispensing robotics, adherence and blister packaging robotics, automated sortation, and shipping and manifesting software that interfaces with orchestration platforms and Pharmacy Information Systems.",
-      "Translate scope, assumptions, and product limits into win themes and customer benefits; practice conservative, defensible exception-taking in partnership with Legal and Government Contracting.",
+      "Led pharmacy automation proposals end to end: compliance matrices, question and exception logs, deliverable tracking, and submission control across RFPs, RFQs, RFIs, and Sources Sought.",
+      "Collaborated with CAD designers and engineering on concepts for conveyor systems, vial dispensing robotics, adherence and blister packaging robotics, automated sortation, and shipping and manifesting software that interfaces with orchestration platforms and Pharmacy Information Systems.",
+      "Translated scope, assumptions, and product limits into win themes and customer benefits; practiced conservative, defensible exception-taking in partnership with Legal and Government Contracting.",
       "Operationalized opportunity tracking (Monday.com) with first-pass metrics and governance cadences so turnaround can be measured and improved.",
-      "Configure AI agents for knowledge management and proposal drafting; proposed an AI-enabled government solicitation research agent and an RFP-insights initiative to turn proposal data into product and process strategy.",
-      "Build AI-assisted views that pull from SAP, Salesforce, and other systems of record to inform sales strategy and competitive battle plans."
+      "Configured AI agents for knowledge management and proposal drafting; proposed an AI-enabled government solicitation research agent and an RFP-insights initiative to turn proposal data into product and process strategy.",
+      "Built AI-assisted views that pulled from SAP, Salesforce, and other systems of record to inform sales strategy and competitive battle plans."
     ],
     tags: ["Proposals","Healthcare","RFP","Pharmacy Automation","Content Governance","Process Improvement","AI/ML","Mentoring"]
   },

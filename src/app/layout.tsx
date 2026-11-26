@@ -95,10 +95,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 familyName: "Gottschling",
                 url: "https://brandongottschling.com",
                 jobTitle: "Proposal Development",
-                worksFor: {
-                  "@type": "Organization",
-                  name: "Becton, Dickinson and Company (BD)",
-                },
                 description: "Proposal and product development grounded in incident leadership. Technology, faith, and work, written down as it happens.",
                 knowsAbout: ["proposal development", "incident management", "pharmacy automation", "software engineering", "AI", "Next.js"],
                 sameAs: [
