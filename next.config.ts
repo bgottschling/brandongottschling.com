@@ -19,6 +19,17 @@ const nextConfig: NextConfig = {
   /* Allow preview tools to reach /_next/* without cross-origin warnings */
   allowedDevOrigins: ["127.0.0.1"],
 
+  /* Renamed content slugs: keep old links and search results working */
+  async redirects() {
+    return [
+      {
+        source: "/research/proposal-persuasion-psychology-and-nlp-humanized",
+        destination: "/research/proposal-persuasion-psychology-and-nlp",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     const csp = [
       "default-src 'self'",
