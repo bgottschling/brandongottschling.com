@@ -3,21 +3,19 @@ type: project
 title: "180 Life Church: Digital Renovation"
 primaryCategory: "technology"
 slug: "180-life-church"
-date: "2026-10-14"
-stage: "beta"
-summary: "A ground-up site for 180 Life Church in Bloomfield, Connecticut: sermons synced from YouTube, giving, leadership pages, and a CMS the staff edit themselves. Built; now in hardening and hand-off."
-status: "Built · hand-off"
+date: "2026-11-27"
+stage: "live"
+summary: "A ground-up site for 180 Life Church in Bloomfield, Connecticut: sermons synced from YouTube, events, giving, leadership pages, and a CMS the staff edit themselves. Live since May 2026."
+status: "Live since May 2026"
 tags: ["next.js", "church", "community", "web-design", "client-work", "cms", "youtube-api"]
 cover: "/images/projects/180life/hero.png"
 links:
-  live: "https://180life.gottschling.dev"
-  repo: "https://github.com/bgottschling/180lifechurch"
+  live: "https://180lifechurch.org"
 ---
 
 <ProjectHeader
-  status="Built · hand-off"
-  live="https://180life.gottschling.dev"
-  repo="https://github.com/bgottschling/180lifechurch"
+  status="Live since May 2026"
+  live="https://180lifechurch.org"
 />
 
 > **Why**
@@ -33,18 +31,21 @@ A ground-up rebuild. Modern, accessible, mobile-first, fast, and a visual identi
 
 ## Where We Are
 
-Discovery is done and the site is built. Since the spring it has picked up:
+The site went live in May 2026 and has run ever since without a major incident. Six months in, it has been a huge success.
 
-- Sermons synced from the church’s YouTube channel, with retries so a quota hiccup doesn’t break a build, plus an audio player for listening on the go.
-- Giving, leadership, and support-team pages the staff update themselves through the CMS.
-- A contact flow with verification and spam protection.
-- A security pass before launch: response headers, XSS hardening in the CMS, and personal emails pulled out of the public site.
-- Hosting cost tuning so pages revalidate on a sensible schedule instead of rebuilding constantly.
+It belongs to the church now. Over the summer the code and the hosting moved into the church’s own accounts. The staff keep the content current in the CMS, sermons arrive from the church’s YouTube channel, and events and contact messages flow through Planning Center. I still take on code changes when they need something new. In November that was a background video for the homepage hero, plus a seasonal mode: an announcement can take over the hero for something like Christmas and hand it back on its own when its dates end.
 
-What’s left is hand-off. Documentation, a walkthrough with the team, and the boring-but-important work of making sure nothing depends on me.
+Since launch I have also:
+
+- Run a security pass: rich text is sanitized, links are validated, security headers are in place, and personal staff emails stay off the public site.
+- Added an inline audio player to sermon cards, for listening on the go.
+- Made the giving page editable in the CMS and split leadership into a staff team and a support team.
+- Moved the video library to the YouTube Data API after YouTube’s old feed endpoint stopped working.
+
+There were a few bumps. We came close to the hosting plan’s limits, so I lengthened how long pages and images stay cached and let the CMS’s publish webhook keep pages fresh. A couple of regressions slipped onto content pages, such as rich text losing its line breaks and an announcement that wouldn’t publish. Each one was fixed, and none took the site down.
 
 ## Stack
 
 - **Core:** Next.js, Tailwind, Vercel
-- **Content:** A CMS the staff edit directly; sermons pulled from the YouTube Data API
-- **Hosting:** Edge-deployed with incremental revalidation
+- **Content:** A CMS the staff edit directly; sermons from the YouTube Data API; events and contact workflows through Planning Center
+- **Hosting:** Incremental revalidation, refreshed by a publish webhook from the CMS
