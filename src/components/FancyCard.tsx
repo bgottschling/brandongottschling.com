@@ -5,6 +5,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { formatContentDate } from "@/lib/format-date";
 import CardThumbnailCanvas from "@/components/CardThumbnailCanvas";
 
 export type CardVariant = "blog" | "project" | "research";
@@ -195,7 +196,7 @@ function FancyCardInner({
               dateTime={date}
               className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400"
             >
-              {new Date(date).toLocaleDateString(undefined, {
+              {formatContentDate(date, {
                 year: "numeric",
                 month: "short",
                 day: "2-digit",

@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllContent, type ContentMeta } from "@/lib/content";
+import { formatContentDate } from "@/lib/format-date";
 
 export const runtime = "nodejs";
 export const dynamic = "force-static";
@@ -18,11 +19,7 @@ function isPeriodSlug(s: string) {
   return /^now\/\d{4}-\d{2}$/.test(s);
 }
 function fmt(d?: string) {
-  if (!d) return null;
-  const date = new Date(d);
-  return Number.isNaN(date.getTime())
-    ? null
-    : date.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+  return formatContentDate(d, { year: "numeric", month: "long" });
 }
 
 export default async function NowArchivePage() {

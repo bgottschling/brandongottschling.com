@@ -1,6 +1,7 @@
 // src/components/item-card.tsx (or wherever your card lives)
 import Link from 'next/link'
 import type { ContentMeta } from '@/lib/content'
+import { formatContentDate } from '@/lib/format-date'
 
 export default function ItemCard({ item }: { item: ContentMeta }) {
   return (
@@ -19,7 +20,7 @@ export default function ItemCard({ item }: { item: ContentMeta }) {
       </header>
       {item.summary && <p className="m-0 text-sm text-zinc-600 dark:text-zinc-300">{item.summary}</p>}
       <footer className="mt-3 text-xs text-zinc-500">
-        {item.date && <time dateTime={item.date}>{new Date(item.date).toLocaleDateString()}</time>}
+        {item.date && <time dateTime={item.date}>{formatContentDate(item.date, { year: 'numeric', month: 'numeric', day: 'numeric' })}</time>}
       </footer>
     </article>
   )
