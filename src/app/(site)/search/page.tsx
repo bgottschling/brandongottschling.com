@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllContent, filterVisible } from "@/lib/content";
+import { formatContentDate } from "@/lib/format-date";
 import SearchViewBar from "@/components/SearchViewBar";
 import type { CardVariant } from "@/components/FancyCard";
 import { Search, BookOpen, Hammer, FlaskConical, Calendar, Tag } from "lucide-react";
@@ -134,13 +135,11 @@ export default async function SearchPage({
             {results.map((item) => {
               const config = TYPE_CONFIG[item.type] ?? TYPE_CONFIG.blog;
               const Icon = config.icon;
-              const dateStr = item.date
-                ? new Date(item.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : null;
+              const dateStr = formatContentDate(item.date, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              });
 
               return (
                 <Link

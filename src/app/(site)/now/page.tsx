@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllContent, getBySlug, type ContentMeta } from "@/lib/content";
+import { formatContentDate } from "@/lib/format-date";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxRemoteOptions } from "@/lib/mdx";
 import { mdxComponents } from "@/components/mdx-components";
@@ -16,11 +17,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const fmt = (d?: string) => {
-  if (!d) return null;
-  const t = new Date(d);
-  return Number.isNaN(t.getTime()) ? null : t.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-};
+const fmt = (d?: string) => formatContentDate(d, { year: "numeric", month: "short", day: "numeric" });
 const isPeriodSlug = (s: string) => /^now\/\d{4}-\d{2}$/.test(s);
 
 export default async function NowPage() {
